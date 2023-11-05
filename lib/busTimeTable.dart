@@ -28,14 +28,14 @@ class busTimeTable extends StatelessWidget {
             Text(
               '愛工大行',
               style: TextStyle(
-                color: Colors.black,
+                // color: Colors.black,
                 fontSize: 16,
               ),
             ),
             Text(
               'あと5:00',
               style: TextStyle(
-                color: Colors.black,
+                // color: Colors.black,
                 fontSize: 18,
               ),
             )
@@ -43,7 +43,7 @@ class busTimeTable extends StatelessWidget {
           Text(
             '13:00',
             style: TextStyle(
-              color: Colors.black,
+              // color: Colors.black,
               fontSize: 48,
             ),
           ),
@@ -78,9 +78,12 @@ class busTimeTable extends StatelessWidget {
       length: 3,
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.white,
+          // backgroundColor: Colors.white,
           centerTitle: true,
-          title: const Text('時刻表', style: TextStyle(color: Colors.black)),
+          title: const Text(
+            '時刻表',
+            // style: TextStyle(color: Colors.black),
+          ),
           bottom: const TabBar(
             tabs: [
               Tab(

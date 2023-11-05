@@ -190,7 +190,7 @@ class noticeList extends StatelessWidget {
       child: TextField(
         decoration: InputDecoration(
           prefixIcon: const Icon(Icons.search),
-          fillColor: Color.fromARGB(255, 233, 233, 233),
+          // fillColor: Color.fromARGB(255, 233, 233, 233),
           filled: true,
           // border: InputBorder.none,
           border: OutlineInputBorder(
@@ -219,7 +219,7 @@ class noticeList extends StatelessWidget {
           centerTitle: true,
           title: const Text(
             'お知らせ',
-            style: TextStyle(color: Colors.black),
+            // style: TextStyle(color: Colors.black),
           ),
           bottom: const TabBar(
             tabs: [

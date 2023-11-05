@@ -37,7 +37,7 @@ class MyApp extends ConsumerWidget {
     final bar = BottomNavigationBar(
       type: BottomNavigationBarType.fixed,
       items: items,
-      backgroundColor: Colors.white,
+      // backgroundColor: Colors.white,
       selectedItemColor: Colors.blue,
       unselectedItemColor: Colors.grey,
       currentIndex: index,
@@ -57,10 +57,22 @@ class MyApp extends ConsumerWidget {
     // ui組み立て
     return MaterialApp(
       // theme: ThemeData.dark(),
-      theme: ThemeData(
-          appBarTheme: AppBarTheme(
-              color: Colors.white,
-              iconTheme: IconThemeData(color: Colors.white))),
+      theme: ThemeData.light().copyWith(
+        appBarTheme: const AppBarTheme(
+          color: Colors.white,
+          iconTheme: IconThemeData(color: Colors.blue),
+          titleTextStyle: TextStyle(color: Colors.black, fontSize: 18),
+        ),
+      ),
+      darkTheme: ThemeData.dark().copyWith(
+        appBarTheme: AppBarTheme(
+          iconTheme: IconThemeData(color: Colors.black),
+        ),
+      ),
+      // darkTheme: ThemeData(
+      //     appBarTheme: AppBarTheme(
+      //         color: Colors.grey,
+      //         iconTheme: IconThemeData(color: Colors.black))),
       home: Scaffold(
         body: pages[index],
         bottomNavigationBar: bar,

@@ -10,7 +10,7 @@ class syllabusSearch extends StatelessWidget {
       child: TextField(
         decoration: InputDecoration(
           prefixIcon: const Icon(Icons.search),
-          fillColor: const Color.fromARGB(255, 233, 233, 233),
+          // fillColor: const Color.fromARGB(255, 233, 233, 233),
           filled: true,
           // border: InputBorder.none,
           border: OutlineInputBorder(
@@ -24,9 +24,12 @@ class syllabusSearch extends StatelessWidget {
     );
     final con = Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        // backgroundColor: Colors.white,
         centerTitle: true,
-        title: const Text('シラバス検索', style: TextStyle(color: Colors.black)),
+        title: const Text(
+          'シラバス検索',
+          // style: TextStyle(color: Colors.black),
+        ),
       ),
       body: textField,
     );

@@ -38,6 +38,7 @@ dependencies:
   cupertino_icons: ^1.0.2
 
 dev_dependencies:
+  flutter_launcher_icons: ^0.13.1
   pedantic_mono: any
   flutter_test:
     sdk: flutter
@@ -90,3 +91,7 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+flutter_icons:       
+  android: true
+  ios: true
+  image_path: "assets/images/0m030eac1c725117c9692003de113f170c70ea4d21ca66.png"
