@@ -121,7 +121,7 @@ class classTimeTable extends StatelessWidget {
     );
     final semSelector = Container(
       // color: Colors.grey,
-      height: 90,
+      height: 60,
       child: Row(),
     );
     final tabScreen = Column(
@@ -130,6 +130,7 @@ class classTimeTable extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
+        elevation: 0.0,
         // backgroundColor: Colors.white,
         centerTitle: true,
         title: const Text(

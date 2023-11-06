@@ -189,6 +189,8 @@ class noticeList extends StatelessWidget {
       padding: EdgeInsets.all(16),
       child: TextField(
         decoration: InputDecoration(
+          isDense: true,
+          contentPadding: EdgeInsets.fromLTRB(0, 15, 0, 15),
           prefixIcon: const Icon(Icons.search),
           // fillColor: Color.fromARGB(255, 233, 233, 233),
           filled: true,
@@ -215,6 +217,7 @@ class noticeList extends StatelessWidget {
       child: Scaffold(
         body: TabBarView(children: [tabScreen, tabScreen]),
         appBar: AppBar(
+          elevation: 0.0,
           // backgroundColor: Colors.white,
           centerTitle: true,
           title: const Text(

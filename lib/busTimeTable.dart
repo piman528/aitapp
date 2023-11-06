@@ -84,6 +84,7 @@ class busTimeTable extends StatelessWidget {
       length: 3,
       child: Scaffold(
         appBar: AppBar(
+          elevation: 0.0,
           // backgroundColor: Colors.white,
           centerTitle: true,
           title: const Text(

@@ -34,16 +34,22 @@ class MyApp extends ConsumerWidget {
     ];
 
     // バー作成
-    final bar = BottomNavigationBar(
-      type: BottomNavigationBarType.fixed,
-      items: items,
-      // backgroundColor: Colors.white,
-      selectedItemColor: Colors.blue,
-      unselectedItemColor: Colors.grey,
-      currentIndex: index,
-      onTap: (index) {
-        ref.read(indexProvider.notifier).state = index;
-      },
+    final bar = Container(
+      height: 50,
+      child: BottomNavigationBar(
+        iconSize: 20,
+        selectedFontSize: 12,
+        unselectedFontSize: 12,
+        type: BottomNavigationBarType.fixed,
+        items: items,
+        // backgroundColor: Colors.white,
+        selectedItemColor: Colors.blue,
+        unselectedItemColor: Colors.grey,
+        currentIndex: index,
+        onTap: (index) {
+          ref.read(indexProvider.notifier).state = index;
+        },
+      ),
     );
 
     // ページ一覧

@@ -9,6 +9,8 @@ class syllabusSearch extends StatelessWidget {
       padding: const EdgeInsets.all(15),
       child: TextField(
         decoration: InputDecoration(
+          isDense: true,
+          contentPadding: EdgeInsets.fromLTRB(0, 15, 0, 15),
           prefixIcon: const Icon(Icons.search),
           // fillColor: const Color.fromARGB(255, 233, 233, 233),
           filled: true,
@@ -22,8 +24,10 @@ class syllabusSearch extends StatelessWidget {
         ),
       ),
     );
-    final con = Scaffold(
+
+    return Scaffold(
       appBar: AppBar(
+        elevation: 0.0,
         // backgroundColor: Colors.white,
         centerTitle: true,
         title: const Text(
@@ -33,6 +37,5 @@ class syllabusSearch extends StatelessWidget {
       ),
       body: textField,
     );
-    return con;
   }
 }
