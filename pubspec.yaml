@@ -28,9 +28,9 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
-  flutter_riverpod:
   flutter:
     sdk: flutter
+  flutter_riverpod:
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -39,9 +39,9 @@ dependencies:
 
 dev_dependencies:
   flutter_launcher_icons: ^0.13.1
-  pedantic_mono: any
   flutter_test:
     sdk: flutter
+  pedantic_mono: any
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is

@@ -64,11 +64,11 @@ class MyApp extends ConsumerWidget {
           titleTextStyle: TextStyle(color: Colors.black, fontSize: 18),
         ),
       ),
-      darkTheme: ThemeData.dark().copyWith(
-        appBarTheme: AppBarTheme(
-          iconTheme: IconThemeData(color: Colors.black),
-        ),
-      ),
+      // darkTheme: ThemeData.dark().copyWith(
+      //   appBarTheme: AppBarTheme(
+      //     iconTheme: IconThemeData(color: Colors.black),
+      //   ),
+      // ),
       // darkTheme: ThemeData(
       //     appBarTheme: AppBarTheme(
       //         color: Colors.grey,

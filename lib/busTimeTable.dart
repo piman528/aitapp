@@ -11,12 +11,12 @@ class busTimeTable extends StatelessWidget {
       margin: const EdgeInsets.fromLTRB(12, 6, 12, 6),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        boxShadow: [
+        boxShadow: const [
           BoxShadow(
             color: Color.fromARGB(255, 219, 219, 219),
             spreadRadius: 1,
             blurRadius: 3,
-          )
+          ),
         ],
         color: Colors.white,
         borderRadius: BorderRadius.circular(10),
@@ -24,22 +24,25 @@ class busTimeTable extends StatelessWidget {
       child: const Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text(
-              '愛工大行',
-              style: TextStyle(
-                // color: Colors.black,
-                fontSize: 16,
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Text(
+              //   '愛工大行',
+              //   style: TextStyle(
+              //     // color: Colors.black,
+              //     fontSize: 16,
+              //   ),
+              // ),
+              Text(
+                'あと5:00',
+                style: TextStyle(
+                  // color: Colors.black,
+                  fontSize: 25,
+                ),
               ),
-            ),
-            Text(
-              'あと5:00',
-              style: TextStyle(
-                // color: Colors.black,
-                fontSize: 18,
-              ),
-            )
-          ]),
+            ],
+          ),
           Text(
             '13:00',
             style: TextStyle(
@@ -51,28 +54,31 @@ class busTimeTable extends StatelessWidget {
       ),
     );
     final destination = Container(
-        padding: EdgeInsets.all(8),
-        child: const Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              'シャトルバス(八草行)',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            ),
-            // Text(
-            //   'もっと見る',
-            //   style: TextStyle(fontSize: 14),
-            // ),
-          ],
-        ));
+      padding: const EdgeInsets.all(8),
+      child: const Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            'シャトルバス(八草行)',
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          ),
+          // Text(
+          //   'もっと見る',
+          //   style: TextStyle(fontSize: 14),
+          // ),
+        ],
+      ),
+    );
     final timeTo = Container(
       // padding: EdgeInsets.all(5),
-      child: Column(children: [
-        destination,
-        time,
-        time,
-        time,
-      ]),
+      child: Column(
+        children: [
+          destination,
+          time,
+          time,
+          time,
+        ],
+      ),
     );
     return DefaultTabController(
       length: 3,
@@ -92,27 +98,31 @@ class busTimeTable extends StatelessWidget {
               Tab(
                 text: 'リニモ',
               ),
-              Tab(
-                text: '時刻表',
-              ),
+              // Tab(
+              //   text: '時刻表',
+              // ),
             ],
             labelColor: Colors.black,
           ),
         ),
         body: TabBarView(
           children: [
-            ListView(children: [
-              timeTo,
-              timeTo,
-              // timeTo,
-              // timeTo,
-            ]),
-            ListView(children: [
-              timeTo,
-              timeTo,
-              // timeTo,
-              // timeTo,
-            ]),
+            ListView(
+              children: [
+                timeTo,
+                timeTo,
+                // timeTo,
+                // timeTo,
+              ],
+            ),
+            ListView(
+              children: [
+                timeTo,
+                timeTo,
+                // timeTo,
+                // timeTo,
+              ],
+            ),
           ],
         ),
       ),
