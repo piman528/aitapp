@@ -1,7 +1,6 @@
-import 'package:aitapp/classTimeTable.dart';
-import 'package:aitapp/noticeList.dart';
-import 'package:aitapp/busTimeTable.dart';
-import 'package:aitapp/syllabusSearch.dart';
+import 'package:aitapp/tab/classTimeTable.dart';
+import 'package:aitapp/tab/noticeList.dart';
+import 'package:aitapp/tab/busTimeTable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -29,13 +28,13 @@ class MyApp extends ConsumerWidget {
     const items = [
       BottomNavigationBarItem(icon: Icon(Icons.event), label: 'お知らせ'),
       BottomNavigationBarItem(icon: Icon(Icons.article), label: '時間割'),
-      BottomNavigationBarItem(icon: Icon(Icons.search), label: 'シラバス検索'),
+      // BottomNavigationBarItem(icon: Icon(Icons.search), label: 'シラバス検索'),
       BottomNavigationBarItem(icon: Icon(Icons.directions_bus), label: '時刻表'),
     ];
 
     // バー作成
     final bar = Container(
-      height: 50,
+      // height: 50,
       child: BottomNavigationBar(
         iconSize: 20,
         selectedFontSize: 12,
@@ -56,7 +55,7 @@ class MyApp extends ConsumerWidget {
     const pages = [
       noticeList(),
       classTimeTable(),
-      syllabusSearch(),
+      // syllabusSearch(),
       busTimeTable(),
     ];
 
@@ -64,6 +63,7 @@ class MyApp extends ConsumerWidget {
     return MaterialApp(
       // theme: ThemeData.dark(),
       theme: ThemeData.light().copyWith(
+        splashColor: Colors.transparent,
         appBarTheme: const AppBarTheme(
           color: Colors.white,
           iconTheme: IconThemeData(color: Colors.blue),

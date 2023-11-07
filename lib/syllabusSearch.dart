@@ -1,3 +1,4 @@
+import 'package:aitapp/const.dart';
 import 'package:flutter/material.dart';
 
 class syllabusSearch extends StatelessWidget {
@@ -6,20 +7,16 @@ class syllabusSearch extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textField = Container(
-      padding: const EdgeInsets.all(15),
-      child: TextField(
+      padding: Measure.p_a16,
+      child: const TextField(
         decoration: InputDecoration(
           isDense: true,
-          contentPadding: EdgeInsets.fromLTRB(0, 15, 0, 15),
-          prefixIcon: const Icon(Icons.search),
-          // fillColor: const Color.fromARGB(255, 233, 233, 233),
+          prefixIcon: Icon(Icons.search),
           filled: true,
-          // border: InputBorder.none,
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: Measure.br_8,
             borderSide: BorderSide.none,
           ),
-          // labelText: 'あなたの名前',
           hintText: '教授名、授業名で検索',
         ),
       ),
@@ -27,7 +24,7 @@ class syllabusSearch extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        elevation: 0.0,
+        elevation: 0,
         // backgroundColor: Colors.white,
         centerTitle: true,
         title: const Text(

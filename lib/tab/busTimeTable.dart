@@ -1,3 +1,4 @@
+import 'package:aitapp/const.dart';
 import 'package:flutter/material.dart';
 
 class busTimeTable extends StatelessWidget {
@@ -9,7 +10,7 @@ class busTimeTable extends StatelessWidget {
       // width: 1000,
       // height: 100,
       margin: const EdgeInsets.fromLTRB(12, 6, 12, 6),
-      padding: const EdgeInsets.all(16),
+      padding: Measure.p_a16,
       decoration: BoxDecoration(
         boxShadow: const [
           BoxShadow(
@@ -54,7 +55,7 @@ class busTimeTable extends StatelessWidget {
       ),
     );
     final destination = Container(
-      padding: const EdgeInsets.all(8),
+      padding: Measure.p_a8,
       child: const Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -81,10 +82,10 @@ class busTimeTable extends StatelessWidget {
       ),
     );
     return DefaultTabController(
-      length: 3,
+      length: 2,
       child: Scaffold(
         appBar: AppBar(
-          elevation: 0.0,
+          elevation: 0,
           // backgroundColor: Colors.white,
           centerTitle: true,
           title: const Text(

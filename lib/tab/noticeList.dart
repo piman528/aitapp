@@ -1,3 +1,4 @@
+import 'package:aitapp/const.dart';
 import 'package:flutter/material.dart';
 
 class notice {
@@ -172,7 +173,7 @@ Widget modelToWidget(notice model) {
         title,
         content,
         sender,
-        Divider(
+        const Divider(
           thickness: 1,
         ),
       ],
@@ -186,11 +187,11 @@ class noticeList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textField = Container(
-      padding: EdgeInsets.all(16),
+      padding: Measure.p_a16,
       child: TextField(
         decoration: InputDecoration(
           isDense: true,
-          contentPadding: EdgeInsets.fromLTRB(0, 15, 0, 15),
+          contentPadding: const EdgeInsets.fromLTRB(0, 13, 0, 13),
           prefixIcon: const Icon(Icons.search),
           // fillColor: Color.fromARGB(255, 233, 233, 233),
           filled: true,
@@ -217,7 +218,7 @@ class noticeList extends StatelessWidget {
       child: Scaffold(
         body: TabBarView(children: [tabScreen, tabScreen]),
         appBar: AppBar(
-          elevation: 0.0,
+          elevation: 0,
           // backgroundColor: Colors.white,
           centerTitle: true,
           title: const Text(
