@@ -1,6 +1,6 @@
 import 'package:aitapp/const.dart';
+import 'package:aitapp/router.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
 class ClassTime extends StatelessWidget {
   const ClassTime({
@@ -128,8 +128,9 @@ class ClassGridContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        // print('こんにちは');
-        context.push('/syllabusSearch');
+        print('こんにちは');
+        CustomNavigationHelper.router
+            .push(CustomNavigationHelper.syllabusSearchPath);
       },
       child: Container(
         decoration: const BoxDecoration(

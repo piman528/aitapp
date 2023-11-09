@@ -2,8 +2,11 @@ import 'package:aitapp/const.dart';
 import 'package:flutter/material.dart';
 
 class SearchBarWidget extends StatelessWidget {
-  const SearchBarWidget(
-      {super.key, required this.hintText, required this.controller});
+  const SearchBarWidget({
+    super.key,
+    required this.hintText,
+    required this.controller,
+  });
   final String hintText;
   final TextEditingController controller;
 

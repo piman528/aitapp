@@ -22,7 +22,7 @@ class TimeTableCard extends StatelessWidget {
             Vehicle.name[vehicle]! + Vehicle.destinationName[destination]!,
             style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
-          Text(
+          const Text(
             '時刻表を見る',
             style: TextStyle(fontSize: 16),
           ),
@@ -47,7 +47,7 @@ class TimeTableCard extends StatelessWidget {
             //     ) ==
             //     SizedBox())
             //   {}
-          }
+          },
         ],
       ),
     );
@@ -78,8 +78,8 @@ class TimeCard extends StatelessWidget {
         // height: 100,
         margin: const EdgeInsets.fromLTRB(12, 6, 12, 6),
         padding: Measure.p_a16,
-        decoration: BoxDecoration(
-          boxShadow: const [
+        decoration: const BoxDecoration(
+          boxShadow: [
             BoxShadow(
               color: Color.fromARGB(255, 219, 219, 219),
               spreadRadius: 1,

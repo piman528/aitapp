@@ -1,6 +1,6 @@
+import 'package:aitapp/router.dart';
 import 'package:aitapp/wighet/search_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
 class Notice {
   Notice(this.sender, this.title, this.content, this.sendAt);
@@ -164,7 +164,9 @@ Widget modelToWidget(Notice model, BuildContext context) {
   );
   return GestureDetector(
     onTap: () {
-      context.push('/noticeDetail');
+      CustomNavigationHelper.router.push(
+        CustomNavigationHelper.noticeDetailPath,
+      );
     },
     child: Container(
       // color: Colors.blue,

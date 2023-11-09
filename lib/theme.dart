@@ -13,7 +13,7 @@ ThemeData buildThemeLight() {
 
 ThemeData buildThemeDark() {
   return ThemeData.dark().copyWith(
-    appBarTheme: AppBarTheme(
+    appBarTheme: const AppBarTheme(
       iconTheme: IconThemeData(color: Colors.black),
     ),
   );

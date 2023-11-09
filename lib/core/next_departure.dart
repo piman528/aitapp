@@ -10,7 +10,7 @@ class NextDeparture {
   final String destination;
   final int order;
   String searchNextDeparture() {
-    var now = DateTime.now();
+    final now = DateTime.now();
     var counter = 0;
 
     final hours = Vehicle.daiya[vehicle]![destination]?.keys;
@@ -21,8 +21,8 @@ class NextDeparture {
           for (final minute in minutes!) {
             if (minute > now.minute || hour > now.hour) {
               if (order == counter) {
-                final stringMinute = minute.toString().padLeft(2, "0");
-                final stringHour = hour.toString().padLeft(2, "0");
+                final stringMinute = minute.toString().padLeft(2, '0');
+                final stringHour = hour.toString().padLeft(2, '0');
                 return '$stringHour:$stringMinute';
               } else {
                 counter++;

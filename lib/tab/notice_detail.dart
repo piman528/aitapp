@@ -15,7 +15,7 @@ class NoticeDetail extends StatelessWidget {
           // style: TextStyle(color: Colors.black),
         ),
       ),
-      body: Text('こんにちは'),
+      body: const Text('こんにちは'),
     );
   }
 }

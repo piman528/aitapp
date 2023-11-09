@@ -9,10 +9,10 @@ class ClassTimeTable extends StatelessWidget {
     final list = ListView(
       children: const [TimeTable()],
     );
-    final semSelector = Container(
+    const semSelector = SizedBox(
       // color: Colors.grey,
       height: 60,
-      child: const Row(),
+      child: Row(),
     );
     final tabScreen = Column(
       children: [semSelector, Expanded(child: list)],
