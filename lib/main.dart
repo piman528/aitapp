@@ -1,88 +1,46 @@
-import 'package:aitapp/tab/classTimeTable.dart';
-import 'package:aitapp/tab/noticeList.dart';
-import 'package:aitapp/tab/busTimeTable.dart';
+import 'package:aitapp/app.dart';
+import 'package:aitapp/notice_detail.dart';
+import 'package:aitapp/syllabus_search.dart';
+import 'package:aitapp/tab/notice_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 main() {
   // スコープ
-  const scope = ProviderScope(child: MyApp());
-  runApp(scope);
+  // const scope = ProviderScope(child: App());
+  runApp(App());
 }
 
-// プロバイダー
-final indexProvider = StateProvider((ref) {
-  // 変化させたいデータ
-  return 0;
-});
+class App extends StatelessWidget {
+  App({super.key});
 
-class MyApp extends ConsumerWidget {
-  const MyApp({super.key});
-
-  // This widget is the root of your application.
+  final router = GoRouter(initialLocation: '/maintab', routes: [
+    GoRoute(
+      path: '/maintab',
+      builder: (context, state) => ProviderScope(
+        child: MainTab(),
+      ),
+    ),
+    GoRoute(
+      path: '/notice',
+      builder: (context, state) => NoticeList(),
+    ),
+    GoRoute(
+      path: '/noticeDetail',
+      builder: (context, state) => NoticeDetail(),
+    ),
+    GoRoute(
+      path: '/syllabusSearch',
+      builder: (context, state) => SyllabusSearch(),
+    ),
+  ]);
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final index = ref.watch(indexProvider);
-
-    // アイテム
-    const items = [
-      BottomNavigationBarItem(icon: Icon(Icons.event), label: 'お知らせ'),
-      BottomNavigationBarItem(icon: Icon(Icons.article), label: '時間割'),
-      // BottomNavigationBarItem(icon: Icon(Icons.search), label: 'シラバス検索'),
-      BottomNavigationBarItem(icon: Icon(Icons.directions_bus), label: '時刻表'),
-    ];
-
-    // バー作成
-    final bar = Container(
-      // height: 50,
-      child: BottomNavigationBar(
-        iconSize: 20,
-        selectedFontSize: 12,
-        unselectedFontSize: 12,
-        type: BottomNavigationBarType.fixed,
-        items: items,
-        // backgroundColor: Colors.white,
-        selectedItemColor: Colors.blue,
-        unselectedItemColor: Colors.grey,
-        currentIndex: index,
-        onTap: (index) {
-          ref.read(indexProvider.notifier).state = index;
-        },
-      ),
-    );
-
-    // ページ一覧
-    const pages = [
-      noticeList(),
-      classTimeTable(),
-      // syllabusSearch(),
-      busTimeTable(),
-    ];
-
-    // ui組み立て
-    return MaterialApp(
-      // theme: ThemeData.dark(),
-      theme: ThemeData.light().copyWith(
-        splashColor: Colors.transparent,
-        appBarTheme: const AppBarTheme(
-          color: Colors.white,
-          iconTheme: IconThemeData(color: Colors.blue),
-          titleTextStyle: TextStyle(color: Colors.black, fontSize: 18),
-        ),
-      ),
-      // darkTheme: ThemeData.dark().copyWith(
-      //   appBarTheme: AppBarTheme(
-      //     iconTheme: IconThemeData(color: Colors.black),
-      //   ),
-      // ),
-      // darkTheme: ThemeData(
-      //     appBarTheme: AppBarTheme(
-      //         color: Colors.grey,
-      //         iconTheme: IconThemeData(color: Colors.black))),
-      home: Scaffold(
-        body: pages[index],
-        bottomNavigationBar: bar,
-      ),
+  Widget build(BuildContext context) {
+    return MaterialApp.router(
+      routeInformationProvider: router.routeInformationProvider,
+      routeInformationParser: router.routeInformationParser,
+      routerDelegate: router.routerDelegate,
     );
   }
 }

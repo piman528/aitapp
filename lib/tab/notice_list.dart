@@ -1,8 +1,9 @@
-import 'package:aitapp/const.dart';
+import 'package:aitapp/wighet/search_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
-class notice {
-  notice(this.sender, this.title, this.content, this.sendAt);
+class Notice {
+  Notice(this.sender, this.title, this.content, this.sendAt);
   // 発信者
   final String sender;
   // タイトル
@@ -14,121 +15,121 @@ class notice {
 }
 
 final models = [
-  notice(
+  Notice(
     'こんにちは',
     'テストテストテストテストテストテストテストテストテスト',
     'ああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああ',
     '2023/11/03',
   ),
-  notice(
+  Notice(
     'こんにちは',
     'テストテストテストテストテストテストテストテストテストテストテストテスト',
     'ああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああ',
     '2023/10/24',
   ),
-  notice(
+  Notice(
     'yohei',
     'こんにちは',
     'ああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああ',
     '2023/11/03',
   ),
-  notice(
+  Notice(
     'yohei',
     'こんにちは',
     'ああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああ',
     '2023/11/03',
   ),
-  notice(
+  Notice(
     'yohei',
     'こんにちは',
     'ああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああ',
     '2023/11/03',
   ),
-  notice(
+  Notice(
     'yohei',
     'こんにちは',
     'ああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああ',
     '2023/11/03',
   ),
-  notice(
+  Notice(
     'yohei',
     'こんにちは',
     'ああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああ',
     '2023/11/03',
   ),
-  notice(
+  Notice(
     'yohei',
     'こんにちは',
     'ああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああ',
     '2023/11/03',
   ),
-  notice(
+  Notice(
     'yohei',
     'こんにちは',
     'ああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああ',
     '2023/11/03',
   ),
-  notice(
+  Notice(
     'yohei',
     'こんにちは',
     'ああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああ',
     '2023/11/03',
   ),
-  notice(
+  Notice(
     'yohei',
     'こんにちは',
     'ああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああ',
     '2023/11/03',
   ),
-  notice(
+  Notice(
     'yohei',
     'こんにちは',
     'ああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああ',
     '2023/11/03',
   ),
-  notice(
+  Notice(
     'yohei',
     'こんにちは',
     'ああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああ',
     '2023/11/03',
   ),
-  notice(
+  Notice(
     'yohei',
     'こんにちは',
     'ああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああ',
     '2023/11/03',
   ),
-  notice(
+  Notice(
     'yohei',
     'こんにちは',
     'ああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああ',
     '2023/11/03',
   ),
-  notice(
+  Notice(
     'yohei',
     'こんにちは',
     'ああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああ',
     '2023/11/03',
   ),
-  notice(
+  Notice(
     'yohei',
     'こんにちは',
     'ああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああ',
     '2023/11/03',
   ),
-  notice(
+  Notice(
     'yohei',
     'こんにちは',
     'ああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああ',
     '2023/11/03',
   ),
-  notice(
+  Notice(
     'yohei',
     'こんにちは',
     'ああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああ',
     '2023/11/03',
   ),
-  notice(
+  Notice(
     'yohei',
     'こんにちは',
     'ああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああ',
@@ -136,7 +137,7 @@ final models = [
   ),
 ];
 
-Widget modelToWidget(notice model) {
+Widget modelToWidget(Notice model, BuildContext context) {
   final title = Container(
     // color: Colors.purple[200],
     padding: const EdgeInsets.fromLTRB(10, 8, 10, 4),
@@ -161,56 +162,44 @@ Widget modelToWidget(notice model) {
       children: [Text(model.sender), Text(model.sendAt)],
     ),
   );
-  return Container(
-    // decoration: BoxDecoration(
-    //     border: Border.all(color: Colors.grey),
-    //     borderRadius: BorderRadius.circular(8)),
-    // color: Colors.blue[200],
-    // padding: EdgeInsets.all(2),
-    child: Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        title,
-        content,
-        sender,
-        const Divider(
-          thickness: 1,
-        ),
-      ],
+  return GestureDetector(
+    onTap: () {
+      context.push('/noticeDetail');
+    },
+    child: Container(
+      // color: Colors.blue,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          title,
+          content,
+          sender,
+          const Divider(
+            thickness: 1,
+          ),
+        ],
+      ),
     ),
   );
 }
 
-class noticeList extends StatelessWidget {
-  const noticeList({super.key});
+class NoticeList extends StatelessWidget {
+  const NoticeList({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final textField = Container(
-      padding: Measure.p_a16,
-      child: TextField(
-        decoration: InputDecoration(
-          isDense: true,
-          contentPadding: const EdgeInsets.fromLTRB(0, 13, 0, 13),
-          prefixIcon: const Icon(Icons.search),
-          // fillColor: Color.fromARGB(255, 233, 233, 233),
-          filled: true,
-          // border: InputBorder.none,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: BorderSide.none,
-          ),
-          // labelText: 'あなたの名前',
-          hintText: '送信元、キーワードで検索',
-        ),
-      ),
-    );
     final list = ListView.builder(
       itemCount: models.length,
-      itemBuilder: (c, i) => modelToWidget(models[i]),
+      itemBuilder: (c, i) => modelToWidget(models[i], context),
     );
     final tabScreen = Column(
-      children: [textField, Expanded(child: list)],
+      children: [
+        SearchBarWidget(
+          controller: TextEditingController(),
+          hintText: '送信元、キーワードで検索',
+        ),
+        Expanded(child: list)
+      ],
     );
 
     return DefaultTabController(

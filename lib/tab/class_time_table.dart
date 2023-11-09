@@ -1,8 +1,8 @@
-import 'package:aitapp/wighet/ClassTimeTableWidget.dart';
+import 'package:aitapp/wighet/class_timetable_widget.dart';
 import 'package:flutter/material.dart';
 
-class classTimeTable extends StatelessWidget {
-  const classTimeTable({super.key});
+class ClassTimeTable extends StatelessWidget {
+  const ClassTimeTable({super.key});
 
   @override
   Widget build(BuildContext context) {
