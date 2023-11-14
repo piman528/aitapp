@@ -1,3 +1,5 @@
+import 'package:aitapp/infrastructure/secure_storage.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:universal_html/parsing.dart';
 
@@ -31,6 +33,10 @@ Future<List<String>> getCookie() async {
 }
 
 Future<void> loginLcam(String jSessionId, String liveAppsCookie) async {
+  final id = await SecureStorage.instance.read(key: 'id');
+  final password = await SecureStorage.instance.read(key: 'password');
+  debugPrint('$id');
+  debugPrint('$password');
   final headers = {
     'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
     'Sec-Fetch-Site': 'same-origin',
@@ -46,8 +52,8 @@ Future<void> loginLcam(String jSessionId, String liveAppsCookie) async {
   };
 
   final data = {
-    'userID': '',
-    'password': '',
+    'userID': '$id',
+    'password': '$password',
     'selectLocale': 'ja',
     'mode': 'sp',
     'userDivision': '2',

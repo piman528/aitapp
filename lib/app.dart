@@ -1,3 +1,4 @@
+import 'package:aitapp/infrastructure/login.dart';
 import 'package:aitapp/router.dart';
 import 'package:aitapp/theme.dart';
 import 'package:flutter/material.dart';
@@ -5,6 +6,12 @@ import 'package:go_router/go_router.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
+
+  @override
+  void initState() {
+    //アプリ起動時に一度だけ実行される
+    logIn();
+  }
 
   @override
   Widget build(BuildContext context) {
