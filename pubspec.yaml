@@ -28,6 +28,8 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  universal_html:
+  http:
   go_router:
   # fleeezed_annotation:
   flutter:
