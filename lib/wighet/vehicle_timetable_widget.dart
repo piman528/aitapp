@@ -29,27 +29,24 @@ class TimeTableCard extends StatelessWidget {
         ],
       ),
     );
-    return Container(
-      // padding: EdgeInsets.all(5),
-      child: Column(
-        children: [
-          destinationTitle,
-          for (int i = 0; i < 3; i++) ...{
-            TimeCard(
-              vehicle: vehicle,
-              destination: destination,
-              order: i,
-            ),
-            // if (TimeCard(
-            //       vehicle: vehicle,
-            //       destination: destination,
-            //       order: i,
-            //     ) ==
-            //     SizedBox())
-            //   {}
-          },
-        ],
-      ),
+    return Column(
+      children: [
+        destinationTitle,
+        for (int i = 0; i < 3; i++) ...{
+          TimeCard(
+            vehicle: vehicle,
+            destination: destination,
+            order: i,
+          ),
+          // if (TimeCard(
+          //       vehicle: vehicle,
+          //       destination: destination,
+          //       order: i,
+          //     ) ==
+          //     SizedBox())
+          //   {}
+        },
+      ],
     );
   }
 }

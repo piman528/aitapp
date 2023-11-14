@@ -173,16 +173,12 @@ class WeekClassGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      // padding: const EdgeInsets.all(15),
-      // color: Colors.blue,
-      child: Row(
-        children: [
-          for (final element in ClassPeriod.oneWeek) ...{
-            DayClassGrid(dayofweek: element),
-          },
-        ],
-      ),
+    return Row(
+      children: [
+        for (final element in ClassPeriod.oneWeek) ...{
+          DayClassGrid(dayofweek: element),
+        },
+      ],
     );
   }
 }

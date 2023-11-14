@@ -1,5 +1,4 @@
 import 'package:aitapp/const.dart';
-import 'package:aitapp/core/get_notice.dart';
 import 'package:aitapp/router.dart';
 import 'package:aitapp/wighet/search_bar.dart';
 import 'package:flutter/material.dart';
@@ -41,25 +40,21 @@ class UnivNotice {
       ),
     );
     return GestureDetector(
-      onTap: () async {
-        await getUnivNoticelist();
+      onTap: () {
         CustomNavigationHelper.router.push(
           CustomNavigationHelper.noticeDetailPath,
         );
       },
-      child: Container(
-        // color: Colors.blue,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            widgetTitle,
-            widgetContent,
-            widgetSender,
-            const Divider(
-              thickness: 1,
-            ),
-          ],
-        ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          widgetTitle,
+          widgetContent,
+          widgetSender,
+          const Divider(
+            thickness: 1,
+          ),
+        ],
       ),
     );
   }

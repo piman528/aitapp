@@ -24,7 +24,7 @@ class CustomNavigationHelper {
                 path: noticeListPath,
                 pageBuilder: (context, GoRouterState state) {
                   return getPage(
-                    child: const NoticeList(),
+                    child: NoticeList(),
                     state: state,
                   );
                 },

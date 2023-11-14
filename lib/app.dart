@@ -7,7 +7,6 @@ import 'package:go_router/go_router.dart';
 class App extends StatelessWidget {
   const App({super.key});
 
-  @override
   void initState() {
     //アプリ起動時に一度だけ実行される
     logIn();
@@ -44,7 +43,7 @@ class _BottomNavigationPageState extends State<BottomNavigationPage> {
         child: widget.child,
       ),
       bottomNavigationBar: SizedBox(
-        height: 84,
+        height: 50,
         child: BottomNavigationBar(
           iconSize: 20,
           selectedFontSize: 12,
