@@ -37,7 +37,7 @@ class _BottomNavigationPageState extends State<BottomNavigationPage> {
         child: widget.child,
       ),
       bottomNavigationBar: SizedBox(
-        height: 50,
+        height: 84,
         child: BottomNavigationBar(
           iconSize: 20,
           selectedFontSize: 12,
