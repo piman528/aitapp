@@ -12,7 +12,7 @@ class App extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       routerConfig: CustomNavigationHelper.router,
       theme: buildThemeLight(),
-      // darkTheme: buildThemeDark(),
+      darkTheme: buildThemeDark(),
     );
   }
 }

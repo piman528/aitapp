@@ -1,7 +1,7 @@
 {
     "ios.simulator": "XXXX-IOS-SIMULATOR-ID-XXXX",
     "ios.device": "XXXX-IOS-DEVICE-ID-XXXX",
-    "android.emulator": "XXXX-ANDROID-EMULATOR-ID-XXXX",
+    "android.emulator": "Pixel_7_API_33",
     "android.device": "XXXX-ANDROID-DEVICE-ID-XXXX",
   
     "editor.formatOnSave": true,

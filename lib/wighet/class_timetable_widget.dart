@@ -128,7 +128,6 @@ class ClassGridContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        print('こんにちは');
         CustomNavigationHelper.router
             .push(CustomNavigationHelper.syllabusSearchPath);
       },
@@ -179,7 +178,7 @@ class WeekClassGrid extends StatelessWidget {
       // color: Colors.blue,
       child: Row(
         children: [
-          for (final element in ClassPeriod.OneWeek) ...{
+          for (final element in ClassPeriod.oneWeek) ...{
             DayClassGrid(dayofweek: element),
           },
         ],
