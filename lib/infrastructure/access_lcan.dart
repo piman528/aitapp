@@ -1,5 +1,4 @@
 import 'package:aitapp/infrastructure/secure_storage.dart';
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 final _regexSplitSetCookies = RegExp(',(?=[^ ])');

@@ -1,7 +1,6 @@
 import 'package:aitapp/infrastructure/access_lcan.dart';
 import 'package:aitapp/infrastructure/parse_html.dart';
 import 'package:aitapp/wighet/notices.dart';
-import 'package:flutter/material.dart';
 
 Future<List<ClassNotice>> getClassNoticelist() async {
   final cookies = await getCookie();
