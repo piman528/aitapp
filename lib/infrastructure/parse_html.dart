@@ -137,5 +137,5 @@ List<UnivNotice> parseUnivNotice(String body) {
     }
     univNoticeList.add(UnivNotice(sender, title, content, sendAt));
   }
-  return <UnivNotice>[];
+  return univNoticeList;
 }

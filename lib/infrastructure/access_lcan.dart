@@ -161,7 +161,7 @@ Future<String> getClassNoticeBody(
   };
 
   final url = Uri.parse(
-    'https://lcam.aitech.ac.jp/portalv2/smartphone/smartPhoneClassContact/selectClassContactList',
+    'https://lcam.aitech.ac.jp/portalv2/smartphone/smartPhoneClassContact/SelectClassContactList',
   );
 
   final res = await http.post(url, headers: headers, body: data);
@@ -200,13 +200,13 @@ Future<String> getUnivNoticeBody(
     'reportDateFromRcv': '',
     'reportDateToRcv': '',
     'unReadFlg': '1',
-    'listPageNo': '1',
+    'listPageNo': '10',
     '_screenIdentifier': 'smartPhoneCommonContactList',
-    '_scrollTop': '0',
+    '_scrollTop': '100',
   };
 
   final url = Uri.parse(
-      'https://lcam.aitech.ac.jp/portalv2/smartphone/smartPhoneCommonContact/selectCommonContactList');
+      'https://lcam.aitech.ac.jp/portalv2/smartphone/smartPhoneCommonContact/nextSelectCommonContactList');
 
   final res = await http.post(url, headers: headers, body: data);
   final status = res.statusCode;
