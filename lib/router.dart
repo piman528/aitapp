@@ -1,7 +1,7 @@
 import 'package:aitapp/app.dart';
 import 'package:aitapp/tab/class_time_table.dart';
 import 'package:aitapp/tab/notice_detail.dart';
-import 'package:aitapp/tab/notice_list.dart';
+import 'package:aitapp/tab/notice_tab.dart';
 import 'package:aitapp/tab/syllabus_search.dart';
 import 'package:aitapp/tab/vehicle_time_table.dart';
 import 'package:flutter/material.dart';
@@ -24,7 +24,7 @@ class CustomNavigationHelper {
                 path: noticeListPath,
                 pageBuilder: (context, GoRouterState state) {
                   return getPage(
-                    child: const NoticeList(),
+                    child: const NoticeTab(),
                     state: state,
                   );
                 },

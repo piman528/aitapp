@@ -1,5 +1,4 @@
-import 'package:aitapp/tab/notice_list.dart';
-import 'package:flutter/material.dart';
+import 'package:aitapp/wighet/notices.dart';
 import 'package:universal_html/html.dart' as html;
 import 'package:universal_html/parsing.dart';
 
@@ -86,18 +85,23 @@ List<UnivNotice> parseUnivNotice(String body) {
             texts.add(line);
           }
         }
-      } else {
-        final senderParse = noticeParse!.querySelectorAll('> div > div');
-        for (final element2 in senderParse) {
-          final spaceTrimTextList =
-              element2.text!.replaceAll('	', '').trim().split('\n');
-          for (final line in spaceTrimTextList) {
-            if (line != '') {
-              texts.add(line);
+      } else if (node.nodeType == html.Node.ELEMENT_NODE) {
+        final childDocument = parseHtmlDocument('$node');
+        final childElements = childDocument.querySelectorAll('> div > div');
+        for (final childElement in childElements) {
+          final childNodes = childElement.nodes;
+          for (final childNode in childNodes) {
+            if (childNode.nodeType == html.Node.TEXT_NODE) {
+              final spaceTrimTextList =
+                  childNode.text!.replaceAll('	', '').trim().split('\n');
+              for (final line in spaceTrimTextList) {
+                if (line != '') {
+                  texts.add(line);
+                }
+              }
             }
           }
         }
-        break;
       }
     }
     var c = 0;
@@ -108,7 +112,7 @@ List<UnivNotice> parseUnivNotice(String body) {
     // var subject = '';
     // var makeupClassAt = '';
     for (final text in texts) {
-      debugPrint('$text $c');
+      // debugPrint('$text $c');
       switch (c) {
         case 0: // タイトル
           title = text;
@@ -116,26 +120,31 @@ List<UnivNotice> parseUnivNotice(String body) {
           sender = text;
         case 2: // 日付
           sendAt = text;
-        // case 3: // 授業時間割
-        //   break;
-        // case 4: // 「タイトル」
-        //   break;
-        // case 5: // コロン
-        //   break;
-        // case 6: // タイトル
-        //   title = text;
-        // case 7: // 講師名
-        //   sender = text;
-        // case 8: // 「補講日」
-        //   break;
-        // case 9: // コロン
-        //   break;
-        // case 10: // 補講日日付
-        //   makeupClassAt = text;
       }
       c++;
     }
     univNoticeList.add(UnivNotice(sender, title, content, sendAt));
   }
   return univNoticeList;
+}
+
+String? parseStrutsToken(
+  String body,
+  bool isCommon,
+) {
+  String selector;
+  if (isCommon) {
+    selector =
+        '#smartPhoneCommonContactList > form:nth-child(3) > div:nth-child(1) > input';
+  } else {
+    selector =
+        '#smartPhoneClassContactList > form:nth-child(3) > div:nth-child(1) > input';
+  }
+  final document = parseHtmlDocument(body);
+  final topStorytitle = document.querySelectorAll(
+    selector,
+  );
+  final value = topStorytitle[0].attributes['value'];
+  // final a = topStorytitle[0].attributes;
+  return value;
 }

@@ -1,6 +1,6 @@
 import 'package:aitapp/infrastructure/secure_storage.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:universal_html/parsing.dart';
 
 final _regexSplitSetCookies = RegExp(',(?=[^ ])');
 
@@ -80,21 +80,16 @@ Future<void> loginLcam(String jSessionId, String liveAppsCookie) async {
   // debugPrint(topStorytitle);
 }
 
-Future<String?> getStrutsToken(
+Future<String> getStrutsToken(
   String jSessionId,
   String liveAppsCookie,
   bool isCommon,
 ) async {
   String contactType;
-  String selector;
   if (isCommon) {
     contactType = 'commonContact';
-    selector =
-        '#smartPhoneCommonContactList > form:nth-child(3) > div:nth-child(1) > input';
   } else {
     contactType = 'classContact';
-    selector =
-        '#smartPhoneClassContactList > form:nth-child(3) > div:nth-child(1) > input';
   }
   final headers = {
     'Sec-Fetch-Site': 'same-origin',
@@ -118,15 +113,7 @@ Future<String?> getStrutsToken(
   if (status != 200) {
     throw Exception('http.get error: statusCode= $status');
   }
-
-  // debugPrint(res.body);
-  final document = parseHtmlDocument(res.body);
-  final topStorytitle = document.querySelectorAll(
-    selector,
-  );
-  final value = topStorytitle[0].attributes['value'];
-  // final a = topStorytitle[0].attributes;
-  return value;
+  return res.body;
 }
 
 Future<String> getClassNoticeBody(
@@ -161,7 +148,7 @@ Future<String> getClassNoticeBody(
   };
 
   final url = Uri.parse(
-    'https://lcam.aitech.ac.jp/portalv2/smartphone/smartPhoneClassContact/SelectClassContactList',
+    'https://lcam.aitech.ac.jp/portalv2/smartphone/smartPhoneClassContact/selectClassContactList',
   );
 
   final res = await http.post(url, headers: headers, body: data);
@@ -200,19 +187,63 @@ Future<String> getUnivNoticeBody(
     'reportDateFromRcv': '',
     'reportDateToRcv': '',
     'unReadFlg': '1',
-    'listPageNo': '10',
+    'listPageNo': '1',
     '_screenIdentifier': 'smartPhoneCommonContactList',
-    '_scrollTop': '100',
+    '_scrollTop': '0',
   };
 
   final url = Uri.parse(
-      'https://lcam.aitech.ac.jp/portalv2/smartphone/smartPhoneCommonContact/nextSelectCommonContactList');
+    'https://lcam.aitech.ac.jp/portalv2/smartphone/smartPhoneCommonContact/selectCommonContactList',
+  );
 
   final res = await http.post(url, headers: headers, body: data);
   final status = res.statusCode;
   if (status != 200) {
     throw Exception('http.post error: statusCode= $status');
   }
+  return res.body;
+}
+
+Future<String> getUnivNoticeBodyNext(
+  String jSessionId,
+  String liveAppsCookie,
+  String token,
+) async {
+  final headers = {
+    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+    'Sec-Fetch-Site': 'same-origin',
+    'Accept-Language': 'ja',
+    'Sec-Fetch-Mode': 'navigate',
+    'Content-Type': 'application/x-www-form-urlencoded',
+    'Origin': 'https://lcam.aitech.ac.jp',
+    'Referer':
+        'https://lcam.aitech.ac.jp/portalv2/smartphone/smartPhoneCommonContact/selectCommonContactList',
+    'Connection': 'keep-alive',
+    'Cookie':
+        '$jSessionId; $liveAppsCookie; $jSessionId; L-CamApp=Y; $liveAppsCookie',
+    'Sec-Fetch-Dest': 'document',
+    'Accept-Encoding': 'gzip',
+  };
+
+  final data = {
+    'org.apache.struts.taglib.html.TOKEN': token,
+    'commonContactCateIdRcv': '',
+    'reportDateFromRcv': '',
+    'reportDateToRcv': '',
+    'unReadFlg': '1',
+    'listPageNo': '10',
+    '_screenIdentifier': 'smartPhoneCommonContactList',
+    '_scrollTop': '0',
+  };
+
+  final url = Uri.parse(
+    'https://lcam.aitech.ac.jp/portalv2/smartphone/smartPhoneCommonContact/nextSelectCommonContactList',
+  );
+
+  final res = await http.post(url, headers: headers, body: data);
+  final status = res.statusCode;
+  if (status != 200) throw Exception('http.post error: statusCode= $status');
+
   return res.body;
 }
 
