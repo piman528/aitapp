@@ -17,8 +17,8 @@ class NextDeparture {
     for (final hour in hours!) {
       if (hour >= now.hour) {
         final minutes = Vehicle.daiya[vehicle]?[destination]?[hour];
-        if (minutes != Null) {
-          for (final minute in minutes!) {
+        if (minutes != null) {
+          for (final minute in minutes) {
             if (minute > now.minute || hour > now.hour) {
               if (order == counter) {
                 final stringMinute = minute.toString().padLeft(2, '0');

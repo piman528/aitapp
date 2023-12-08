@@ -1,8 +1,21 @@
-import 'package:aitapp/app.dart';
-import 'package:aitapp/router.dart';
+import 'package:aitapp/screens/tabs.dart';
+import 'package:aitapp/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-main() async {
-  CustomNavigationHelper.instance;
-  runApp(const App());
+void main() {
+  runApp(const ProviderScope(child: App()));
+}
+
+class App extends StatelessWidget {
+  const App({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: const TabScreen(),
+      theme: buildThemeLight(),
+      darkTheme: buildThemeDark(),
+    );
+  }
 }

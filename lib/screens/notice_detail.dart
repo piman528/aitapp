@@ -1,8 +1,7 @@
-import 'package:aitapp/wighet/search_bar.dart';
 import 'package:flutter/material.dart';
 
-class SyllabusSearch extends StatelessWidget {
-  const SyllabusSearch({super.key});
+class NoticeDetailScreen extends StatelessWidget {
+  const NoticeDetailScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -12,14 +11,11 @@ class SyllabusSearch extends StatelessWidget {
         // backgroundColor: Colors.white,
         centerTitle: true,
         title: const Text(
-          'シラバス検索',
+          '詳細',
           // style: TextStyle(color: Colors.black),
         ),
       ),
-      body: SearchBarWidget(
-        controller: TextEditingController(),
-        hintText: '教授名、授業名で検索',
-      ),
+      body: const Text('こんにちは'),
     );
   }
 }

@@ -1,4 +1,7 @@
-import 'package:aitapp/wighet/notices.dart';
+import 'package:aitapp/const.dart';
+import 'package:aitapp/models/class.dart';
+import 'package:aitapp/models/class_notice.dart';
+import 'package:aitapp/models/univ_notice.dart';
 import 'package:universal_html/html.dart' as html;
 import 'package:universal_html/parsing.dart';
 
@@ -18,6 +21,7 @@ List<ClassNotice> parseClassNotice(String body) {
       if (node.nodeType == html.Node.TEXT_NODE) {
         final spaceTrimTextList =
             node.text!.replaceAll('	', '').trim().split('\n');
+        // print(spaceTrimTextList);
         for (final line in spaceTrimTextList) {
           texts.add(line);
         }
@@ -30,30 +34,46 @@ List<ClassNotice> parseClassNotice(String body) {
     const sendAt = '';
     var subject = '';
     var makeupClassAt = '';
+    var isNotInportant = false;
     for (final text in texts) {
-      switch (c) {
-        // case 0: //「授業科目」
-        //   break;
-        // case 1: // コロン
-        //   break;
-        case 2: // 授業科目
-          subject = text;
-        case 3: // 授業時間割
-          break;
-        // case 4: // 「タイトル」
-        //   break;
-        // case 5: // コロン
-        //   break;
-        case 6: // タイトル
-          title = text;
-        case 7: // 講師名
-          sender = text;
-        // case 8: // 「補講日」
-        //   break;
-        // case 9: // コロン
-        //   break;
-        case 10: // 補講日日付
-          makeupClassAt = text;
+      if (c == 6 && text == '') {
+        isNotInportant = true;
+      }
+      if (isNotInportant) {
+        //重要でない場合
+        switch (c) {
+          case 7: // タイトル
+            title = text;
+          case 8: // 講師名
+            sender = text;
+          case 9: // 補講日日付
+            makeupClassAt = text;
+        }
+      } else {
+        switch (c) {
+          // case 0: //「授業科目」
+          //   break;
+          // case 1: // コロン
+          //   break;
+          case 2: // 授業科目
+            subject = text;
+          case 3: // 授業時間割
+            break;
+          // case 4: // 「タイトル」
+          //   break;
+          // case 5: // コロン
+          //   break;
+          case 6: // タイトル
+            title = text;
+          case 7: // 講師名
+            sender = text;
+          // case 8: // 「補講日」
+          //   break;
+          // case 9: // コロン
+          //   break;
+          case 10: // 補講日日付
+            makeupClassAt = text;
+        }
       }
       c++;
     }
@@ -128,10 +148,65 @@ List<UnivNotice> parseUnivNotice(String body) {
   return univNoticeList;
 }
 
-String? parseStrutsToken(
-  String body,
-  bool isCommon,
-) {
+Map<DayOfWeek, Map<int, Class>> parseClassTimeTable(String body) {
+  final classTimeTableMap = <DayOfWeek, Map<int, Class>>{};
+  final topStorytitle = parseHtmlDocument(body).querySelectorAll(
+    'body > form > table > tbody > tr',
+  );
+  for (var i = 0; i < topStorytitle.length; i++) {
+    final day = i ~/ 7;
+    final period = i % 7 + 1;
+    final classesParse = topStorytitle[i].querySelector('> td > div');
+    final childNodes = classesParse?.nodes;
+    final texts = <String>[];
+    if (childNodes != null) {
+      for (final node in childNodes) {
+        if (node.nodeType == html.Node.TEXT_NODE) {
+          final spaceTrimTextList =
+              node.text!.replaceAll('	', '').trim().split('\n');
+          for (final line in spaceTrimTextList) {
+            texts.add(line);
+          }
+        }
+      }
+    }
+    var c = 0;
+    var subject = '';
+    var teacher = '';
+    var classRoom = '';
+    for (final text in texts) {
+      switch (c) {
+        case 0: //授業科目
+          subject = text.replaceAll('[八]', '');
+        case 1: // 教員
+          teacher = text;
+        case 2: // 教室
+          classRoom = text.replaceAll('八草', '').replaceAll(' ', '');
+      }
+      c++;
+    }
+    final dayOfWeek = switch (day) {
+      0 => DayOfWeek.monday,
+      1 => DayOfWeek.tuesday,
+      2 => DayOfWeek.wednesday,
+      3 => DayOfWeek.thurstay,
+      4 => DayOfWeek.friday,
+      5 => DayOfWeek.saturday,
+      _ => DayOfWeek.sunday,
+    };
+    if (subject != '') {
+      classTimeTableMap[dayOfWeek] ??= <int, Class>{};
+      classTimeTableMap[dayOfWeek]![period] =
+          Class(title: subject, classRoom: classRoom, teacher: teacher);
+    }
+  }
+  return classTimeTableMap;
+}
+
+String? parseStrutsToken({
+  required String body,
+  required bool isCommon,
+}) {
   String selector;
   if (isCommon) {
     selector =
@@ -145,6 +220,5 @@ String? parseStrutsToken(
     selector,
   );
   final value = topStorytitle[0].attributes['value'];
-  // final a = topStorytitle[0].attributes;
   return value;
 }

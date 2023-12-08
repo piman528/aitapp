@@ -1,8 +1,8 @@
-import 'package:aitapp/wighet/vehicle_timetable_widget.dart';
+import 'package:aitapp/wighets/vehicle_timetable_item.dart';
 import 'package:flutter/material.dart';
 
-class BusTimeTable extends StatelessWidget {
-  const BusTimeTable({super.key});
+class TimeTableScreen extends StatelessWidget {
+  const TimeTableScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -26,13 +26,13 @@ class BusTimeTable extends StatelessWidget {
                 text: 'リニモ',
               ),
             ],
-            labelColor: Colors.black,
+            // labelColor: Colors.black,
           ),
         ),
-        body: TabBarView(
+        body: const TabBarView(
           children: [
-            ListView(
-              children: const [
+            Column(
+              children: [
                 TimeTableCard(
                   vehicle: 'bus',
                   destination: 'toAIT',
@@ -43,8 +43,8 @@ class BusTimeTable extends StatelessWidget {
                 ),
               ],
             ),
-            ListView(
-              children: const [
+            Column(
+              children: [
                 TimeTableCard(
                   vehicle: 'linimo',
                   destination: 'toYakusa',

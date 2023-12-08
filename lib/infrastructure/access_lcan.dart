@@ -79,11 +79,11 @@ Future<void> loginLcam(String jSessionId, String liveAppsCookie) async {
   // debugPrint(topStorytitle);
 }
 
-Future<String> getStrutsToken(
-  String jSessionId,
-  String liveAppsCookie,
-  bool isCommon,
-) async {
+Future<String> getStrutsToken({
+  required String jSessionId,
+  required String liveAppsCookie,
+  required bool isCommon,
+}) async {
   String contactType;
   if (isCommon) {
     contactType = 'commonContact';
@@ -241,7 +241,38 @@ Future<String> getUnivNoticeBodyNext(
 
   final res = await http.post(url, headers: headers, body: data);
   final status = res.statusCode;
-  if (status != 200) throw Exception('http.post error: statusCode= $status');
+  if (status != 200) {
+    throw Exception('http.post error: statusCode= $status');
+  }
+
+  return res.body;
+}
+
+Future<String> getClassTimeTableBody(
+  String jSessionId,
+  String liveAppsCookie,
+) async {
+  final headers = {
+    'Sec-Fetch-Site': 'none',
+    'Cookie':
+        '$jSessionId; $liveAppsCookie; $jSessionId; L-CamApp=Y; LiveApps-Cookie=$liveAppsCookie',
+    'Connection': 'keep-alive',
+    'Sec-Fetch-Mode': 'navigate',
+    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+    'Accept-Language': 'ja',
+    'Sec-Fetch-Dest': 'document',
+    'Accept-Encoding': 'gzip',
+  };
+
+  final url = Uri.parse(
+    'https://lcam.aitech.ac.jp/portalv2/smartphone/smartPhoneHome/nextPage/timeTable',
+  );
+
+  final res = await http.get(url, headers: headers);
+  final status = res.statusCode;
+  if (status != 200) {
+    throw Exception('http.get error: statusCode= $status');
+  }
 
   return res.body;
 }

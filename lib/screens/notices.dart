@@ -1,9 +1,10 @@
-import 'package:aitapp/wighet/notice_to_list.dart';
-import 'package:aitapp/wighet/search_bar.dart';
+import 'package:aitapp/wighets/class_notice_list.dart';
+import 'package:aitapp/wighets/search_bar.dart';
+import 'package:aitapp/wighets/univ_notice_list.dart';
 import 'package:flutter/material.dart';
 
-class NoticeTab extends StatelessWidget {
-  const NoticeTab({super.key});
+class NoticeScreen extends StatelessWidget {
+  const NoticeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +47,7 @@ class NoticeTab extends StatelessWidget {
                 text: '授業',
               ),
             ],
-            labelColor: Colors.black,
+            // labelColor: Colors.black,
           ),
         ),
       ),

@@ -1,5 +1,5 @@
 import 'package:aitapp/const.dart';
-import 'package:aitapp/core/next_departure.dart';
+import 'package:aitapp/infrastructure/next_departure.dart';
 import 'package:flutter/material.dart';
 
 class TimeTableCard extends StatelessWidget {
@@ -14,7 +14,7 @@ class TimeTableCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final destinationTitle = Container(
-      padding: Measure.p_a8,
+      padding: const EdgeInsets.all(8),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -29,24 +29,26 @@ class TimeTableCard extends StatelessWidget {
         ],
       ),
     );
-    return Column(
-      children: [
-        destinationTitle,
-        for (int i = 0; i < 3; i++) ...{
-          TimeCard(
-            vehicle: vehicle,
-            destination: destination,
-            order: i,
-          ),
-          // if (TimeCard(
-          //       vehicle: vehicle,
-          //       destination: destination,
-          //       order: i,
-          //     ) ==
-          //     SizedBox())
-          //   {}
-        },
-      ],
+    return Expanded(
+      child: Column(
+        children: [
+          destinationTitle,
+          for (int i = 0; i < 3; i++) ...{
+            TimeCard(
+              vehicle: vehicle,
+              destination: destination,
+              order: i,
+            ),
+            // if (TimeCard(
+            //       vehicle: vehicle,
+            //       destination: destination,
+            //       order: i,
+            //     ) ==
+            //     SizedBox())
+            //   {}
+          },
+        ],
+      ),
     );
   }
 }
@@ -74,17 +76,17 @@ class TimeCard extends StatelessWidget {
         // width: 1000,
         // height: 100,
         margin: const EdgeInsets.fromLTRB(12, 6, 12, 6),
-        padding: Measure.p_a16,
-        decoration: const BoxDecoration(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
           boxShadow: [
             BoxShadow(
-              color: Color.fromARGB(255, 219, 219, 219),
+              color: Theme.of(context).canvasColor,
               spreadRadius: 1,
               blurRadius: 3,
             ),
           ],
-          color: Colors.white,
-          borderRadius: Measure.br_8,
+          color: Theme.of(context).hoverColor,
+          borderRadius: const BorderRadius.all(Radius.circular(8)),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,

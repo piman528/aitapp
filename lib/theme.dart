@@ -1,20 +1,31 @@
 import 'package:flutter/material.dart';
 
+ColorScheme kColorScheme = ColorScheme.fromSeed(
+  seedColor: const Color.fromARGB(255, 35, 207, 255),
+);
+
+ColorScheme kDarkColorScheme = ColorScheme.fromSeed(
+  brightness: Brightness.dark,
+  seedColor: const Color.fromARGB(255, 35, 207, 255),
+);
+
 ThemeData buildThemeLight() {
   return ThemeData.light().copyWith(
-    splashColor: Colors.transparent,
+    useMaterial3: true,
+    colorScheme: kColorScheme,
     appBarTheme: const AppBarTheme(
-      color: Colors.white,
       iconTheme: IconThemeData(color: Colors.blue),
-      titleTextStyle: TextStyle(color: Colors.black, fontSize: 18),
     ),
   );
 }
 
 ThemeData buildThemeDark() {
   return ThemeData.dark().copyWith(
+    useMaterial3: true,
+    colorScheme: kDarkColorScheme,
     appBarTheme: const AppBarTheme(
-      iconTheme: IconThemeData(color: Colors.black),
+      iconTheme: IconThemeData(color: Colors.blue),
+      color: Color.fromRGBO(46, 46, 46, 255),
     ),
   );
 }
