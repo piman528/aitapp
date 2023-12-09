@@ -4,7 +4,7 @@ import 'package:aitapp/models/class_notice.dart';
 import 'package:aitapp/models/univ_notice.dart';
 
 class GetNotice {
-  late final List<String> cookies;
+  late List<String> cookies;
   late String token;
   Future<void> create() async {
     cookies = await getCookie();
@@ -49,5 +49,15 @@ class GetNotice {
         await getClassNoticeBodyNext(cookies[0], cookies[1], token2, 10);
     token = parseStrutsToken(body: body, isCommon: isCommon);
     return parseClassNotice(body);
+  }
+
+  Future<void> getUnivNoticeDetail(int pageNumber) async {
+    final body = await getUnivNoticeDetailBody(
+      pageNumber,
+      cookies[0],
+      cookies[1],
+      token,
+    );
+    print(body);
   }
 }

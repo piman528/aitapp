@@ -6,9 +6,11 @@ class ClassNoticesNotifier
     extends StateNotifier<AsyncValue<List<ClassNotice>>> {
   ClassNoticesNotifier() : super(const AsyncValue.loading());
 
-  Future<void> fetchData() async {
-    final getNotice = GetNotice();
-    await getNotice.create();
+  Future<void> fetchNotices(
+    GetNotice getNotice,
+    Future<void> create,
+  ) async {
+    await create;
     state = const AsyncValue.loading();
     try {
       final result = await getNotice.getClassNoticelist();
@@ -18,9 +20,11 @@ class ClassNoticesNotifier
     }
   }
 
-  Future<void> reloadData() async {
-    final getNotice = GetNotice();
-    await getNotice.create();
+  Future<void> reloadNotices(
+    GetNotice getNotice,
+    Future<void> create,
+  ) async {
+    await create;
     try {
       final result = await getNotice.getClassNoticelist();
       state = AsyncValue.data(result);

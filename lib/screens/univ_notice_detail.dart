@@ -1,12 +1,19 @@
+import 'package:aitapp/models/get_notice.dart';
 import 'package:flutter/material.dart';
 
 class UnivNoticeDetailScreen extends StatelessWidget {
-  const UnivNoticeDetailScreen({super.key, required this.index});
+  const UnivNoticeDetailScreen({
+    super.key,
+    required this.index,
+    required this.getNotice,
+  });
 
   final int index;
+  final GetNotice getNotice;
 
   @override
   Widget build(BuildContext context) {
+    getNotice.getUnivNoticeDetail(index);
     return Scaffold(
       appBar: AppBar(
         elevation: 0,

@@ -148,6 +148,10 @@ List<UnivNotice> parseUnivNotice(String body) {
   return univNoticeList;
 }
 
+UnivNotice parseUnivNoticeDetail(String body) {
+  return UnivNotice('a', 'a', 'aa', 'aa');
+}
+
 Map<DayOfWeek, Map<int, Class>> parseClassTimeTable(String body) {
   final classTimeTableMap = <DayOfWeek, Map<int, Class>>{};
   final topStorytitle = parseHtmlDocument(body).querySelectorAll(

@@ -324,7 +324,7 @@ Future<String> getClassTimeTableBody(
   return res.body;
 }
 
-Future<String> getClassNoticeDetail(
+Future<String> getClassNoticeDetailBody(
   int index,
   String jSessionId,
   String liveAppsCookie,
@@ -364,7 +364,7 @@ Future<String> getClassNoticeDetail(
   return res.body;
 }
 
-Future<String> getUnivNoticeDetail(
+Future<String> getUnivNoticeDetailBody(
   int index,
   String jSessionId,
   String liveAppsCookie,

@@ -1,12 +1,19 @@
 import 'package:aitapp/models/class_notice.dart';
+import 'package:aitapp/models/get_notice.dart';
 import 'package:aitapp/screens/class_notice_detail.dart';
 import 'package:flutter/material.dart';
 
 class ClassNoticeItem extends StatelessWidget {
-  const ClassNoticeItem({super.key, required this.notice, required this.index});
+  const ClassNoticeItem({
+    super.key,
+    required this.notice,
+    required this.index,
+    required this.getNotice,
+  });
 
   final ClassNotice notice;
   final int index;
+  final GetNotice getNotice;
 
   @override
   Widget build(BuildContext context) {
@@ -16,6 +23,7 @@ class ClassNoticeItem extends StatelessWidget {
           MaterialPageRoute(
             builder: (ctx) => ClassNoticeDetailScreen(
               index: index,
+              getNotice: getNotice,
             ),
           ),
         );

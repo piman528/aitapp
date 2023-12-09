@@ -5,9 +5,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 class UnivNoticesNotifier extends StateNotifier<AsyncValue<List<UnivNotice>>> {
   UnivNoticesNotifier() : super(const AsyncValue.loading());
 
-  Future<void> fetchData() async {
-    final getNotice = GetNotice();
-    await getNotice.create();
+  Future<void> fetchNotices(
+    GetNotice getNotice,
+    Future<void> create,
+  ) async {
+    await create;
     state = const AsyncValue.loading();
     try {
       final result = await getNotice.getUnivNoticelist();
@@ -17,9 +19,11 @@ class UnivNoticesNotifier extends StateNotifier<AsyncValue<List<UnivNotice>>> {
     }
   }
 
-  Future<void> reloadData() async {
-    final getNotice = GetNotice();
-    await getNotice.create();
+  Future<void> reloadNotices(
+    GetNotice getNotice,
+    Future<void> create,
+  ) async {
+    await create;
     try {
       final result = await getNotice.getUnivNoticelist();
       state = AsyncValue.data(result);

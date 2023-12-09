@@ -1,27 +1,38 @@
-import 'package:aitapp/provider/class_notices_provider.dart';
-import 'package:aitapp/wighets/class_notice.dart';
+import 'package:aitapp/models/get_notice.dart';
+import 'package:aitapp/provider/univ_notices_provider.dart';
+import 'package:aitapp/wighets/univ_notice.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class ClassNoticeList extends ConsumerWidget {
-  const ClassNoticeList({super.key});
+class UnivNoticeList extends ConsumerWidget {
+  UnivNoticeList({super.key});
+
+  final getNotice = GetNotice();
+
+  Future<void> _create() async {
+    await getNotice.create();
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final asyncValue = ref.watch(classNoticesProvider);
+    final asyncValue = ref.watch(univNoticesProvider);
     if (asyncValue.isLoading) {
-      ref.read(classNoticesProvider.notifier).fetchData();
+      ref.read(univNoticesProvider.notifier).fetchNotices(getNotice, _create());
     }
     return asyncValue.when(
       data: (data) => Expanded(
         child: RefreshIndicator(
           onRefresh: () async {
-            await ref.read(classNoticesProvider.notifier).reloadData();
+            await ref
+                .read(univNoticesProvider.notifier)
+                .reloadNotices(getNotice, _create());
           },
           child: ListView.builder(
             itemCount: data.length,
-            itemBuilder: (c, i) => ClassNoticeItem(
+            itemBuilder: (c, i) => UnivNoticeItem(
               notice: data[i],
               index: i,
+              getNotice: getNotice,
             ),
           ),
         ),

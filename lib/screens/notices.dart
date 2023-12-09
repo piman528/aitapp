@@ -1,6 +1,6 @@
-import 'package:aitapp/wighets/class_notice_list.dart';
+import 'package:aitapp/wighets/class_notice_listview.dart';
 import 'package:aitapp/wighets/search_bar.dart';
-import 'package:aitapp/wighets/univ_notice_list.dart';
+import 'package:aitapp/wighets/univ_notice_listview.dart';
 import 'package:flutter/material.dart';
 
 class NoticeScreen extends StatelessWidget {
@@ -14,7 +14,7 @@ class NoticeScreen extends StatelessWidget {
           controller: TextEditingController(),
           hintText: '送信元、キーワードで検索',
         ),
-        const ClassNoticeList(),
+        ClassNoticeList(),
       ],
     );
     final tabScreenUniv = Column(
@@ -23,7 +23,7 @@ class NoticeScreen extends StatelessWidget {
           controller: TextEditingController(),
           hintText: '送信元、キーワードで検索',
         ),
-        const UnivNoticeList(),
+        UnivNoticeList(),
       ],
     );
     return DefaultTabController(
