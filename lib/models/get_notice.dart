@@ -9,18 +9,18 @@ class GetNotice {
   Future<void> create() async {
     cookies = await getCookie();
     await loginLcam(cookies[0], cookies[1]);
-    token = parseStrutsToken(
-      body: await getStrutsToken(
-        jSessionId: cookies[0],
-        liveAppsCookie: cookies[1],
-        isCommon: true,
-      ),
-      isCommon: true,
-    );
   }
 
   Future<List<UnivNotice>> getUnivNoticelist() async {
     const isCommon = true;
+    token = parseStrutsToken(
+      body: await getStrutsToken(
+        jSessionId: cookies[0],
+        liveAppsCookie: cookies[1],
+        isCommon: isCommon,
+      ),
+      isCommon: isCommon,
+    );
     final token2 = parseStrutsToken(
       body: await getUnivNoticeBody(cookies[0], cookies[1], token),
       isCommon: isCommon,
@@ -33,6 +33,14 @@ class GetNotice {
 
   Future<List<ClassNotice>> getClassNoticelist() async {
     const isCommon = false;
+    token = parseStrutsToken(
+      body: await getStrutsToken(
+        jSessionId: cookies[0],
+        liveAppsCookie: cookies[1],
+        isCommon: isCommon,
+      ),
+      isCommon: isCommon,
+    );
     final token2 = parseStrutsToken(
       body: await getClassNoticeBody(cookies[0], cookies[1], token),
       isCommon: isCommon,
