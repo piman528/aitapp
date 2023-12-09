@@ -32,7 +32,10 @@ class ClassNoticeList extends ConsumerWidget {
           child: ListView.builder(
             itemCount: data.length,
             itemBuilder: (c, i) => ClassNoticeItem(
-                notice: data[i], index: i, getNotice: getNotice),
+              notice: data[i],
+              index: i,
+              getNotice: getNotice,
+            ),
           ),
         ),
       ),

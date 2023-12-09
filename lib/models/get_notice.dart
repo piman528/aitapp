@@ -51,13 +51,13 @@ class GetNotice {
     return parseClassNotice(body);
   }
 
-  Future<void> getUnivNoticeDetail(int pageNumber) async {
+  Future<UnivNotice> getUnivNoticeDetail(int pageNumber) async {
     final body = await getUnivNoticeDetailBody(
       pageNumber,
       cookies[0],
       cookies[1],
       token,
     );
-    print(body);
+    return parseUnivNoticeDetail(body);
   }
 }

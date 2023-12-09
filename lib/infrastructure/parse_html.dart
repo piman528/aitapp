@@ -149,6 +149,11 @@ List<UnivNotice> parseUnivNotice(String body) {
 }
 
 UnivNotice parseUnivNoticeDetail(String body) {
+  final topStorytitle = parseHtmlDocument(body).querySelectorAll(
+    '#login',
+  );
+  print(topStorytitle);
+
   return UnivNotice('a', 'a', 'aa', 'aa');
 }
 
