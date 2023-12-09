@@ -203,7 +203,7 @@ Map<DayOfWeek, Map<int, Class>> parseClassTimeTable(String body) {
   return classTimeTableMap;
 }
 
-String? parseStrutsToken({
+String parseStrutsToken({
   required String body,
   required bool isCommon,
 }) {
@@ -220,5 +220,5 @@ String? parseStrutsToken({
     selector,
   );
   final value = topStorytitle[0].attributes['value'];
-  return value;
+  return value!;
 }

@@ -15,11 +15,14 @@ class ClassNoticeList extends ConsumerWidget {
       data: (data) => Expanded(
         child: RefreshIndicator(
           onRefresh: () async {
-            await ref.read(classNoticesProvider.notifier).fetchData();
+            await ref.read(classNoticesProvider.notifier).reloadData();
           },
           child: ListView.builder(
             itemCount: data.length,
-            itemBuilder: (c, i) => ClassNoticeItem(notice: data[i]),
+            itemBuilder: (c, i) => ClassNoticeItem(
+              notice: data[i],
+              index: i,
+            ),
           ),
         ),
       ),

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
-class NoticeDetailScreen extends StatelessWidget {
-  const NoticeDetailScreen({super.key});
+class ClassNoticeDetailScreen extends StatelessWidget {
+  const ClassNoticeDetailScreen({super.key, required this.index});
+
+  final int index;
 
   @override
   Widget build(BuildContext context) {

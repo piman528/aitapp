@@ -1,11 +1,12 @@
 import 'package:aitapp/models/univ_notice.dart';
-import 'package:aitapp/screens/notice_detail.dart';
+import 'package:aitapp/screens/univ_notice_detail.dart';
 import 'package:flutter/material.dart';
 
 class UnivNoticeItem extends StatelessWidget {
-  const UnivNoticeItem({super.key, required this.notice});
+  const UnivNoticeItem({super.key, required this.notice, required this.index});
 
   final UnivNotice notice;
+  final int index;
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +14,9 @@ class UnivNoticeItem extends StatelessWidget {
       onTap: () {
         Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (ctx) => const NoticeDetailScreen(),
+            builder: (ctx) => UnivNoticeDetailScreen(
+              index: index,
+            ),
           ),
         );
       },

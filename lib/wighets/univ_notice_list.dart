@@ -15,11 +15,14 @@ class UnivNoticeList extends ConsumerWidget {
       data: (data) => Expanded(
         child: RefreshIndicator(
           onRefresh: () async {
-            await ref.read(univNoticesProvider.notifier).fetchData();
+            await ref.read(univNoticesProvider.notifier).reloadData();
           },
           child: ListView.builder(
             itemCount: data.length,
-            itemBuilder: (c, i) => UnivNoticeItem(notice: data[i]),
+            itemBuilder: (c, i) => UnivNoticeItem(
+              notice: data[i],
+              index: i,
+            ),
           ),
         ),
       ),
