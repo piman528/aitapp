@@ -19,7 +19,7 @@ class TimeTableCard extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            Vehicle.name[vehicle]! + Vehicle.destinationName[destination]!,
+            vehicleName[vehicle]! + destinationName[destination]!,
             style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
           const Text(

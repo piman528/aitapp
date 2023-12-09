@@ -13,7 +13,7 @@ class GetNotice {
 
   Future<List<UnivNotice>> getUnivNoticelist() async {
     const isCommon = true;
-    token = parseStrutsToken(
+    final token1 = parseStrutsToken(
       body: await getStrutsToken(
         jSessionId: cookies[0],
         liveAppsCookie: cookies[1],
@@ -22,7 +22,7 @@ class GetNotice {
       isCommon: isCommon,
     );
     final token2 = parseStrutsToken(
-      body: await getUnivNoticeBody(cookies[0], cookies[1], token),
+      body: await getUnivNoticeBody(cookies[0], cookies[1], token1),
       isCommon: isCommon,
     );
     final body =
@@ -33,7 +33,7 @@ class GetNotice {
 
   Future<List<ClassNotice>> getClassNoticelist() async {
     const isCommon = false;
-    token = parseStrutsToken(
+    final token1 = parseStrutsToken(
       body: await getStrutsToken(
         jSessionId: cookies[0],
         liveAppsCookie: cookies[1],
@@ -42,7 +42,7 @@ class GetNotice {
       isCommon: isCommon,
     );
     final token2 = parseStrutsToken(
-      body: await getClassNoticeBody(cookies[0], cookies[1], token),
+      body: await getClassNoticeBody(cookies[0], cookies[1], token1),
       isCommon: isCommon,
     );
     final body =

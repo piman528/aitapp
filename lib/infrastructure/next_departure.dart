@@ -13,10 +13,10 @@ class NextDeparture {
     final now = DateTime.now();
     var counter = 0;
 
-    final hours = Vehicle.daiya[vehicle]![destination]?.keys;
+    final hours = daiya[vehicle]![destination]?.keys;
     for (final hour in hours!) {
       if (hour >= now.hour) {
-        final minutes = Vehicle.daiya[vehicle]?[destination]?[hour];
+        final minutes = daiya[vehicle]?[destination]?[hour];
         if (minutes != null) {
           for (final minute in minutes) {
             if (minute > now.minute || hour > now.hour) {
