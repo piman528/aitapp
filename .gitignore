@@ -45,5 +45,3 @@ app.*.map.json
 
 # Auth
 lib/infrastructure/login.dart
-
-lib/infrastructure/access_lcan.dart
