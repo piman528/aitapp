@@ -60,4 +60,14 @@ class GetNotice {
     );
     return parseUnivNoticeDetail(body);
   }
+
+  Future<ClassNotice> getClassNoticeDetail(int pageNumber) async {
+    final body = await getClassNoticeDetailBody(
+      pageNumber,
+      cookies[0],
+      cookies[1],
+      token,
+    );
+    return parseClassNoticeDetail(body);
+  }
 }

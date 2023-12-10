@@ -30,7 +30,7 @@ List<ClassNotice> parseClassNotice(String body) {
     var c = 0;
     var sender = '';
     var title = '';
-    const content = '';
+    const content = <String>[];
     const sendAt = '';
     var subject = '';
     var makeupClassAt = '';
@@ -82,6 +82,79 @@ List<ClassNotice> parseClassNotice(String body) {
     );
   }
   return classNoticeList;
+}
+
+ClassNotice parseClassNoticeDetail(String body) {
+  final topStorytitle = parseHtmlDocument(body).querySelectorAll(
+    'body > form > table > tbody > tr > td',
+  );
+  final texts = <String>[];
+  for (final element in topStorytitle) {
+    final noticeDetailChildNodes = element.nodes;
+    for (final node in noticeDetailChildNodes) {
+      if (node.nodeType == html.Node.TEXT_NODE) {
+        final spaceTrimTextList = node.text!
+            .replaceAll('	', '')
+            .replaceAll('', '')
+            .trim()
+            .split('\n');
+        for (final line in spaceTrimTextList) {
+          if (line != '') {
+            texts.add(line);
+          }
+        }
+      }
+    }
+  }
+  final parseContentBody = parseHtmlDocument(body).querySelectorAll(
+    'body > form > table > tbody > tr > td > div > div',
+  );
+  for (final contentElement in parseContentBody) {
+    final noticeContentChildNodes = contentElement.nodes;
+    for (final node in noticeContentChildNodes) {
+      if (node.nodeType == html.Node.TEXT_NODE) {
+        final spaceTrimTextList = node.text!
+            .replaceAll('	', '')
+            .replaceAll('', '')
+            .trim()
+            .split('\n');
+        for (final line in spaceTrimTextList) {
+          if (line != '') {
+            texts.add(line);
+          }
+        }
+      }
+    }
+  }
+  var c = 0;
+  var subject = '';
+  var sender = '';
+  var title = '';
+  final content = <String>[];
+  var sendAt = '';
+  for (final text in texts) {
+    // print('$text $c');
+    switch (c) {
+      case 0: // 教科
+        subject = text;
+      case 1: // 授業時間
+      // title = text;
+      case 2: // 送信者
+        sender = text;
+      case 3: // タイトル
+        title = text;
+      case 4: //日付
+        sendAt = text;
+      case 5: //時間
+        sendAt = '$sendAt $text';
+    }
+    if (c >= 8) {
+      content.add(text);
+    }
+    c++;
+  }
+  // print(title);
+  return ClassNotice(sender, title, content, sendAt, subject, '');
 }
 
 List<UnivNotice> parseUnivNotice(String body) {
