@@ -1,4 +1,3 @@
-import 'package:aitapp/infrastructure/login.dart';
 import 'package:aitapp/screens/class_timetable.dart';
 import 'package:aitapp/screens/notices.dart';
 import 'package:aitapp/screens/vehicle_timetable.dart';
@@ -9,7 +8,7 @@ class TabScreen extends ConsumerStatefulWidget {
   const TabScreen({super.key});
   void initState() {
     //アプリ起動時に一度だけ実行される
-    logIn();
+    // logIn();
   }
 
   @override
