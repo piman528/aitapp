@@ -378,7 +378,7 @@ Future<String> getUnivNoticeDetailBody(
     'Content-Type': 'application/x-www-form-urlencoded',
     'Origin': 'https://lcam.aitech.ac.jp',
     'Referer':
-        'https://lcam.aitech.ac.jp/portalv2/smartphone/smartPhoneContactNotice/nextPage/commonContact/',
+        'https://lcam.aitech.ac.jp/portalv2/smartphone/smartPhoneCommonContact/nextSelectCommonContactList',
     'Connection': 'keep-alive',
     'Cookie':
         '$jSessionId; $liveAppsCookie; $jSessionId; L-CamApp=Y; $liveAppsCookie',

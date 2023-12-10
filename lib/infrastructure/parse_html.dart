@@ -127,7 +127,7 @@ List<UnivNotice> parseUnivNotice(String body) {
     var c = 0;
     var sender = '';
     var title = '';
-    const content = '';
+    const content = <String>[];
     var sendAt = '';
     // var subject = '';
     // var makeupClassAt = '';
@@ -150,11 +150,66 @@ List<UnivNotice> parseUnivNotice(String body) {
 
 UnivNotice parseUnivNoticeDetail(String body) {
   final topStorytitle = parseHtmlDocument(body).querySelectorAll(
-    '#login',
+    'body > form > table > tbody > tr > td',
   );
-  print(topStorytitle);
-
-  return UnivNotice('a', 'a', 'aa', 'aa');
+  final texts = <String>[];
+  for (final element in topStorytitle) {
+    final noticeDetailChildNodes = element.nodes;
+    for (final node in noticeDetailChildNodes) {
+      if (node.nodeType == html.Node.TEXT_NODE) {
+        final spaceTrimTextList = node.text!
+            .replaceAll('	', '')
+            .replaceAll('', '')
+            .trim()
+            .split('\n');
+        for (final line in spaceTrimTextList) {
+          if (line != '') {
+            texts.add(line);
+          }
+        }
+      }
+    }
+  }
+  final parseContentBody = parseHtmlDocument(body).querySelectorAll(
+    'body > form > table > tbody > tr > td > div > div',
+  );
+  for (final contentElement in parseContentBody) {
+    final noticeContentChildNodes = contentElement.nodes;
+    for (final node in noticeContentChildNodes) {
+      if (node.nodeType == html.Node.TEXT_NODE) {
+        final spaceTrimTextList = node.text!
+            .replaceAll('	', '')
+            .replaceAll('', '')
+            .trim()
+            .split('\n');
+        for (final line in spaceTrimTextList) {
+          if (line != '') {
+            texts.add(line);
+          }
+        }
+      }
+    }
+  }
+  var c = 0;
+  var sender = '';
+  var title = '';
+  final content = <String>[];
+  var sendAt = '';
+  for (final text in texts) {
+    switch (c) {
+      case 1: // タイトル
+        title = text;
+      case 2: // 送信者
+        sender = text;
+      case 3: // 日付
+        sendAt = text;
+    }
+    if (c >= 7) {
+      content.add(text);
+    }
+    c++;
+  }
+  return UnivNotice(sender, title, content, sendAt);
 }
 
 Map<DayOfWeek, Map<int, Class>> parseClassTimeTable(String body) {

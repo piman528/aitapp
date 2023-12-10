@@ -5,7 +5,7 @@ class UnivNotice {
   // タイトル
   final String title;
   // 内容
-  final String content;
+  final List<String> content;
   // 送信日時
   final String sendAt;
 }
