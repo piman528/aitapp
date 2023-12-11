@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1213FC235FFFF3F38D853C5D /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FE108E01CD4923A299FDFF66 /* Pods_Runner.framework */; };
 		1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */ = {isa = PBXBuildFile; fileRef = 1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */; };
 		2B47F62B4FEBCBBF1D526D50 /* Pods_RunnerTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AB5FDA90CF9E52ABBD7F4C5E /* Pods_RunnerTests.framework */; };
 		331C808B294A63AB00263BE5 /* RunnerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 331C807B294A618700263BE5 /* RunnerTests.swift */; };
@@ -80,7 +79,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1213FC235FFFF3F38D853C5D /* Pods_Runner.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -97,7 +95,6 @@
 				1BBCDEEFE3B2E917038663A8 /* Pods-RunnerTests.release.xcconfig */,
 				1640CF41163775484B122F89 /* Pods-RunnerTests.profile.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
