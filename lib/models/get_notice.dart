@@ -26,7 +26,7 @@ class GetNotice {
       isCommon: isCommon,
     );
     final body =
-        await getUnivNoticeBodyNext(cookies[0], cookies[1], token2, 10);
+        await getUnivNoticeBodyNext(cookies[0], cookies[1], token2, 20);
     token = parseStrutsToken(body: body, isCommon: isCommon);
     return parseUnivNotice(body);
   }

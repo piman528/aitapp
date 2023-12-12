@@ -7,6 +7,15 @@ const Map<DayOfWeek, String> dayOfWeekToString = {
   DayOfWeek.saturday: '土',
   DayOfWeek.sunday: '月',
 };
+const Map<DayOfWeek, int> dayOfWeekToInt = {
+  DayOfWeek.monday: 1,
+  DayOfWeek.tuesday: 2,
+  DayOfWeek.wednesday: 3,
+  DayOfWeek.thurstay: 4,
+  DayOfWeek.friday: 5,
+  DayOfWeek.saturday: 6,
+  DayOfWeek.sunday: 7,
+};
 
 enum DayOfWeek {
   sunday,

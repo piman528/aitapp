@@ -90,8 +90,11 @@ class ClassGridContainer extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (ctx) => const SyllabusSearchScreen(),
+          MaterialPageRoute<void>(
+            builder: (ctx) => SyllabusSearchScreen(
+              dayOfWeek: dayOfWeek,
+              classPeriod: classPeriod,
+            ),
           ),
         );
       },

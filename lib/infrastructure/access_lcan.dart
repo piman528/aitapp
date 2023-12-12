@@ -1,4 +1,6 @@
 // import 'package:aitapp/infrastructure/secure_storage.dart';
+// ignore_for_file: lines_longer_than_80_chars
+
 import 'package:aitapp/infrastructure/login.dart';
 import 'package:http/http.dart' as http;
 
@@ -49,8 +51,8 @@ Future<void> loginLcam(String jSessionId, String liveAppsCookie) async {
   };
 
   final data = {
-    'userID': '$id',
-    'password': '$password',
+    'userID': id,
+    'password': password,
     'selectLocale': 'ja',
     'mode': 'sp',
     'userDivision': '2',

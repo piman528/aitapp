@@ -1,20 +1,10 @@
-import 'package:aitapp/models/class_notice.dart';
-import 'package:aitapp/models/get_notice.dart';
-import 'package:aitapp/screens/class_notice_detail.dart';
+import 'package:aitapp/models/class_syllabus.dart';
+import 'package:aitapp/screens/syllabus_detail.dart';
 import 'package:flutter/material.dart';
 
-class ClassNoticeItem extends StatelessWidget {
-  const ClassNoticeItem({
-    super.key,
-    required this.notice,
-    required this.index,
-    required this.getNotice,
-  });
-
-  final ClassNotice notice;
-  final int index;
-  final GetNotice getNotice;
-
+class SyllabusItem extends StatelessWidget {
+  const SyllabusItem({super.key, required this.syllabus});
+  final ClassSyllabus syllabus;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -23,10 +13,7 @@ class ClassNoticeItem extends StatelessWidget {
           onTap: () {
             Navigator.of(context).push(
               MaterialPageRoute<void>(
-                builder: (ctx) => ClassNoticeDetailScreen(
-                  index: index,
-                  getNotice: getNotice,
-                ),
+                builder: (ctx) => const SyllabusDetail(),
               ),
             );
           },
@@ -37,20 +24,24 @@ class ClassNoticeItem extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  notice.title,
+                  syllabus.subject,
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
-                // Text(notice.content),
                 const SizedBox(
-                  height: 30,
-                ),
-                Text(notice.subject),
-                const SizedBox(
-                  height: 10,
+                  height: 20,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [Text(notice.sender), Text(notice.sendAt)],
+                  children: [
+                    Text(syllabus.teacher),
+                    const SizedBox(
+                      width: 100,
+                    ),
+                    Text(
+                      classificationToString[syllabus.classification]!,
+                    ),
+                    Text('${syllabus.unitsNumber} 単位'),
+                  ],
                 ),
               ],
             ),

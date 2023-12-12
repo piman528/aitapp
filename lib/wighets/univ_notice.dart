@@ -22,7 +22,7 @@ class UnivNoticeItem extends StatelessWidget {
         InkWell(
           onTap: () {
             Navigator.of(context).push(
-              MaterialPageRoute(
+              MaterialPageRoute<void>(
                 builder: (ctx) => UnivNoticeDetailScreen(
                   index: index,
                   getNotice: getNotice,

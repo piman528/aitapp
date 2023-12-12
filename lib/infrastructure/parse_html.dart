@@ -1,6 +1,9 @@
+// ignore_for_file: lines_longer_than_80_chars
+
 import 'package:aitapp/const.dart';
 import 'package:aitapp/models/class.dart';
 import 'package:aitapp/models/class_notice.dart';
+import 'package:aitapp/models/class_syllabus.dart';
 import 'package:aitapp/models/univ_notice.dart';
 import 'package:universal_html/html.dart' as html;
 import 'package:universal_html/parsing.dart';
@@ -22,9 +25,7 @@ List<ClassNotice> parseClassNotice(String body) {
         final spaceTrimTextList =
             node.text!.replaceAll('	', '').trim().split('\n');
         // print(spaceTrimTextList);
-        for (final line in spaceTrimTextList) {
-          texts.add(line);
-        }
+        texts.addAll(spaceTrimTextList);
       }
     }
     var c = 0;
@@ -301,9 +302,7 @@ Map<DayOfWeek, Map<int, Class>> parseClassTimeTable(String body) {
         if (node.nodeType == html.Node.TEXT_NODE) {
           final spaceTrimTextList =
               node.text!.replaceAll('	', '').trim().split('\n');
-          for (final line in spaceTrimTextList) {
-            texts.add(line);
-          }
+          texts.addAll(spaceTrimTextList);
         }
       }
     }
@@ -338,6 +337,99 @@ Map<DayOfWeek, Map<int, Class>> parseClassTimeTable(String body) {
     }
   }
   return classTimeTableMap;
+}
+
+List<ClassSyllabus> parseSyllabusList(String body) {
+  final classSyllabusList = <ClassSyllabus>[];
+  final topStorytitle = parseHtmlDocument(body).querySelectorAll(
+    'body > form > table:nth-child(2) > tbody > tr > td > table > tbody > tr',
+  );
+  var i = 0;
+  for (final tr in topStorytitle) {
+    if (i == 0) {
+      i++;
+      continue;
+    }
+    //授業単位
+    final syllabus = <String>[];
+    final syllabusContents = tr.querySelectorAll('td');
+    for (final syllabusContent in syllabusContents) {
+      final syllabusContentNodes = syllabusContent.nodes;
+      for (final node in syllabusContentNodes) {
+        if (node.nodeType == html.Node.TEXT_NODE) {
+          final spaceTrimTextList = node.text!
+              .replaceAll('	', '')
+              .replaceAll('', '')
+              .trim()
+              .split('\n');
+          for (final line in spaceTrimTextList) {
+            if (line != '') {
+              syllabus.add(line);
+            }
+          }
+        } else if (node.nodeType == html.Node.ELEMENT_NODE) {
+          final divElementList =
+              parseHtmlDocument('$node').querySelectorAll('> div');
+          for (final divElement in divElementList) {
+            final divNodes = divElement.nodes;
+            for (final divNode in divNodes) {
+              if (divNode.nodeType == html.Node.TEXT_NODE) {
+                final spaceTrimTextList = divNode.text!
+                    .replaceAll('	', '')
+                    .replaceAll('', '')
+                    .trim()
+                    .split('\n');
+                for (final line in spaceTrimTextList) {
+                  if (line != '') {
+                    syllabus.add(line);
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    var c = 0;
+    // 単位数
+    var unitsNumber = 0;
+    // 区分
+    var classification = Classification.required;
+    // 教員名
+    var teacher = '';
+    // 内容
+    final content = <String>[];
+    // 教科
+    var subject = '';
+    for (final text in syllabus) {
+      switch (c) {
+        case 3: //教科
+          subject = text;
+        case 4: // 教員
+          teacher = text;
+        case 10: // 単位数
+          unitsNumber = int.parse(text);
+        case 9: //区分
+          classification = text == '選必'
+              ? Classification.requiredElective
+              : text == '選択'
+                  ? Classification.choice
+                  : Classification.required;
+      }
+      c++;
+    }
+    classSyllabusList.add(
+      ClassSyllabus(
+        unitsNumber,
+        classification,
+        teacher,
+        content,
+        subject,
+      ),
+    );
+    i++;
+  }
+  return classSyllabusList;
 }
 
 String parseStrutsToken({
