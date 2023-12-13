@@ -24,10 +24,6 @@ class _TabScreenState extends ConsumerState<TabScreen> {
   ];
   @override
   Widget build(BuildContext context) {
-    // final asyncValue = ref.watch(classTimeTableProvider);
-    // if (asyncValue.isLoading) {
-    //   ref.read(classTimeTableProvider.notifier).fetchData();
-    // }
     return Scaffold(
       body: currentPages[_currentPageIndex],
       bottomNavigationBar: BottomNavigationBar(

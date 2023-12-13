@@ -28,11 +28,11 @@ class ClassTime extends StatelessWidget {
         children: [
           Text(
             start,
-            style: const TextStyle(fontSize: 12),
+            style: Theme.of(context).textTheme.bodySmall,
           ),
           Container(
             alignment: Alignment.center,
-            margin: const EdgeInsets.all(8),
+            margin: const EdgeInsets.symmetric(vertical: 8),
             height: 25,
             width: 25,
             decoration: BoxDecoration(
@@ -40,11 +40,14 @@ class ClassTime extends StatelessWidget {
               // color: Colors.grey,
               color: Theme.of(context).hoverColor,
             ),
-            child: Text('$number'),
+            child: Text(
+              '$number',
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
           ),
           Text(
             end,
-            style: const TextStyle(fontSize: 12),
+            style: Theme.of(context).textTheme.bodySmall,
           ),
         ],
       ),
@@ -67,7 +70,10 @@ class WeekGridContainer extends StatelessWidget {
       ),
       margin: const EdgeInsets.all(2),
       height: 35,
-      child: Text(dayofweek),
+      child: Text(
+        dayofweek,
+        style: const TextStyle(fontWeight: FontWeight.bold),
+      ),
     );
   }
 }
@@ -114,7 +120,10 @@ class ClassGridContainer extends StatelessWidget {
                 children: [
                   Text(
                     clas!.title,
-                    style: const TextStyle(fontSize: 9.5),
+                    style: const TextStyle(
+                      fontSize: 9.5,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   Text(
                     clas!.classRoom,
@@ -123,8 +132,6 @@ class ClassGridContainer extends StatelessWidget {
                 ],
               )
             : null,
-        // width: 170,
-        // color: const Color.fromARGB(255, 223, 223, 223),
       ),
     );
   }
@@ -170,6 +177,9 @@ class TimeTable extends ConsumerWidget {
                   ),
                 },
               ],
+            ),
+            const SizedBox(
+              width: 4,
             ),
             Expanded(
               child: Row(

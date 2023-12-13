@@ -33,20 +33,30 @@ class TimeTableCard extends StatelessWidget {
       child: Column(
         children: [
           destinationTitle,
-          for (int i = 0; i < 3; i++) ...{
-            TimeCard(
-              vehicle: vehicle,
-              destination: destination,
-              order: i,
-            ),
-            // if (TimeCard(
-            //       vehicle: vehicle,
-            //       destination: destination,
-            //       order: i,
-            //     ) ==
-            //     SizedBox())
-            //   {}
-          },
+          const SizedBox(
+            height: 5,
+          ),
+          TimeCard(
+            vehicle: vehicle,
+            destination: destination,
+            order: 0,
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          TimeCard(
+            vehicle: vehicle,
+            destination: destination,
+            order: 1,
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          TimeCard(
+            vehicle: vehicle,
+            destination: destination,
+            order: 2,
+          ),
         ],
       ),
     );
@@ -73,9 +83,6 @@ class TimeCard extends StatelessWidget {
     ).searchNextDeparture();
     if (nextDepartureTime != '') {
       return Container(
-        // width: 1000,
-        // height: 100,
-        margin: const EdgeInsets.fromLTRB(12, 6, 12, 6),
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           boxShadow: [

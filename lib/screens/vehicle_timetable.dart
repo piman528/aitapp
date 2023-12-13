@@ -31,29 +31,35 @@ class TimeTableScreen extends StatelessWidget {
         ),
         body: const TabBarView(
           children: [
-            Column(
-              children: [
-                TimeTableCard(
-                  vehicle: 'bus',
-                  destination: 'toAIT',
-                ),
-                TimeTableCard(
-                  vehicle: 'bus',
-                  destination: 'toYakusa',
-                ),
-              ],
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+              child: Column(
+                children: [
+                  TimeTableCard(
+                    vehicle: 'bus',
+                    destination: 'toAIT',
+                  ),
+                  TimeTableCard(
+                    vehicle: 'bus',
+                    destination: 'toYakusa',
+                  ),
+                ],
+              ),
             ),
-            Column(
-              children: [
-                TimeTableCard(
-                  vehicle: 'linimo',
-                  destination: 'toYakusa',
-                ),
-                TimeTableCard(
-                  vehicle: 'linimo',
-                  destination: 'toHujigaoka',
-                ),
-              ],
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+              child: Column(
+                children: [
+                  TimeTableCard(
+                    vehicle: 'linimo',
+                    destination: 'toYakusa',
+                  ),
+                  TimeTableCard(
+                    vehicle: 'linimo',
+                    destination: 'toHujigaoka',
+                  ),
+                ],
+              ),
             ),
           ],
         ),

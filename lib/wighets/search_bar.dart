@@ -12,12 +12,12 @@ class SearchBarWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 14),
       child: TextField(
         controller: controller,
         decoration: InputDecoration(
           isDense: true,
-          contentPadding: const EdgeInsets.fromLTRB(0, 13, 0, 13),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 10),
           prefixIcon: const Icon(Icons.search),
           fillColor: Theme.of(context).hoverColor,
           filled: true,
