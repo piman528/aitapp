@@ -14,6 +14,7 @@ class UnivNoticeDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(index);
     return Scaffold(
       appBar: AppBar(
         elevation: 0,

@@ -5,9 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class UnivNoticeList extends ConsumerWidget {
-  UnivNoticeList({super.key});
+  UnivNoticeList({super.key, required this.filterText});
 
   final getNotice = GetNotice();
+  final String filterText;
 
   Future<void> _create() async {
     await getNotice.create();
@@ -20,23 +21,34 @@ class UnivNoticeList extends ConsumerWidget {
       ref.read(univNoticesProvider.notifier).fetchNotices(getNotice, _create());
     }
     return asyncValue.when(
-      data: (data) => Expanded(
-        child: RefreshIndicator(
-          onRefresh: () async {
-            await ref
-                .read(univNoticesProvider.notifier)
-                .reloadNotices(getNotice, _create());
-          },
-          child: ListView.builder(
-            itemCount: data.length,
-            itemBuilder: (c, i) => UnivNoticeItem(
-              notice: data[i],
-              index: i,
-              getNotice: getNotice,
+      data: (data) {
+        final result = data
+            .where(
+              (univNotice) =>
+                  univNotice.title.toLowerCase().contains(filterText) ||
+                  univNotice.sender.toLowerCase().contains(filterText),
+            )
+            .toList();
+        return Expanded(
+          child: RefreshIndicator(
+            onRefresh: () async {
+              await ref
+                  .read(univNoticesProvider.notifier)
+                  .reloadNotices(getNotice, _create());
+            },
+            child: ListView.builder(
+              itemCount: result.length,
+              itemBuilder: (c, i) {
+                return UnivNoticeItem(
+                  notice: result[i],
+                  index: data.indexOf(result[i]),
+                  getNotice: getNotice,
+                );
+              },
             ),
           ),
-        ),
-      ),
+        );
+      },
       loading: () => const Center(
         child: SizedBox(
           height: 25, //指定
