@@ -5,9 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class ClassNoticeList extends ConsumerWidget {
-  ClassNoticeList({super.key});
+  const ClassNoticeList(
+      {super.key, required this.filterText, required this.getNotice});
 
-  final getNotice = GetNotice();
+  final GetNotice getNotice;
+  final String filterText;
 
   Future<void> _create() async {
     await getNotice.create();
@@ -22,23 +24,33 @@ class ClassNoticeList extends ConsumerWidget {
           .fetchNotices(getNotice, _create());
     }
     return asyncValue.when(
-      data: (data) => Expanded(
-        child: RefreshIndicator(
-          onRefresh: () async {
-            await ref
-                .read(classNoticesProvider.notifier)
-                .reloadNotices(getNotice, _create());
-          },
-          child: ListView.builder(
-            itemCount: data.length,
-            itemBuilder: (c, i) => ClassNoticeItem(
-              notice: data[i],
-              index: i,
-              getNotice: getNotice,
+      data: (data) {
+        final result = data
+            .where(
+              (classNotice) =>
+                  classNotice.subject.toLowerCase().contains(filterText) ||
+                  classNotice.title.toLowerCase().contains(filterText) ||
+                  classNotice.sender.toLowerCase().contains(filterText),
+            )
+            .toList();
+        return Expanded(
+          child: RefreshIndicator(
+            onRefresh: () async {
+              await ref
+                  .read(classNoticesProvider.notifier)
+                  .reloadNotices(getNotice, _create());
+            },
+            child: ListView.builder(
+              itemCount: result.length,
+              itemBuilder: (c, i) => ClassNoticeItem(
+                notice: result[i],
+                index: data.indexOf(result[i]),
+                getNotice: getNotice,
+              ),
             ),
           ),
-        ),
-      ),
+        );
+      },
       loading: () => const Center(
         child: SizedBox(
           height: 25, //指定

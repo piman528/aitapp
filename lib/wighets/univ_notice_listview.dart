@@ -5,9 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class UnivNoticeList extends ConsumerWidget {
-  UnivNoticeList({super.key, required this.filterText});
+  const UnivNoticeList(
+      {super.key, required this.filterText, required this.getNotice});
 
-  final getNotice = GetNotice();
+  final GetNotice getNotice;
   final String filterText;
 
   Future<void> _create() async {

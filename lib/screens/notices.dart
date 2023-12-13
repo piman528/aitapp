@@ -1,3 +1,4 @@
+import 'package:aitapp/models/get_notice.dart';
 import 'package:aitapp/wighets/class_notice_listview.dart';
 import 'package:aitapp/wighets/search_bar.dart';
 import 'package:aitapp/wighets/univ_notice_listview.dart';
@@ -16,6 +17,8 @@ class _NoticeScreenState extends State<NoticeScreen> {
 
   String filter1 = '';
   String filter2 = '';
+  final getNotice1 = GetNotice();
+  final getNotice2 = GetNotice();
 
   void _printLatestValue1() {
     setState(() {
@@ -57,6 +60,7 @@ class _NoticeScreenState extends State<NoticeScreen> {
                   hintText: '送信元、キーワードで検索',
                 ),
                 UnivNoticeList(
+                  getNotice: getNotice1,
                   filterText: filter1,
                 ),
               ],
@@ -67,7 +71,10 @@ class _NoticeScreenState extends State<NoticeScreen> {
                   controller: myController2,
                   hintText: '送信元、キーワードで検索',
                 ),
-                ClassNoticeList(),
+                ClassNoticeList(
+                  getNotice: getNotice2,
+                  filterText: filter2,
+                ),
               ],
             ),
           ],
