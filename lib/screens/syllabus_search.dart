@@ -8,10 +8,12 @@ class SyllabusSearchScreen extends StatefulWidget {
     super.key,
     required this.dayOfWeek,
     required this.classPeriod,
+    this.teacher,
   });
 
   final DayOfWeek dayOfWeek;
   final int classPeriod;
+  final String? teacher;
 
   @override
   State<SyllabusSearchScreen> createState() => _SyllabusSearchScreenState();
@@ -29,7 +31,9 @@ class _SyllabusSearchScreenState extends State<SyllabusSearchScreen> {
 
   @override
   void initState() {
-    controller.addListener(_setFilterValue);
+    controller
+      ..addListener(_setFilterValue)
+      ..text = widget.teacher ?? '';
     super.initState();
   }
 

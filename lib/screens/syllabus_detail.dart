@@ -1,3 +1,5 @@
+// ignore_for_file: lines_longer_than_80_chars
+
 import 'package:aitapp/models/class_syllabus.dart';
 import 'package:aitapp/models/get_syllabus.dart';
 import 'package:flutter/material.dart';
@@ -36,20 +38,25 @@ class SyllabusDetail extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('${syllabus!.teacher}'),
+                        Text(syllabus!.classRoom),
+                        Text(
+                          '${classificationToString[syllabus.classification]} ${syllabus.unitsNumber}単位    ${syllabus.semester} ${syllabus.classPeriod}',
+                        ),
                       ],
                     ),
                     const SizedBox(
                       height: 10,
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(syllabus.classRoom),
-                        Text(
-                            '${classificationToString[syllabus.classification]} ${syllabus.unitsNumber}単位    ${syllabus.semester} ${syllabus.classPeriod}'),
-                      ],
-                    ),
+                    for (var i = 0; i <= syllabus.teacher.length; i += 3) ...{
+                      Row(
+                        children: [
+                          Text(
+                            '${syllabus.teacher[i]} ${syllabus.teacher[i + 1]}',
+                          ),
+                          const Spacer(),
+                        ],
+                      ),
+                    },
                     const SizedBox(
                       height: 30,
                     ),
@@ -122,20 +129,22 @@ class SyllabusDetail extends StatelessWidget {
                       height: 30,
                     ),
                     Text(syllabus.records),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    const Text(
-                      '教員メッセージ',
-                      style: TextStyle(
-                        fontSize: 17,
-                        fontWeight: FontWeight.bold,
+                    if (syllabus.teachersMessage != '') ...{
+                      const SizedBox(
+                        height: 20,
                       ),
-                    ),
-                    const SizedBox(
-                      height: 30,
-                    ),
-                    Text(syllabus.teachersMessage),
+                      const Text(
+                        '教員メッセージ',
+                        style: TextStyle(
+                          fontSize: 17,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 30,
+                      ),
+                      Text(syllabus.teachersMessage),
+                    },
                     const SizedBox(
                       height: 30,
                     ),

@@ -1,3 +1,5 @@
+// ignore_for_file: lines_longer_than_80_chars
+
 import 'package:aitapp/models/class_syllabus.dart';
 import 'package:aitapp/models/get_syllabus.dart';
 import 'package:aitapp/screens/syllabus_detail.dart';

@@ -27,10 +27,12 @@ class SearchBarWidget extends StatelessWidget {
             borderSide: BorderSide.none,
           ),
           hintText: hintText,
-          suffixIcon: IconButton(
-            onPressed: controller.clear, //リセット処理
-            icon: const Icon(Icons.clear),
-          ),
+          suffixIcon: controller.text != ''
+              ? IconButton(
+                  onPressed: controller.clear, //リセット処理
+                  icon: const Icon(Icons.clear),
+                )
+              : null,
         ),
       ),
     );

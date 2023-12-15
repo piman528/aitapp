@@ -6,10 +6,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class TabScreen extends ConsumerStatefulWidget {
   const TabScreen({super.key});
-  void initState() {
-    //アプリ起動時に一度だけ実行される
-    // logIn();
-  }
 
   @override
   ConsumerState<TabScreen> createState() => _TabScreenState();
@@ -26,24 +22,23 @@ class _TabScreenState extends ConsumerState<TabScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: currentPages[_currentPageIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        selectedItemColor: Theme.of(context).colorScheme.primary,
-        currentIndex: _currentPageIndex,
-        items: const [
-          BottomNavigationBarItem(
+      bottomNavigationBar: NavigationBar(
+        selectedIndex: _currentPageIndex,
+        destinations: const [
+          NavigationDestination(
             icon: Icon(Icons.article),
             label: 'お知らせ',
           ),
-          BottomNavigationBarItem(
+          NavigationDestination(
             icon: Icon(Icons.event),
             label: '時間割',
           ),
-          BottomNavigationBarItem(
+          NavigationDestination(
             icon: Icon(Icons.directions_bus),
             label: '時刻表',
           ),
         ],
-        onTap: (index) {
+        onDestinationSelected: (index) {
           setState(() {
             _currentPageIndex = index;
           });

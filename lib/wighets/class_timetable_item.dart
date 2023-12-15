@@ -100,6 +100,7 @@ class ClassGridContainer extends StatelessWidget {
             builder: (ctx) => SyllabusSearchScreen(
               dayOfWeek: dayOfWeek,
               classPeriod: classPeriod,
+              teacher: clas?.teacher,
             ),
           ),
         );

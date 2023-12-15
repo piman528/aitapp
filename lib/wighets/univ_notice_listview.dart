@@ -4,7 +4,7 @@ import 'package:aitapp/wighets/univ_notice.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class UnivNoticeList extends ConsumerWidget {
+class UnivNoticeList extends ConsumerStatefulWidget {
   const UnivNoticeList({
     super.key,
     required this.filterText,
@@ -14,23 +14,42 @@ class UnivNoticeList extends ConsumerWidget {
   final GetNotice getNotice;
   final String filterText;
 
+  @override
+  ConsumerState<UnivNoticeList> createState() => _UnivNoticeListState();
+}
+
+class _UnivNoticeListState extends ConsumerState<UnivNoticeList> {
+  @override
+  void initState() {
+    super.initState();
+    ref
+        .read(univNoticesProvider.notifier)
+        .reloadNotices(widget.getNotice, _create());
+  }
+
   Future<void> _create() async {
-    await getNotice.create();
+    await widget.getNotice.create();
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final asyncValue = ref.watch(univNoticesProvider);
     if (asyncValue.isLoading) {
-      ref.read(univNoticesProvider.notifier).fetchNotices(getNotice, _create());
+      ref
+          .read(univNoticesProvider.notifier)
+          .fetchNotices(widget.getNotice, _create());
     }
     return asyncValue.when(
       data: (data) {
         final result = data
             .where(
               (univNotice) =>
-                  univNotice.title.toLowerCase().contains(filterText) ||
-                  univNotice.sender.toLowerCase().contains(filterText),
+                  univNotice.title.toLowerCase().contains(
+                        widget.filterText.toLowerCase(),
+                      ) ||
+                  univNotice.sender.toLowerCase().contains(
+                        widget.filterText.toLowerCase(),
+                      ),
             )
             .toList();
         return Expanded(
@@ -38,7 +57,7 @@ class UnivNoticeList extends ConsumerWidget {
             onRefresh: () async {
               await ref
                   .read(univNoticesProvider.notifier)
-                  .reloadNotices(getNotice, _create());
+                  .reloadNotices(widget.getNotice, _create());
             },
             child: ListView.builder(
               itemCount: result.length,
@@ -46,7 +65,7 @@ class UnivNoticeList extends ConsumerWidget {
                 return UnivNoticeItem(
                   notice: result[i],
                   index: data.indexOf(result[i]),
-                  getNotice: getNotice,
+                  getNotice: widget.getNotice,
                 );
               },
             ),

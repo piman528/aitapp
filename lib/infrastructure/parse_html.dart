@@ -1,3 +1,5 @@
+// ignore_for_file: lines_longer_than_80_chars
+
 import 'package:aitapp/const.dart';
 import 'package:aitapp/models/class.dart';
 import 'package:aitapp/models/class_notice.dart';
