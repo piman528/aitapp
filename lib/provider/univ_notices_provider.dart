@@ -5,20 +5,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 class UnivNoticesNotifier extends StateNotifier<AsyncValue<List<UnivNotice>>> {
   UnivNoticesNotifier() : super(const AsyncValue.loading());
 
-  Future<void> fetchNotices(
-    GetNotice getNotice,
-    Future<void> create,
-  ) async {
-    await create;
-    state = const AsyncValue.loading();
-    try {
-      final result = await getNotice.getUnivNoticelist();
-      state = AsyncValue.data(result);
-    } on Exception catch (err, stack) {
-      state = AsyncValue.error(err, stack);
-    }
-  }
-
   Future<void> reloadNotices(
     GetNotice getNotice,
     Future<void> create,

@@ -34,11 +34,6 @@ class _UnivNoticeListState extends ConsumerState<UnivNoticeList> {
   @override
   Widget build(BuildContext context) {
     final asyncValue = ref.watch(univNoticesProvider);
-    if (asyncValue.isLoading) {
-      ref
-          .read(univNoticesProvider.notifier)
-          .fetchNotices(widget.getNotice, _create());
-    }
     return asyncValue.when(
       data: (data) {
         final result = data

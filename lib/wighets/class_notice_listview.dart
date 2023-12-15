@@ -34,11 +34,6 @@ class _ClassNoticeListState extends ConsumerState<ClassNoticeList> {
   @override
   Widget build(BuildContext context) {
     final asyncValue = ref.watch(classNoticesProvider);
-    if (asyncValue.isLoading) {
-      ref
-          .read(classNoticesProvider.notifier)
-          .fetchNotices(widget.getNotice, _create());
-    }
     return asyncValue.when(
       data: (data) {
         final result = data
