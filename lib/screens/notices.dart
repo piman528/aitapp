@@ -12,37 +12,37 @@ class NoticeScreen extends StatefulWidget {
 }
 
 class _NoticeScreenState extends State<NoticeScreen> {
-  final myController1 = TextEditingController();
-  final myController2 = TextEditingController();
+  final univController = TextEditingController();
+  final classController = TextEditingController();
 
-  String filter1 = '';
-  String filter2 = '';
-  final getNotice1 = GetNotice();
-  final getNotice2 = GetNotice();
+  String univFilter = '';
+  String classFilter = '';
+  final getUnivNotice = GetNotice();
+  final getClassNotice = GetNotice();
 
-  void _printLatestValue1() {
+  void _printUnivFilterValue1() {
     setState(() {
-      filter1 = myController1.text;
+      univFilter = univController.text;
     });
   }
 
-  void _printLatestValue2() {
+  void _setClassFilterValue2() {
     setState(() {
-      filter2 = myController2.text;
+      classFilter = classController.text;
     });
   }
 
   @override
   void initState() {
-    myController1.addListener(_printLatestValue1);
-    myController2.addListener(_printLatestValue2);
+    univController.addListener(_printUnivFilterValue1);
+    classController.addListener(_setClassFilterValue2);
     super.initState();
   }
 
   @override
   void dispose() {
-    myController1.dispose();
-    myController2.dispose();
+    univController.dispose();
+    classController.dispose();
     super.dispose();
   }
 
@@ -56,24 +56,24 @@ class _NoticeScreenState extends State<NoticeScreen> {
             Column(
               children: [
                 SearchBarWidget(
-                  controller: myController1,
+                  controller: univController,
                   hintText: '送信元、キーワードで検索',
                 ),
                 UnivNoticeList(
-                  getNotice: getNotice1,
-                  filterText: filter1,
+                  getNotice: getUnivNotice,
+                  filterText: univFilter,
                 ),
               ],
             ),
             Column(
               children: [
                 SearchBarWidget(
-                  controller: myController2,
+                  controller: classController,
                   hintText: '送信元、キーワードで検索',
                 ),
                 ClassNoticeList(
-                  getNotice: getNotice2,
-                  filterText: filter2,
+                  getNotice: getClassNotice,
+                  filterText: classFilter,
                 ),
               ],
             ),

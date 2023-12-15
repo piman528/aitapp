@@ -3,7 +3,7 @@ import 'package:aitapp/wighets/search_bar.dart';
 import 'package:aitapp/wighets/syllabus_list.dart';
 import 'package:flutter/material.dart';
 
-class SyllabusSearchScreen extends StatelessWidget {
+class SyllabusSearchScreen extends StatefulWidget {
   const SyllabusSearchScreen({
     super.key,
     required this.dayOfWeek,
@@ -14,6 +14,32 @@ class SyllabusSearchScreen extends StatelessWidget {
   final int classPeriod;
 
   @override
+  State<SyllabusSearchScreen> createState() => _SyllabusSearchScreenState();
+}
+
+class _SyllabusSearchScreenState extends State<SyllabusSearchScreen> {
+  final controller = TextEditingController();
+  String filter = '';
+
+  void _setFilterValue() {
+    setState(() {
+      filter = controller.text;
+    });
+  }
+
+  @override
+  void initState() {
+    controller.addListener(_setFilterValue);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -21,19 +47,20 @@ class SyllabusSearchScreen extends StatelessWidget {
         // backgroundColor: Colors.white,
         centerTitle: true,
         title: Text(
-          '${dayOfWeekToString[dayOfWeek]} $classPeriod限から検索',
+          '${dayOfWeekToString[widget.dayOfWeek]} ${widget.classPeriod}限から検索',
           // style: TextStyle(color: Colors.black),
         ),
       ),
       body: Column(
         children: [
           SearchBarWidget(
-            controller: TextEditingController(),
+            controller: controller,
             hintText: '教授名、授業名で検索',
           ),
           SyllabusList(
-            classPeriod: classPeriod,
-            dayOfWeek: dayOfWeek,
+            classPeriod: widget.classPeriod,
+            dayOfWeek: widget.dayOfWeek,
+            filterText: filter,
           ),
         ],
       ),

@@ -1,30 +1,25 @@
 import 'package:aitapp/const.dart';
-import 'package:aitapp/infrastructure/parse_html.dart';
-import 'package:aitapp/infrastructure/syllabus_search.dart';
 import 'package:aitapp/models/class_syllabus.dart';
+import 'package:aitapp/models/get_syllabus.dart';
 import 'package:aitapp/wighets/syllabus_item.dart';
 import 'package:flutter/material.dart';
 
 class SyllabusList extends StatelessWidget {
-  const SyllabusList({
+  SyllabusList({
     super.key,
     required this.dayOfWeek,
     required this.classPeriod,
+    required this.filterText,
   });
   final DayOfWeek dayOfWeek;
   final int classPeriod;
+  final String filterText;
+  final getSyllabus = GetSyllabus();
 
   Future<List<ClassSyllabus>> _syllabusList() async {
-    final jSessionId = await getSyllabusSearchBody();
-    final body = await getSyllabusListBody(
-      1,
-      2,
-      dayOfWeekToInt[dayOfWeek]!,
-      classPeriod,
-      '02',
-      jSessionId,
-    );
-    final syllabusList = parseSyllabusList(body);
+    await getSyllabus.create();
+    final syllabusList =
+        await getSyllabus.getSyllabusList(dayOfWeek, classPeriod);
     return syllabusList;
   }
 
@@ -35,11 +30,19 @@ class SyllabusList extends StatelessWidget {
       builder:
           (BuildContext context, AsyncSnapshot<List<ClassSyllabus>> snapshot) {
         if (snapshot.hasData) {
+          final result = snapshot.data!
+              .where(
+                (syllabus) =>
+                    syllabus.teacher.toLowerCase().contains(filterText) ||
+                    syllabus.subject.toLowerCase().contains(filterText),
+              )
+              .toList();
           return Expanded(
             child: ListView.builder(
-              itemCount: snapshot.data?.length,
+              itemCount: result.length,
               itemBuilder: (c, i) => SyllabusItem(
-                syllabus: snapshot.data![i],
+                syllabus: result[i],
+                getSyllabus: getSyllabus,
               ),
             ),
           );

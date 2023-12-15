@@ -1,5 +1,3 @@
-// ignore_for_file: lines_longer_than_80_chars
-
 import 'package:aitapp/const.dart';
 import 'package:aitapp/models/class.dart';
 import 'package:aitapp/models/class_notice.dart';
@@ -390,6 +388,12 @@ List<ClassSyllabus> parseSyllabusList(String body) {
         }
       }
     }
+    final url = tr
+        .querySelector(
+          'td > a',
+        )!
+        .attributes['onclick']!
+        .split("'")[1];
     var c = 0;
     // 単位数
     var unitsNumber = 0;
@@ -397,8 +401,6 @@ List<ClassSyllabus> parseSyllabusList(String body) {
     var classification = Classification.required;
     // 教員名
     var teacher = '';
-    // 内容
-    final content = <String>[];
     // 教科
     var subject = '';
     for (final text in syllabus) {
@@ -423,13 +425,78 @@ List<ClassSyllabus> parseSyllabusList(String body) {
         unitsNumber,
         classification,
         teacher,
-        content,
         subject,
+        url,
       ),
     );
     i++;
   }
   return classSyllabusList;
+}
+
+ClassSyllabusDetail parseSyllabus(String body) {
+  final topStorytitle = parseHtmlDocument(body).querySelectorAll(
+    'body > table:nth-child(16) > tbody > tr > td > table > tbody > tr',
+  );
+  final texts = <String>[];
+  for (final tr in topStorytitle) {
+    final tds = tr.querySelectorAll('td');
+    for (final tdtext in tds) {
+      for (final text in tdtext.text!
+          .replaceAll('	', '')
+          .replaceAll(' ', '')
+          .replaceAll(' ', '')
+          .trim()
+          .split('\n')) {
+        if (text != '' && text != ' ') {
+          texts.add(text.trim().replaceAll(' ', ''));
+        }
+      }
+    }
+  }
+  // print(texts);
+  final unitsNumber = texts[texts.indexOf('単位数') + 1];
+  final classification = texts[texts.indexOf('単位区分') + 1] == '選択'
+      ? Classification.choice
+      : texts[texts.indexOf('単位区分') + 1] == '必修'
+          ? Classification.required
+          : Classification.requiredElective;
+  final teacher = <String>[];
+  for (var i = texts.indexOf('担当教員') + 1;
+      i < texts.indexOf('研究室・オフィスアワー');
+      i++) {
+    teacher.add(texts[i]);
+  }
+  final subject = texts[texts.indexOf('科目名') + 3];
+  final classPeriod = texts[texts.indexOf('曜日・時限') + 1];
+  final classRoom = texts[texts.indexOf('講義室（キャンパス）') + 1] != '開講学期'
+      ? texts[texts.indexOf('講義室（キャンパス）') + 1]
+      : '';
+  final semester = texts[texts.indexOf('開講学期') + 1];
+  final content = texts[texts.indexOf('概要') + 1];
+  final plan = texts[texts.indexOf('計画') + 1];
+  final learningGoal = texts[texts.indexOf('学習到達目標') + 1];
+  final feature = texts[texts.indexOf('方法と特徴') + 1];
+  final record = texts[texts.indexOf('成績評価の方法') + 1];
+  final teachersMessage =
+      texts[texts.indexOf('教員からのメッセージ') + 1] != '添付ファイル(5MBまで）'
+          ? texts[texts.indexOf('教員からのメッセージ') + 1]
+          : '';
+  return ClassSyllabusDetail(
+    int.parse(unitsNumber),
+    classification,
+    teacher,
+    semester,
+    [content],
+    subject,
+    classPeriod,
+    classRoom,
+    plan,
+    learningGoal,
+    feature,
+    record,
+    teachersMessage,
+  );
 }
 
 String parseStrutsToken({

@@ -1,10 +1,16 @@
 import 'package:aitapp/models/class_syllabus.dart';
+import 'package:aitapp/models/get_syllabus.dart';
 import 'package:aitapp/screens/syllabus_detail.dart';
 import 'package:flutter/material.dart';
 
 class SyllabusItem extends StatelessWidget {
-  const SyllabusItem({super.key, required this.syllabus});
+  const SyllabusItem({
+    super.key,
+    required this.syllabus,
+    required this.getSyllabus,
+  });
   final ClassSyllabus syllabus;
+  final GetSyllabus getSyllabus;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -13,7 +19,10 @@ class SyllabusItem extends StatelessWidget {
           onTap: () {
             Navigator.of(context).push(
               MaterialPageRoute<void>(
-                builder: (ctx) => const SyllabusDetail(),
+                builder: (ctx) => SyllabusDetail(
+                  syllabus: syllabus,
+                  getSyllabus: getSyllabus,
+                ),
               ),
             );
           },
@@ -34,13 +43,9 @@ class SyllabusItem extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(syllabus.teacher),
-                    const SizedBox(
-                      width: 100,
-                    ),
                     Text(
-                      classificationToString[syllabus.classification]!,
+                      '${classificationToString[syllabus.classification]!}   ${syllabus.unitsNumber} 単位',
                     ),
-                    Text('${syllabus.unitsNumber} 単位'),
                   ],
                 ),
               ],

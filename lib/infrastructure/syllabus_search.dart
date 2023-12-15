@@ -2,7 +2,7 @@ import 'package:http/http.dart' as http;
 
 final _regexSplitSetCookies = RegExp(',(?=[^ ])');
 
-Future<String> getSyllabusSearchBody() async {
+Future<String> getSyllabusSessionId() async {
   final headers = {
     'Sec-Fetch-Site': 'none',
     'Connection': 'keep-alive',
@@ -77,6 +77,33 @@ Future<String> getSyllabusListBody(
   if (status != 200) {
     throw Exception('http.post error: statusCode= $status');
   }
+  return res.body;
+}
+
+Future<String> getSyllabus(String detailUrl, String jSessionId) async {
+  final headers = {
+    'Sec-Fetch-Site': 'same-origin',
+    'Cookie': jSessionId,
+    'Connection': 'keep-alive',
+    'Sec-Fetch-Mode': 'navigate',
+    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+    'Referer':
+        'https://syllabus.aitech.ac.jp/ext_syllabus/syllabusSearch.do;$jSessionId',
+    'Sec-Fetch-Dest': 'document',
+    'Accept-Language': 'ja',
+    'Accept-Encoding': 'gzip',
+  };
+
+  final url = Uri.parse(
+    'https://syllabus.aitech.ac.jp$detailUrl',
+  );
+
+  final res = await http.get(url, headers: headers);
+  final status = res.statusCode;
+  if (status != 200) {
+    throw Exception('http.get error: statusCode= $status');
+  }
+
   return res.body;
 }
 
