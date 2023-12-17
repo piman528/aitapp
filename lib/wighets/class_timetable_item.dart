@@ -1,6 +1,7 @@
 import 'package:aitapp/const.dart';
 import 'package:aitapp/models/class.dart';
 import 'package:aitapp/provider/class_timetable_provider.dart';
+import 'package:aitapp/provider/id_password_provider.dart';
 import 'package:aitapp/screens/syllabus_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -148,7 +149,8 @@ class TimeTable extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final asyncValue = ref.watch(classTimeTableProvider);
     if (asyncValue.isLoading) {
-      ref.read(classTimeTableProvider.notifier).fetchData();
+      final list = ref.read(idPasswordProvider);
+      ref.read(classTimeTableProvider.notifier).fetchData(list[0], list[1]);
     }
     return asyncValue.when(
       loading: () => const Center(

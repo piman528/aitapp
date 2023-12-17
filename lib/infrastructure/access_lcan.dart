@@ -1,7 +1,4 @@
-// import 'package:aitapp/infrastructure/secure_storage.dart';
 // ignore_for_file: lines_longer_than_80_chars
-
-import 'package:aitapp/infrastructure/login.dart';
 import 'package:http/http.dart' as http;
 
 final _regexSplitSetCookies = RegExp(',(?=[^ ])');
@@ -33,9 +30,12 @@ Future<List<String>> getCookie() async {
   return cookies;
 }
 
-Future<void> loginLcam(String jSessionId, String liveAppsCookie) async {
-  // final id = await SecureStorage.instance.read(key: 'id');
-  // final password = await SecureStorage.instance.read(key: 'password');
+Future<void> loginLcam(
+  String id,
+  String password,
+  String jSessionId,
+  String liveAppsCookie,
+) async {
   final headers = {
     'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
     'Sec-Fetch-Site': 'same-origin',

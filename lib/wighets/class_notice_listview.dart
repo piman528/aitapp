@@ -1,5 +1,6 @@
 import 'package:aitapp/models/get_notice.dart';
 import 'package:aitapp/provider/class_notices_provider.dart';
+import 'package:aitapp/provider/id_password_provider.dart';
 import 'package:aitapp/wighets/class_notice.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -28,7 +29,8 @@ class _ClassNoticeListState extends ConsumerState<ClassNoticeList> {
   }
 
   Future<void> _create() async {
-    await widget.getNotice.create();
+    final list = ref.read(idPasswordProvider);
+    await widget.getNotice.create(list[0], list[1]);
   }
 
   @override

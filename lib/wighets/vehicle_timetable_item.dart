@@ -16,49 +16,57 @@ class TimeTableCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final destinationTitle = Container(
-      padding: const EdgeInsets.all(8),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            vehicleName[vehicle]! + destinationName[destination]!,
-            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-          ),
-          const Text(
-            '時刻表を見る',
-            style: TextStyle(fontSize: 16),
-          ),
-        ],
-      ),
-    );
     return Expanded(
       child: Column(
         children: [
-          destinationTitle,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                vehicleName[vehicle]! + destinationName[destination]!,
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              TextButton(
+                onPressed: () {},
+                child: const Text(
+                  '時刻表を見る',
+                  style: TextStyle(fontSize: 16),
+                ),
+              ),
+            ],
+          ),
           const SizedBox(
             height: 5,
           ),
-          TimeCard(
-            vehicle: vehicle,
-            destination: destination,
-            order: 0,
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          TimeCard(
-            vehicle: vehicle,
-            destination: destination,
-            order: 1,
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          TimeCard(
-            vehicle: vehicle,
-            destination: destination,
-            order: 2,
+          Expanded(
+            child: ListView(
+              children: [
+                TimeCard(
+                  vehicle: vehicle,
+                  destination: destination,
+                  order: 0,
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                TimeCard(
+                  vehicle: vehicle,
+                  destination: destination,
+                  order: 1,
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                TimeCard(
+                  vehicle: vehicle,
+                  destination: destination,
+                  order: 2,
+                ),
+              ],
+            ),
           ),
         ],
       ),

@@ -7,10 +7,10 @@ class ClassTimeTableNotifier
     extends StateNotifier<AsyncValue<Map<DayOfWeek, Map<int, Class>>>> {
   ClassTimeTableNotifier() : super(const AsyncValue.loading());
 
-  Future<void> fetchData() async {
+  Future<void> fetchData(String id, String password) async {
     state = const AsyncValue.loading();
     try {
-      final result = await getClassTimeTable();
+      final result = await getClassTimeTable(id, password);
       state = AsyncValue.data(result);
     } on Exception catch (err, stack) {
       state = AsyncValue.error(err, stack);

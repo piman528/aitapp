@@ -1,4 +1,5 @@
 import 'package:aitapp/models/get_notice.dart';
+import 'package:aitapp/provider/id_password_provider.dart';
 import 'package:aitapp/provider/univ_notices_provider.dart';
 import 'package:aitapp/wighets/univ_notice.dart';
 import 'package:flutter/material.dart';
@@ -28,7 +29,8 @@ class _UnivNoticeListState extends ConsumerState<UnivNoticeList> {
   }
 
   Future<void> _create() async {
-    await widget.getNotice.create();
+    final list = ref.read(idPasswordProvider);
+    await widget.getNotice.create(list[0], list[1]);
   }
 
   @override

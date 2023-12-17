@@ -6,9 +6,9 @@ import 'package:aitapp/models/univ_notice.dart';
 class GetNotice {
   late List<String> cookies;
   late String token;
-  Future<void> create() async {
+  Future<void> create(String id, String password) async {
     cookies = await getCookie();
-    await loginLcam(cookies[0], cookies[1]);
+    await loginLcam(id, password, cookies[0], cookies[1]);
   }
 
   Future<List<UnivNotice>> getUnivNoticelist() async {
