@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:aitapp/const.dart';
 import 'package:aitapp/infrastructure/next_departure.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class TimeTableCard extends StatelessWidget {
   const TimeTableCard({
@@ -63,7 +66,7 @@ class TimeTableCard extends StatelessWidget {
   }
 }
 
-class TimeCard extends StatelessWidget {
+class TimeCard extends StatefulWidget {
   const TimeCard({
     super.key,
     required this.vehicle,
@@ -75,13 +78,40 @@ class TimeCard extends StatelessWidget {
   final int order;
 
   @override
+  State<TimeCard> createState() => _TimeCardState();
+}
+
+class _TimeCardState extends State<TimeCard> {
+  late DateTime _time;
+  late Timer _timer;
+
+  @override
+  void initState() {
+    _time = DateTime.now();
+    _timer = Timer.periodic(const Duration(milliseconds: 1000), (timer) {
+      setState(() {
+        _time = DateTime.now();
+      });
+    });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final nextDepartureTime = NextDeparture(
-      vehicle: vehicle,
-      destination: destination,
-      order: order,
+      vehicle: widget.vehicle,
+      destination: widget.destination,
+      order: widget.order,
     ).searchNextDeparture();
-    if (nextDepartureTime != '') {
+    if (nextDepartureTime != null) {
+      final remainTime = nextDepartureTime.difference(_time);
+      final f = DateFormat('HH:mm');
       return Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
@@ -98,20 +128,20 @@ class TimeCard extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Column(
+            Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'あと5:00',
-                  style: TextStyle(
+                  'あと${remainTime.inMinutes}分${remainTime.inSeconds % 60}秒',
+                  style: const TextStyle(
                     // color: Colors.black,
-                    fontSize: 25,
+                    fontSize: 20,
                   ),
                 ),
               ],
             ),
             Text(
-              nextDepartureTime,
+              f.format(nextDepartureTime),
               style: const TextStyle(
                 // color: Colors.black,
                 fontSize: 48,
