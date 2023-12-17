@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:aitapp/infrastructure/access_lcan.dart';
 import 'package:aitapp/provider/id_password_provider.dart';
 import 'package:aitapp/screens/tabs.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +18,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   final idController = TextEditingController();
 
   final passwordController = TextEditingController();
+  bool _isObscure = true;
 
   @override
   void dispose() {
@@ -28,44 +32,103 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     return Scaffold(
       body: Center(
         child: Padding(
-          padding: const EdgeInsets.all(8),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Text('愛工大へログイン'),
-              const SizedBox(
-                height: 40,
-              ),
-              TextField(
-                controller: idController,
-              ),
-              const SizedBox(
-                height: 40,
-              ),
-              TextField(
-                controller: passwordController,
-              ),
-              const SizedBox(
-                height: 40,
-              ),
-              ElevatedButton(
-                onPressed: () async {
-                  final prefs = await SharedPreferences.getInstance();
-                  await prefs.setString('id', idController.text);
-                  await prefs.setString('password', passwordController.text);
-                  ref.read(idPasswordProvider.notifier).setIdPassword(
+          padding: const EdgeInsets.symmetric(horizontal: 40),
+          child: Card(
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    '愛工大へログイン',
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
+                  const SizedBox(
+                    height: 40,
+                  ),
+                  TextField(
+                    controller: idController,
+                    keyboardType: TextInputType.emailAddress,
+                    decoration: InputDecoration(
+                      hintText: '愛工大ID',
+                      isDense: true,
+                      prefixIcon: const Icon(Icons.account_circle),
+                      fillColor: Theme.of(context).hoverColor,
+                      filled: true,
+                      // border: InputBorder.none,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: BorderSide.none,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 40,
+                  ),
+                  TextField(
+                    keyboardType: TextInputType.visiblePassword,
+                    controller: passwordController,
+                    obscureText: _isObscure,
+                    decoration: InputDecoration(
+                      hintText: 'パスワード',
+                      isDense: true,
+                      prefixIcon: const Icon(Icons.lock),
+                      fillColor: Theme.of(context).hoverColor,
+                      filled: true,
+                      // border: InputBorder.none,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: BorderSide.none,
+                      ),
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          _isObscure ? Icons.visibility_off : Icons.visibility,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _isObscure = !_isObscure;
+                          });
+                        },
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 40,
+                  ),
+                  ElevatedButton(
+                    onPressed: () async {
+                      final cookies = await getCookie();
+                      final loginBool = await loginLcam(
                         idController.text,
                         passwordController.text,
+                        cookies[0],
+                        cookies[1],
                       );
-                  await Navigator.of(context).pushReplacement(
-                    MaterialPageRoute<void>(
-                      builder: (ctx) => const TabScreen(),
-                    ),
-                  );
-                },
-                child: const Text('ログイン'),
+                      if (loginBool) {
+                        final prefs = await SharedPreferences.getInstance();
+                        await prefs.setString('id', idController.text);
+                        await prefs.setString(
+                          'password',
+                          passwordController.text,
+                        );
+                        ref.read(idPasswordProvider.notifier).setIdPassword(
+                              idController.text,
+                              passwordController.text,
+                            );
+                        unawaited(
+                          Navigator.of(context).pushReplacement(
+                            MaterialPageRoute<void>(
+                              builder: (ctx) => const TabScreen(),
+                            ),
+                          ),
+                        );
+                      }
+                    },
+                    child: const Text('ログイン'),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
         ),
       ),

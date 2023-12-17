@@ -34,29 +34,25 @@ class _AppState extends ConsumerState<App> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: loadIdPass(),
-      builder: (context, snapshot) {
-        if (snapshot.hasData &&
-            snapshot.data?[0] != '' &&
-            snapshot.data?[1] != '') {
-          return MaterialApp(
-            home: const TabScreen(),
-            theme: buildThemeLight(),
-            darkTheme: buildThemeDark(),
-          );
-        } else if (snapshot.hasData &&
-            snapshot.data?[0] == '' &&
-            snapshot.data?[1] == '') {
-          return MaterialApp(
-            home: const LoginScreen(),
-            theme: buildThemeLight(),
-            darkTheme: buildThemeDark(),
-          );
-        } else {
-          return const SizedBox();
-        }
-      },
+    return MaterialApp(
+      theme: buildThemeLight(),
+      darkTheme: buildThemeDark(),
+      home: FutureBuilder(
+        future: loadIdPass(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData &&
+              snapshot.data?[0] != '' &&
+              snapshot.data?[1] != '') {
+            return const TabScreen();
+          } else if (snapshot.hasData &&
+              snapshot.data?[0] == '' &&
+              snapshot.data?[1] == '') {
+            return const LoginScreen();
+          } else {
+            return const SizedBox();
+          }
+        },
+      ),
     );
   }
 }

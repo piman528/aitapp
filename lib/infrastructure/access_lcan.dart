@@ -1,5 +1,6 @@
 // ignore_for_file: lines_longer_than_80_chars
 import 'package:http/http.dart' as http;
+import 'package:universal_html/parsing.dart';
 
 final _regexSplitSetCookies = RegExp(',(?=[^ ])');
 
@@ -30,7 +31,7 @@ Future<List<String>> getCookie() async {
   return cookies;
 }
 
-Future<void> loginLcam(
+Future<bool> loginLcam(
   String id,
   String password,
   String jSessionId,
@@ -72,14 +73,16 @@ Future<void> loginLcam(
     throw Exception('http.post error: statusCode= $status');
   }
 
-  // print(res.body);
-  // var document = parseHtmlDocument(res.body);
-  // final topStorytitle = document
-  //     .querySelectorAll(
-  //         'body > div:nth-child(3) > table > tbody > tr > td:nth-child(2)')
-  //     .first
-  //     .text;
-  // debugPrint(topStorytitle);
+  final document = parseHtmlDocument(res.body);
+  try {
+    document
+        .querySelectorAll('#_errorInformation > ul > li:nth-child(1)')
+        .first
+        .text;
+  } catch (err) {
+    return true;
+  }
+  return false;
 }
 
 Future<String> getStrutsToken({
