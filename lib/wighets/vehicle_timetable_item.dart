@@ -140,7 +140,7 @@ class _TimeCardState extends State<TimeCard> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'あと${remainTime.inMinutes}分${remainTime.inSeconds % 60}秒',
+                  'あと${remainTime.inMinutes % 60}分${remainTime.inSeconds % 60}秒',
                   style: const TextStyle(
                     // color: Colors.black,
                     fontSize: 20,
