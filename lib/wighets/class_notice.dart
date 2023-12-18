@@ -4,12 +4,13 @@ import 'package:aitapp/screens/class_notice_detail.dart';
 import 'package:flutter/material.dart';
 
 class ClassNoticeItem extends StatelessWidget {
-  const ClassNoticeItem(
-      {super.key,
-      required this.notice,
-      required this.index,
-      required this.getNotice,
-      required this.tap});
+  const ClassNoticeItem({
+    super.key,
+    required this.notice,
+    required this.index,
+    required this.getNotice,
+    required this.tap,
+  });
 
   final ClassNotice notice;
   final int index;
