@@ -22,6 +22,7 @@ class UnivNoticeList extends ConsumerStatefulWidget {
 
 class _UnivNoticeListState extends ConsumerState<UnivNoticeList> {
   bool isLoading = true;
+  bool isManual = false;
 
   @override
   void initState() {
@@ -30,6 +31,9 @@ class _UnivNoticeListState extends ConsumerState<UnivNoticeList> {
   }
 
   Future<void> _load() async {
+    setState(() {
+      isLoading = true;
+    });
     final identity = ref.read(idPasswordProvider);
     await widget.getNotice.create(identity[0], identity[1]);
     final result = await widget.getNotice.getUnivNoticelist();
@@ -57,31 +61,7 @@ class _UnivNoticeListState extends ConsumerState<UnivNoticeList> {
   }
 
   Widget _content() {
-    if (isLoading) {
-      if (ref.read(univNoticesProvider) != null) {
-        final result = ref.read(univNoticesProvider)!;
-        final filteredResult = _filteredList(result);
-        return ListView.builder(
-          itemCount: filteredResult.length,
-          itemBuilder: (c, i) {
-            return UnivNoticeItem(
-              notice: filteredResult[i],
-              index: result.indexOf(filteredResult[i]),
-              getNotice: widget.getNotice,
-              tap: false,
-            );
-          },
-        );
-      } else {
-        return const Center(
-          child: SizedBox(
-            height: 25, //指定
-            width: 25, //指定
-            child: CircularProgressIndicator(),
-          ),
-        );
-      }
-    } else {
+    if (ref.read(univNoticesProvider) != null) {
       final result = ref.read(univNoticesProvider)!;
       final filteredResult = _filteredList(result);
       return ListView.builder(
@@ -91,9 +71,17 @@ class _UnivNoticeListState extends ConsumerState<UnivNoticeList> {
             notice: filteredResult[i],
             index: result.indexOf(filteredResult[i]),
             getNotice: widget.getNotice,
-            tap: true,
+            tap: !isLoading,
           );
         },
+      );
+    } else {
+      return const Center(
+        child: SizedBox(
+          height: 25, //指定
+          width: 25, //指定
+          child: CircularProgressIndicator(),
+        ),
       );
     }
   }
@@ -103,12 +91,17 @@ class _UnivNoticeListState extends ConsumerState<UnivNoticeList> {
     return Expanded(
       child: Column(
         children: [
-          if (isLoading && ref.read(univNoticesProvider) != null) ...{
+          if (isLoading &&
+              ref.read(univNoticesProvider) != null &&
+              !isManual) ...{
             const LinearProgressIndicator(),
           },
           Expanded(
             child: RefreshIndicator(
               onRefresh: () async {
+                setState(() {
+                  isManual = true;
+                });
                 await _load();
               },
               child: _content(),

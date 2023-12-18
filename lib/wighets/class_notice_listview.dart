@@ -22,6 +22,7 @@ class ClassNoticeList extends ConsumerStatefulWidget {
 
 class _ClassNoticeListState extends ConsumerState<ClassNoticeList> {
   bool isLoading = true;
+  bool isManual = false;
 
   @override
   void initState() {
@@ -30,6 +31,9 @@ class _ClassNoticeListState extends ConsumerState<ClassNoticeList> {
   }
 
   Future<void> _load() async {
+    setState(() {
+      isLoading = true;
+    });
     final identity = ref.read(idPasswordProvider);
     await widget.getNotice.create(identity[0], identity[1]);
     final result = await widget.getNotice.getClassNoticelist();
@@ -54,31 +58,7 @@ class _ClassNoticeListState extends ConsumerState<ClassNoticeList> {
   }
 
   Widget _content() {
-    if (isLoading) {
-      if (ref.read(classNoticesProvider) != null) {
-        final result = ref.read(classNoticesProvider)!;
-        final filteredResult = _filteredList(result);
-        return ListView.builder(
-          itemCount: filteredResult.length,
-          itemBuilder: (c, i) {
-            return ClassNoticeItem(
-              notice: filteredResult[i],
-              index: result.indexOf(filteredResult[i]),
-              getNotice: widget.getNotice,
-              tap: false,
-            );
-          },
-        );
-      } else {
-        return const Center(
-          child: SizedBox(
-            height: 25, //指定
-            width: 25, //指定
-            child: CircularProgressIndicator(),
-          ),
-        );
-      }
-    } else {
+    if (ref.read(classNoticesProvider) != null) {
       final result = ref.read(classNoticesProvider)!;
       final filteredResult = _filteredList(result);
       return ListView.builder(
@@ -88,9 +68,17 @@ class _ClassNoticeListState extends ConsumerState<ClassNoticeList> {
             notice: filteredResult[i],
             index: result.indexOf(filteredResult[i]),
             getNotice: widget.getNotice,
-            tap: true,
+            tap: !isLoading,
           );
         },
+      );
+    } else {
+      return const Center(
+        child: SizedBox(
+          height: 25, //指定
+          width: 25, //指定
+          child: CircularProgressIndicator(),
+        ),
       );
     }
   }
@@ -100,12 +88,17 @@ class _ClassNoticeListState extends ConsumerState<ClassNoticeList> {
     return Expanded(
       child: Column(
         children: [
-          if (isLoading && ref.read(classNoticesProvider) != null) ...{
+          if (isLoading &&
+              ref.read(classNoticesProvider) != null &&
+              !isManual) ...{
             const LinearProgressIndicator(),
           },
           Expanded(
             child: RefreshIndicator(
               onRefresh: () async {
+                setState(() {
+                  isManual = true;
+                });
                 await _load();
               },
               child: _content(),
