@@ -49,9 +49,15 @@ class _ClassNoticeListState extends ConsumerState<ClassNoticeList> {
     final result = list
         .where(
           (classNotice) =>
-              classNotice.subject.toLowerCase().contains(widget.filterText) ||
-              classNotice.title.toLowerCase().contains(widget.filterText) ||
-              classNotice.sender.toLowerCase().contains(widget.filterText),
+              classNotice.subject.toLowerCase().contains(
+                    widget.filterText.toLowerCase(),
+                  ) ||
+              classNotice.title.toLowerCase().contains(
+                    widget.filterText.toLowerCase(),
+                  ) ||
+              classNotice.sender.toLowerCase().contains(
+                    widget.filterText.toLowerCase(),
+                  ),
         )
         .toList();
     return result;
