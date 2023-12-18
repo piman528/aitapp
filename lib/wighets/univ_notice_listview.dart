@@ -33,10 +33,12 @@ class _UnivNoticeListState extends ConsumerState<UnivNoticeList> {
     final identity = ref.read(idPasswordProvider);
     await widget.getNotice.create(identity[0], identity[1]);
     final result = await widget.getNotice.getUnivNoticelist();
-    ref.read(univNoticesProvider.notifier).reloadNotices(result);
-    setState(() {
-      isLoading = false;
-    });
+    if (mounted) {
+      setState(() {
+        ref.read(univNoticesProvider.notifier).reloadNotices(result);
+        isLoading = false;
+      });
+    }
   }
 
   List<UnivNotice> _filteredList(List<UnivNotice> list) {

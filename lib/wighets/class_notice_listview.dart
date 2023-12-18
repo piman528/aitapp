@@ -33,10 +33,12 @@ class _ClassNoticeListState extends ConsumerState<ClassNoticeList> {
     final identity = ref.read(idPasswordProvider);
     await widget.getNotice.create(identity[0], identity[1]);
     final result = await widget.getNotice.getClassNoticelist();
-    ref.read(classNoticesProvider.notifier).reloadNotices(result);
-    setState(() {
-      isLoading = false;
-    });
+    if (mounted) {
+      setState(() {
+        ref.read(classNoticesProvider.notifier).reloadNotices(result);
+        isLoading = false;
+      });
+    }
   }
 
   List<ClassNotice> _filteredList(List<ClassNotice> list) {
