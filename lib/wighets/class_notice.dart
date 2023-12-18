@@ -4,16 +4,17 @@ import 'package:aitapp/screens/class_notice_detail.dart';
 import 'package:flutter/material.dart';
 
 class ClassNoticeItem extends StatelessWidget {
-  const ClassNoticeItem({
-    super.key,
-    required this.notice,
-    required this.index,
-    required this.getNotice,
-  });
+  const ClassNoticeItem(
+      {super.key,
+      required this.notice,
+      required this.index,
+      required this.getNotice,
+      required this.tap});
 
   final ClassNotice notice;
   final int index;
   final GetNotice getNotice;
+  final bool tap;
 
   @override
   Widget build(BuildContext context) {
@@ -21,14 +22,16 @@ class ClassNoticeItem extends StatelessWidget {
       children: [
         InkWell(
           onTap: () {
-            Navigator.of(context).push(
-              MaterialPageRoute<void>(
-                builder: (ctx) => ClassNoticeDetailScreen(
-                  index: index,
-                  getNotice: getNotice,
+            if (tap) {
+              Navigator.of(context).push(
+                MaterialPageRoute<void>(
+                  builder: (ctx) => ClassNoticeDetailScreen(
+                    index: index,
+                    getNotice: getNotice,
+                  ),
                 ),
-              ),
-            );
+              );
+            }
           },
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),

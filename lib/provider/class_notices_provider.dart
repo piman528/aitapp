@@ -1,27 +1,16 @@
 import 'package:aitapp/models/class_notice.dart';
-import 'package:aitapp/models/get_notice.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class ClassNoticesNotifier
-    extends StateNotifier<AsyncValue<List<ClassNotice>>> {
-  ClassNoticesNotifier() : super(const AsyncValue.loading());
+class ClassNoticesNotifier extends StateNotifier<List<ClassNotice>?> {
+  ClassNoticesNotifier() : super(null);
 
-  Future<void> reloadNotices(
-    GetNotice getNotice,
-    Future<void> create,
-  ) async {
-    await create;
-    try {
-      final result = await getNotice.getClassNoticelist();
-      state = AsyncValue.data(result);
-    } on Exception catch (err, stack) {
-      state = AsyncValue.error(err, stack);
-    }
+  void reloadNotices(List<ClassNotice> list) {
+    state = list;
   }
 }
 
 final classNoticesProvider =
-    StateNotifierProvider<ClassNoticesNotifier, AsyncValue<List<ClassNotice>>>(
+    StateNotifierProvider<ClassNoticesNotifier, List<ClassNotice>?>(
   (ref) {
     return ClassNoticesNotifier();
   },

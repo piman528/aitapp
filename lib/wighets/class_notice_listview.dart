@@ -1,3 +1,4 @@
+import 'package:aitapp/models/class_notice.dart';
 import 'package:aitapp/models/get_notice.dart';
 import 'package:aitapp/provider/class_notices_provider.dart';
 import 'package:aitapp/provider/id_password_provider.dart';
@@ -20,60 +21,87 @@ class ClassNoticeList extends ConsumerStatefulWidget {
 }
 
 class _ClassNoticeListState extends ConsumerState<ClassNoticeList> {
+  bool isLoading = true;
+
   @override
   void initState() {
+    _load();
     super.initState();
-    ref
-        .read(classNoticesProvider.notifier)
-        .reloadNotices(widget.getNotice, _create());
   }
 
-  Future<void> _create() async {
-    final list = ref.read(idPasswordProvider);
-    await widget.getNotice.create(list[0], list[1]);
+  Future<void> _load() async {
+    final identity = ref.read(idPasswordProvider);
+    await widget.getNotice.create(identity[0], identity[1]);
+    final result = await widget.getNotice.getClassNoticelist();
+    ref.read(classNoticesProvider.notifier).reloadNotices(result);
+    setState(() {
+      isLoading = false;
+    });
+  }
+
+  List<ClassNotice> _filteredList(List<ClassNotice> list) {
+    final result = list
+        .where(
+          (classNotice) =>
+              classNotice.subject.toLowerCase().contains(widget.filterText) ||
+              classNotice.title.toLowerCase().contains(widget.filterText) ||
+              classNotice.sender.toLowerCase().contains(widget.filterText),
+        )
+        .toList();
+    return result;
+  }
+
+  Widget _content() {
+    if (isLoading) {
+      if (ref.read(classNoticesProvider) != null) {
+        final result = ref.read(classNoticesProvider)!;
+        final filteredResult = _filteredList(result);
+        return ListView.builder(
+          itemCount: filteredResult.length,
+          itemBuilder: (c, i) {
+            return ClassNoticeItem(
+              notice: filteredResult[i],
+              index: result.indexOf(filteredResult[i]),
+              getNotice: widget.getNotice,
+              tap: false,
+            );
+          },
+        );
+      } else {
+        return const Center(
+          child: SizedBox(
+            height: 25, //指定
+            width: 25, //指定
+            child: CircularProgressIndicator(),
+          ),
+        );
+      }
+    } else {
+      final result = ref.read(classNoticesProvider)!;
+      final filteredResult = _filteredList(result);
+      return ListView.builder(
+        itemCount: filteredResult.length,
+        itemBuilder: (c, i) {
+          return ClassNoticeItem(
+            notice: filteredResult[i],
+            index: result.indexOf(filteredResult[i]),
+            getNotice: widget.getNotice,
+            tap: true,
+          );
+        },
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final asyncValue = ref.watch(classNoticesProvider);
-    return asyncValue.when(
-      data: (data) {
-        final result = data
-            .where(
-              (classNotice) =>
-                  classNotice.subject
-                      .toLowerCase()
-                      .contains(widget.filterText) ||
-                  classNotice.title.toLowerCase().contains(widget.filterText) ||
-                  classNotice.sender.toLowerCase().contains(widget.filterText),
-            )
-            .toList();
-        return Expanded(
-          child: RefreshIndicator(
-            onRefresh: () async {
-              await ref
-                  .read(classNoticesProvider.notifier)
-                  .reloadNotices(widget.getNotice, _create());
-            },
-            child: ListView.builder(
-              itemCount: result.length,
-              itemBuilder: (c, i) => ClassNoticeItem(
-                notice: result[i],
-                index: data.indexOf(result[i]),
-                getNotice: widget.getNotice,
-              ),
-            ),
-          ),
-        );
-      },
-      loading: () => const Center(
-        child: SizedBox(
-          height: 25, //指定
-          width: 25, //指定
-          child: CircularProgressIndicator(),
-        ),
+    return Expanded(
+      child: RefreshIndicator(
+        onRefresh: () async {
+          await _load();
+        },
+        child: _content(),
       ),
-      error: (_, __) => const Text('An error occurred'),
     );
   }
 }

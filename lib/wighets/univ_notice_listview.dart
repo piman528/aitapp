@@ -23,12 +23,20 @@ class UnivNoticeList extends ConsumerStatefulWidget {
 class _UnivNoticeListState extends ConsumerState<UnivNoticeList> {
   bool isLoading = true;
 
+  @override
+  void initState() {
+    _load();
+    super.initState();
+  }
+
   Future<void> _load() async {
-    final list = ref.read(idPasswordProvider);
-    await widget.getNotice.create(list[0], list[1]);
+    final identity = ref.read(idPasswordProvider);
+    await widget.getNotice.create(identity[0], identity[1]);
     final result = await widget.getNotice.getUnivNoticelist();
     ref.read(univNoticesProvider.notifier).reloadNotices(result);
-    isLoading = false;
+    setState(() {
+      isLoading = false;
+    });
   }
 
   List<UnivNotice> _filteredList(List<UnivNotice> list) {
@@ -50,12 +58,13 @@ class _UnivNoticeListState extends ConsumerState<UnivNoticeList> {
     if (isLoading) {
       if (ref.read(univNoticesProvider) != null) {
         final result = ref.read(univNoticesProvider)!;
+        final filteredResult = _filteredList(result);
         return ListView.builder(
-          itemCount: _filteredList(result).length,
+          itemCount: filteredResult.length,
           itemBuilder: (c, i) {
             return UnivNoticeItem(
-              notice: _filteredList(result)[i],
-              index: result.indexOf(_filteredList(result)[i]),
+              notice: filteredResult[i],
+              index: result.indexOf(filteredResult[i]),
               getNotice: widget.getNotice,
               tap: false,
             );
@@ -72,24 +81,19 @@ class _UnivNoticeListState extends ConsumerState<UnivNoticeList> {
       }
     } else {
       final result = ref.read(univNoticesProvider)!;
+      final filteredResult = _filteredList(result);
       return ListView.builder(
-        itemCount: _filteredList(result).length,
+        itemCount: filteredResult.length,
         itemBuilder: (c, i) {
           return UnivNoticeItem(
-            notice: _filteredList(result)[i],
-            index: result.indexOf(_filteredList(result)[i]),
+            notice: filteredResult[i],
+            index: result.indexOf(filteredResult[i]),
             getNotice: widget.getNotice,
-            tap: false,
+            tap: true,
           );
         },
       );
     }
-  }
-
-  @override
-  void initState() {
-    _load();
-    super.initState();
   }
 
   @override
