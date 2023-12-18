@@ -9,11 +9,13 @@ class UnivNoticeItem extends StatelessWidget {
     required this.notice,
     required this.index,
     required this.getNotice,
+    required this.tap,
   });
 
   final UnivNotice notice;
   final int index;
   final GetNotice getNotice;
+  final bool tap;
 
   @override
   Widget build(BuildContext context) {
@@ -21,14 +23,16 @@ class UnivNoticeItem extends StatelessWidget {
       children: [
         InkWell(
           onTap: () {
-            Navigator.of(context).push(
-              MaterialPageRoute<void>(
-                builder: (ctx) => UnivNoticeDetailScreen(
-                  index: index,
-                  getNotice: getNotice,
+            if (tap) {
+              Navigator.of(context).push(
+                MaterialPageRoute<void>(
+                  builder: (ctx) => UnivNoticeDetailScreen(
+                    index: index,
+                    getNotice: getNotice,
+                  ),
                 ),
-              ),
-            );
+              );
+            }
           },
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
