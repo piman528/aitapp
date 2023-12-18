@@ -99,11 +99,20 @@ class _UnivNoticeListState extends ConsumerState<UnivNoticeList> {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: RefreshIndicator(
-        onRefresh: () async {
-          await _load();
-        },
-        child: _content(),
+      child: Column(
+        children: [
+          if (isLoading && ref.read(univNoticesProvider) != null) ...{
+            const LinearProgressIndicator(),
+          },
+          Expanded(
+            child: RefreshIndicator(
+              onRefresh: () async {
+                await _load();
+              },
+              child: _content(),
+            ),
+          ),
+        ],
       ),
     );
   }

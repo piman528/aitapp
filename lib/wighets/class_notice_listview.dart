@@ -96,11 +96,20 @@ class _ClassNoticeListState extends ConsumerState<ClassNoticeList> {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: RefreshIndicator(
-        onRefresh: () async {
-          await _load();
-        },
-        child: _content(),
+      child: Column(
+        children: [
+          if (isLoading && ref.read(classNoticesProvider) != null) ...{
+            const LinearProgressIndicator(),
+          },
+          Expanded(
+            child: RefreshIndicator(
+              onRefresh: () async {
+                await _load();
+              },
+              child: _content(),
+            ),
+          ),
+        ],
       ),
     );
   }
