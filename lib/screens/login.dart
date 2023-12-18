@@ -32,7 +32,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     return Scaffold(
       body: Center(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 40),
+          padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Card(
             child: Padding(
               padding: const EdgeInsets.all(20),
@@ -44,7 +44,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
                   const SizedBox(
-                    height: 40,
+                    height: 50,
                   ),
                   TextField(
                     controller: idController,
@@ -63,7 +63,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     ),
                   ),
                   const SizedBox(
-                    height: 40,
+                    height: 50,
                   ),
                   TextField(
                     keyboardType: TextInputType.visiblePassword,

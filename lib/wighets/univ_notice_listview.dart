@@ -21,24 +21,14 @@ class UnivNoticeList extends ConsumerStatefulWidget {
 }
 
 class _UnivNoticeListState extends ConsumerState<UnivNoticeList> {
+  bool isLoading = true;
+
   Future<void> _load() async {
     final list = ref.read(idPasswordProvider);
     await widget.getNotice.create(list[0], list[1]);
     final result = await widget.getNotice.getUnivNoticelist();
-    final filteredResult = _filteredList(result);
-    setState(() {
-      final futureList = ListView.builder(
-        itemCount: result.length,
-        itemBuilder: (c, i) {
-          return UnivNoticeItem(
-            notice: result[i],
-            index: result.indexOf(filteredResult[i]),
-            getNotice: widget.getNotice,
-            tap: true,
-          );
-        },
-      );
-    });
+    ref.read(univNoticesProvider.notifier).reloadNotices(result);
+    isLoading = false;
   }
 
   List<UnivNotice> _filteredList(List<UnivNotice> list) {
@@ -56,84 +46,60 @@ class _UnivNoticeListState extends ConsumerState<UnivNoticeList> {
     return result;
   }
 
+  Widget _content() {
+    if (isLoading) {
+      if (ref.read(univNoticesProvider) != null) {
+        final result = ref.read(univNoticesProvider)!;
+        return ListView.builder(
+          itemCount: _filteredList(result).length,
+          itemBuilder: (c, i) {
+            return UnivNoticeItem(
+              notice: _filteredList(result)[i],
+              index: result.indexOf(_filteredList(result)[i]),
+              getNotice: widget.getNotice,
+              tap: false,
+            );
+          },
+        );
+      } else {
+        return const Center(
+          child: SizedBox(
+            height: 25, //指定
+            width: 25, //指定
+            child: CircularProgressIndicator(),
+          ),
+        );
+      }
+    } else {
+      final result = ref.read(univNoticesProvider)!;
+      return ListView.builder(
+        itemCount: _filteredList(result).length,
+        itemBuilder: (c, i) {
+          return UnivNoticeItem(
+            notice: _filteredList(result)[i],
+            index: result.indexOf(_filteredList(result)[i]),
+            getNotice: widget.getNotice,
+            tap: false,
+          );
+        },
+      );
+    }
+  }
+
+  @override
+  void initState() {
+    _load();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final oldList = ref.watch(univNoticesProvider);
-    Widget futureList = FutureBuilder(
-      future: _load(),
-      builder:
-          (BuildContext context, AsyncSnapshot<List<UnivNotice>> snapshot) {
-        if (snapshot.hasData) {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            ref
-                .watch(univNoticesProvider.notifier)
-                .reloadNotices(snapshot.data!);
-          });
-          final result = _filteredList(snapshot.data!);
-          return ListView.builder(
-            itemCount: result.length,
-            itemBuilder: (c, i) {
-              return UnivNoticeItem(
-                notice: result[i],
-                index: snapshot.data!.indexOf(result[i]),
-                getNotice: widget.getNotice,
-                tap: true,
-              );
-            },
-          );
-        } else if (oldList != null) {
-          final result = _filteredList(oldList);
-          return Expanded(
-            child: Column(
-              children: [
-                const LinearProgressIndicator(),
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: result.length,
-                    itemBuilder: (c, i) {
-                      return UnivNoticeItem(
-                        notice: result[i],
-                        index: oldList.indexOf(result[i]),
-                        getNotice: widget.getNotice,
-                        tap: false,
-                      );
-                    },
-                  ),
-                ),
-              ],
-            ),
-          );
-        } else {
-          return const Center(
-            child: SizedBox(
-              height: 25, //指定
-              width: 25, //指定
-              child: CircularProgressIndicator(),
-            ),
-          );
-        }
-      },
-    );
     return Expanded(
       child: RefreshIndicator(
         onRefresh: () async {
-          final list = await _load();
-          setState(() {
-            final result = _filteredList(list);
-            futureList = ListView.builder(
-              itemCount: result.length,
-              itemBuilder: (c, i) {
-                return UnivNoticeItem(
-                  notice: result[i],
-                  index: list.indexOf(result[i]),
-                  getNotice: widget.getNotice,
-                  tap: true,
-                );
-              },
-            );
-          });
+          await _load();
         },
-        child: futureList,
+        child: _content(),
       ),
     );
   }
