@@ -160,42 +160,18 @@ ClassNotice parseClassNoticeDetail(String body) {
 
 List<UnivNotice> parseUnivNotice(String body) {
   final univNoticeList = <UnivNotice>[]; //return
-  final document = parseHtmlDocument(body);
-  final topStorytitle = document.querySelectorAll(
+  final topStorytitle = parseHtmlDocument(body).querySelectorAll(
     '#smartPhoneCommonContactList > form:nth-child(4) > div.listItem',
   ); //記事のリスト
 
-  for (final element in topStorytitle) {
-    final noticeParse =
-        element.querySelector('> table > tbody > tr > td:nth-child(1)');
-    final noticeChildNodes = noticeParse?.nodes;
+  for (final parentDiv in topStorytitle) {
     final texts = <String>[];
-    for (final node in noticeChildNodes!) {
-      if (node.nodeType == html.Node.TEXT_NODE) {
-        final spaceTrimTextList =
-            node.text!.replaceAll('	', '').trim().split('\n');
-        for (final line in spaceTrimTextList) {
-          if (line != '') {
-            texts.add(line);
-          }
-        }
-      } else if (node.nodeType == html.Node.ELEMENT_NODE) {
-        final childDocument = parseHtmlDocument('$node');
-        final childElements = childDocument.querySelectorAll('> div > div');
-        for (final childElement in childElements) {
-          final childNodes = childElement.nodes;
-          for (final childNode in childNodes) {
-            if (childNode.nodeType == html.Node.TEXT_NODE) {
-              final spaceTrimTextList =
-                  childNode.text!.replaceAll('	', '').trim().split('\n');
-              for (final line in spaceTrimTextList) {
-                if (line != '') {
-                  texts.add(line);
-                }
-              }
-            }
-          }
-        }
+    final td = parentDiv.querySelector(
+      'table > tbody > tr > td',
+    );
+    for (final text in td!.text!.replaceAll('	', '').trim().split('\n')) {
+      if (text != '') {
+        texts.add(text);
       }
     }
     var c = 0;
@@ -206,9 +182,11 @@ List<UnivNotice> parseUnivNotice(String body) {
     // var subject = '';
     // var makeupClassAt = '';
     for (final text in texts) {
-      // debugPrint('$text $c');
       switch (c) {
         case 0: // タイトル
+          if (text == '重要') {
+            continue;
+          }
           title = text;
         case 1: // 送信者
           sender = text;
@@ -351,43 +329,10 @@ List<ClassSyllabus> parseSyllabusList(String body) {
       continue;
     }
     //授業単位
-    final syllabus = <String>[];
-    final syllabusContents = tr.querySelectorAll('td');
-    for (final syllabusContent in syllabusContents) {
-      final syllabusContentNodes = syllabusContent.nodes;
-      for (final node in syllabusContentNodes) {
-        if (node.nodeType == html.Node.TEXT_NODE) {
-          final spaceTrimTextList = node.text!
-              .replaceAll('	', '')
-              .replaceAll('', '')
-              .trim()
-              .split('\n');
-          for (final line in spaceTrimTextList) {
-            if (line != '') {
-              syllabus.add(line);
-            }
-          }
-        } else if (node.nodeType == html.Node.ELEMENT_NODE) {
-          final divElementList =
-              parseHtmlDocument('$node').querySelectorAll('> div');
-          for (final divElement in divElementList) {
-            final divNodes = divElement.nodes;
-            for (final divNode in divNodes) {
-              if (divNode.nodeType == html.Node.TEXT_NODE) {
-                final spaceTrimTextList = divNode.text!
-                    .replaceAll('	', '')
-                    .replaceAll('', '')
-                    .trim()
-                    .split('\n');
-                for (final line in spaceTrimTextList) {
-                  if (line != '') {
-                    syllabus.add(line);
-                  }
-                }
-              }
-            }
-          }
-        }
+    final texts = <String>[];
+    for (final text in tr.text!.replaceAll('	', '').trim().split('\n')) {
+      if (text != '') {
+        texts.add(text);
       }
     }
     final url = tr
@@ -405,7 +350,7 @@ List<ClassSyllabus> parseSyllabusList(String body) {
     var teacher = '';
     // 教科
     var subject = '';
-    for (final text in syllabus) {
+    for (final text in texts) {
       switch (c) {
         case 3: //教科
           subject = text;

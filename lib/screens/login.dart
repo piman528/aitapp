@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:aitapp/infrastructure/access_lcan.dart';
 import 'package:aitapp/provider/id_password_provider.dart';
 import 'package:aitapp/screens/tabs.dart';
@@ -115,11 +113,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               idController.text,
                               passwordController.text,
                             );
-                        unawaited(
-                          Navigator.of(context).pushReplacement(
-                            MaterialPageRoute<void>(
-                              builder: (ctx) => const TabScreen(),
-                            ),
+                        Navigator.of(context).pushReplacement(
+                          MaterialPageRoute<void>(
+                            builder: (ctx) => const TabScreen(),
                           ),
                         );
                       }
