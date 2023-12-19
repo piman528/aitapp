@@ -10,22 +10,17 @@ import 'package:universal_html/parsing.dart';
 
 List<ClassNotice> parseClassNotice(String body) {
   final classNoticeList = <ClassNotice>[];
-  final document = parseHtmlDocument(body);
-  final topStorytitle = document.querySelectorAll(
+  final topStorytitle = parseHtmlDocument(body).querySelectorAll(
     '#smartPhoneClassContactList > form:nth-child(4) > div.listItem',
   );
 
-  for (final element in topStorytitle) {
-    final noticesParse =
-        element.querySelector('> table > tbody > tr > td:nth-child(1)');
-    final childNodes = noticesParse?.nodes;
+  for (final div in topStorytitle) {
     final texts = <String>[];
-    for (final node in childNodes!) {
-      if (node.nodeType == html.Node.TEXT_NODE) {
-        final spaceTrimTextList =
-            node.text!.replaceAll('	', '').trim().split('\n');
-        // print(spaceTrimTextList);
-        texts.addAll(spaceTrimTextList);
+    final contents =
+        div.querySelector('> table > tbody > tr > td:nth-child(1)');
+    for (final text in contents!.text!.replaceAll('	', '').trim().split('\n')) {
+      if (text != '') {
+        texts.add(text);
       }
     }
     var c = 0;
@@ -35,46 +30,19 @@ List<ClassNotice> parseClassNotice(String body) {
     const sendAt = '';
     var subject = '';
     var makeupClassAt = '';
-    var isNotInportant = false;
     for (final text in texts) {
-      if (c == 6 && text == '') {
-        isNotInportant = true;
-      }
-      if (isNotInportant) {
-        //重要でない場合
-        switch (c) {
-          case 7: // タイトル
-            title = text;
-          case 8: // 講師名
-            sender = text;
-          case 9: // 補講日日付
-            makeupClassAt = text;
-        }
-      } else {
-        switch (c) {
-          // case 0: //「授業科目」
-          //   break;
-          // case 1: // コロン
-          //   break;
-          case 2: // 授業科目
-            subject = text;
-          case 3: // 授業時間割
-            break;
-          // case 4: // 「タイトル」
-          //   break;
-          // case 5: // コロン
-          //   break;
-          case 6: // タイトル
-            title = text;
-          case 7: // 講師名
-            sender = text;
-          // case 8: // 「補講日」
-          //   break;
-          // case 9: // コロン
-          //   break;
-          case 10: // 補講日日付
-            makeupClassAt = text;
-        }
+      switch (c) {
+        case 2: // 授業科目
+          subject = text;
+        case 6: // タイトル
+          if (text == '重要') {
+            continue;
+          }
+          title = text;
+        case 7: // 講師名
+          sender = text;
+        case 10: // 補講日日付
+          makeupClassAt = text;
       }
       c++;
     }
@@ -87,74 +55,27 @@ List<ClassNotice> parseClassNotice(String body) {
 
 ClassNotice parseClassNoticeDetail(String body) {
   final topStorytitle = parseHtmlDocument(body).querySelectorAll(
-    'body > form > table > tbody > tr > td',
+    'body > form > table > tbody > tr',
   );
   final texts = <String>[];
-  for (final element in topStorytitle) {
-    final noticeDetailChildNodes = element.nodes;
-    for (final node in noticeDetailChildNodes) {
-      if (node.nodeType == html.Node.TEXT_NODE) {
-        final spaceTrimTextList = node.text!
-            .replaceAll('	', '')
-            .replaceAll('', '')
-            .trim()
-            .split('\n');
-        for (final line in spaceTrimTextList) {
-          if (line != '') {
-            texts.add(line);
-          }
-        }
+  for (final tr in topStorytitle) {
+    final contents = tr.text!.replaceAll('	', '').trim().split('\n');
+    for (final text in contents) {
+      if (text != '') {
+        texts.add(text);
       }
     }
   }
-  final parseContentBody = parseHtmlDocument(body).querySelectorAll(
-    'body > form > table > tbody > tr > td > div > div',
-  );
-  for (final contentElement in parseContentBody) {
-    final noticeContentChildNodes = contentElement.nodes;
-    for (final node in noticeContentChildNodes) {
-      if (node.nodeType == html.Node.TEXT_NODE) {
-        final spaceTrimTextList = node.text!
-            .replaceAll('	', '')
-            .replaceAll('', '')
-            .trim()
-            .split('\n');
-        for (final line in spaceTrimTextList) {
-          if (line != '') {
-            texts.add(line);
-          }
-        }
-      }
-    }
-  }
-  var c = 0;
-  var subject = '';
-  var sender = '';
-  var title = '';
+  final subject = texts[texts.indexOf('授業科目') + 1];
+  final sender = texts[texts.indexOf('授業科目') + 3];
+  final titleindex = texts.indexOf('タイトル') + 1;
+  final title =
+      texts[titleindex] != '重要' ? texts[titleindex] : texts[titleindex + 1];
   final content = <String>[];
-  var sendAt = '';
-  for (final text in texts) {
-    // print('$text $c');
-    switch (c) {
-      case 0: // 教科
-        subject = text;
-      case 1: // 授業時間
-      // title = text;
-      case 2: // 送信者
-        sender = text;
-      case 3: // タイトル
-        title = text;
-      case 4: //日付
-        sendAt = text;
-      case 5: //時間
-        sendAt = '$sendAt $text';
-    }
-    if (c >= 8) {
-      content.add(text);
-    }
-    c++;
+  for (var i = texts.indexOf('内容') + 1; i < texts.indexOf('ファイル'); i++) {
+    content.add(texts[i]);
   }
-  // print(title);
+  final sendAt = texts[texts.indexOf('連絡日時') + 1];
   return ClassNotice(sender, title, content, sendAt, subject, '');
 }
 
