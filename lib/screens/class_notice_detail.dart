@@ -45,24 +45,30 @@ class ClassNoticeDetailScreen extends StatelessWidget {
                     const SizedBox(
                       height: 40,
                     ),
-                    Text(
-                      getnotice.title,
-                      style: const TextStyle(
-                        fontSize: 17,
-                        fontWeight: FontWeight.bold,
+                    SelectionArea(
+                      child: Column(
+                        children: [
+                          Text(
+                            getnotice.title,
+                            style: const TextStyle(
+                              fontSize: 17,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 60,
+                          ),
+                          for (final text in getnotice.content) ...{
+                            if (text != '') ...{
+                              Text(text),
+                              const SizedBox(
+                                height: 20,
+                              ),
+                            },
+                          },
+                        ],
                       ),
                     ),
-                    const SizedBox(
-                      height: 60,
-                    ),
-                    for (final text in getnotice.content) ...{
-                      if (text != '') ...{
-                        SelectableText(text),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                      },
-                    },
                   ],
                 ),
               ),

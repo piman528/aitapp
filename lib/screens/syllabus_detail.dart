@@ -1,5 +1,7 @@
 // ignore_for_file: lines_longer_than_80_chars
 
+import 'dart:ui';
+
 import 'package:aitapp/models/class_syllabus.dart';
 import 'package:aitapp/models/get_syllabus.dart';
 import 'package:flutter/material.dart';
@@ -71,7 +73,10 @@ class SyllabusDetail extends StatelessWidget {
                       height: 30,
                     ),
                     for (final text in syllabus.content) ...{
-                      SelectableText(text),
+                      SelectableText(
+                        text,
+                        selectionHeightStyle: BoxHeightStyle.max,
+                      ),
                       const SizedBox(
                         height: 20,
                       ),
@@ -86,7 +91,10 @@ class SyllabusDetail extends StatelessWidget {
                     const SizedBox(
                       height: 30,
                     ),
-                    SelectableText(syllabus.plan.join('\n')),
+                    SelectableText(
+                      syllabus.plan.join('\n'),
+                      selectionHeightStyle: BoxHeightStyle.max,
+                    ),
                     const SizedBox(
                       height: 20,
                     ),
@@ -100,7 +108,10 @@ class SyllabusDetail extends StatelessWidget {
                     const SizedBox(
                       height: 30,
                     ),
-                    SelectableText(syllabus.learningGoal),
+                    SelectableText(
+                      syllabus.learningGoal,
+                      selectionHeightStyle: BoxHeightStyle.max,
+                    ),
                     const SizedBox(
                       height: 20,
                     ),
@@ -114,7 +125,10 @@ class SyllabusDetail extends StatelessWidget {
                     const SizedBox(
                       height: 30,
                     ),
-                    SelectableText(syllabus.features),
+                    SelectableText(
+                      syllabus.features,
+                      selectionHeightStyle: BoxHeightStyle.max,
+                    ),
                     const SizedBox(
                       height: 20,
                     ),
@@ -128,7 +142,10 @@ class SyllabusDetail extends StatelessWidget {
                     const SizedBox(
                       height: 30,
                     ),
-                    SelectableText(syllabus.records),
+                    SelectableText(
+                      syllabus.records,
+                      selectionHeightStyle: BoxHeightStyle.max,
+                    ),
                     if (syllabus.teachersMessage != '') ...{
                       const SizedBox(
                         height: 20,
@@ -143,7 +160,10 @@ class SyllabusDetail extends StatelessWidget {
                       const SizedBox(
                         height: 30,
                       ),
-                      SelectableText(syllabus.teachersMessage),
+                      SelectableText(
+                        syllabus.teachersMessage,
+                        selectionHeightStyle: BoxHeightStyle.max,
+                      ),
                     },
                     const SizedBox(
                       height: 30,
