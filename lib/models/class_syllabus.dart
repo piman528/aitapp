@@ -61,7 +61,7 @@ class ClassSyllabusDetail {
   //曜日時限
   final String classPeriod;
   //計画
-  final String plan;
+  final List<String> plan;
   //学習到達目標
   final String learningGoal;
   //方法と特徴

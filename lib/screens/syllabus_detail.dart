@@ -71,7 +71,7 @@ class SyllabusDetail extends StatelessWidget {
                       height: 30,
                     ),
                     for (final text in syllabus.content) ...{
-                      Text(text),
+                      SelectableText(text),
                       const SizedBox(
                         height: 20,
                       ),
@@ -86,7 +86,7 @@ class SyllabusDetail extends StatelessWidget {
                     const SizedBox(
                       height: 30,
                     ),
-                    Text(syllabus.plan),
+                    SelectableText(syllabus.plan.join('\n')),
                     const SizedBox(
                       height: 20,
                     ),
@@ -100,7 +100,7 @@ class SyllabusDetail extends StatelessWidget {
                     const SizedBox(
                       height: 30,
                     ),
-                    Text(syllabus.learningGoal),
+                    SelectableText(syllabus.learningGoal),
                     const SizedBox(
                       height: 20,
                     ),
@@ -114,7 +114,7 @@ class SyllabusDetail extends StatelessWidget {
                     const SizedBox(
                       height: 30,
                     ),
-                    Text(syllabus.features),
+                    SelectableText(syllabus.features),
                     const SizedBox(
                       height: 20,
                     ),
@@ -128,7 +128,7 @@ class SyllabusDetail extends StatelessWidget {
                     const SizedBox(
                       height: 30,
                     ),
-                    Text(syllabus.records),
+                    SelectableText(syllabus.records),
                     if (syllabus.teachersMessage != '') ...{
                       const SizedBox(
                         height: 20,
@@ -143,7 +143,7 @@ class SyllabusDetail extends StatelessWidget {
                       const SizedBox(
                         height: 30,
                       ),
-                      Text(syllabus.teachersMessage),
+                      SelectableText(syllabus.teachersMessage),
                     },
                     const SizedBox(
                       height: 30,

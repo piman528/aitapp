@@ -56,10 +56,12 @@ class ClassNoticeDetailScreen extends StatelessWidget {
                       height: 60,
                     ),
                     for (final text in getnotice.content) ...{
-                      Text(text),
-                      const SizedBox(
-                        height: 20,
-                      ),
+                      if (text != '') ...{
+                        SelectableText(text),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                      },
                     },
                   ],
                 ),

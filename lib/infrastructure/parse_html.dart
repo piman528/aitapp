@@ -58,12 +58,31 @@ ClassNotice parseClassNoticeDetail(String body) {
     'body > form > table > tbody > tr',
   );
   final texts = <String>[];
+  var isMaincontent = false;
   for (final tr in topStorytitle) {
-    final contents = tr.text!.replaceAll('	', '').trim().split('\n');
-    for (final text in contents) {
-      if (text != '') {
-        texts.add(text);
+    if (!isMaincontent) {
+      final contents = tr.text!.replaceAll('	', '').trim().split('\n');
+      for (final text in contents) {
+        if (text != '') {
+          texts.add(text);
+        }
       }
+    } else {
+      final maincontents = tr.querySelector('td > div')!.nodes;
+      for (final mainContent in maincontents) {
+        if (mainContent.nodeType == html.Node.ELEMENT_NODE) {
+          for (final childNode in mainContent.childNodes) {
+            final text = childNode.text!.trim();
+            if (text != '') {
+              texts.add(text);
+            }
+          }
+        }
+      }
+      isMaincontent = false;
+    }
+    if (texts.last == '内容') {
+      isMaincontent = true;
     }
   }
   final subject = texts[texts.indexOf('授業科目') + 1];
@@ -123,65 +142,45 @@ List<UnivNotice> parseUnivNotice(String body) {
 
 UnivNotice parseUnivNoticeDetail(String body) {
   final topStorytitle = parseHtmlDocument(body).querySelectorAll(
-    'body > form > table > tbody > tr > td',
+    'body > form > table > tbody > tr',
   );
   final texts = <String>[];
-  for (final element in topStorytitle) {
-    final noticeDetailChildNodes = element.nodes;
-    for (final node in noticeDetailChildNodes) {
-      if (node.nodeType == html.Node.TEXT_NODE) {
-        final spaceTrimTextList = node.text!
-            .replaceAll('	', '')
-            .replaceAll('', '')
-            .trim()
-            .split('\n');
-        for (final line in spaceTrimTextList) {
-          if (line != '') {
-            texts.add(line);
+  var isMaincontent = false;
+  for (final tr in topStorytitle) {
+    if (!isMaincontent) {
+      final contents = tr.text!.replaceAll('	', '').trim().split('\n');
+      for (final text in contents) {
+        if (text != '') {
+          texts.add(text);
+        }
+      }
+    } else {
+      final maincontents = tr.querySelector('td > div')!.nodes;
+      for (final mainContent in maincontents) {
+        if (mainContent.nodeType == html.Node.ELEMENT_NODE) {
+          for (final childNode in mainContent.childNodes) {
+            final text = childNode.text!.trim();
+            if (text != '') {
+              texts.add(text);
+            }
           }
         }
       }
+      isMaincontent = false;
+    }
+    if (texts.last == '連絡内容') {
+      isMaincontent = true;
     }
   }
-  final parseContentBody = parseHtmlDocument(body).querySelectorAll(
-    'body > form > table > tbody > tr > td > div > div',
-  );
-  for (final contentElement in parseContentBody) {
-    final noticeContentChildNodes = contentElement.nodes;
-    for (final node in noticeContentChildNodes) {
-      if (node.nodeType == html.Node.TEXT_NODE) {
-        final spaceTrimTextList = node.text!
-            .replaceAll('	', '')
-            .replaceAll('', '')
-            .trim()
-            .split('\n');
-        for (final line in spaceTrimTextList) {
-          if (line != '') {
-            texts.add(line);
-          }
-        }
-      }
-    }
-  }
-  var c = 0;
-  var sender = '';
-  var title = '';
+  final sender = texts[texts.indexOf('管理所属') + 1];
+  final titleindex = texts.indexOf('タイトル') + 1;
+  final title =
+      texts[titleindex] != '重要' ? texts[titleindex] : texts[titleindex + 1];
   final content = <String>[];
-  var sendAt = '';
-  for (final text in texts) {
-    switch (c) {
-      case 1: // タイトル
-        title = text;
-      case 2: // 送信者
-        sender = text;
-      case 3: // 日付
-        sendAt = text;
-    }
-    if (c >= 7) {
-      content.add(text);
-    }
-    c++;
+  for (var i = texts.indexOf('連絡内容') + 1; i < texts.indexOf('連絡元'); i++) {
+    content.add(texts[i]);
   }
+  final sendAt = texts[texts.indexOf('連絡日時') + 1];
   return UnivNotice(sender, title, content, sendAt);
 }
 
@@ -193,15 +192,13 @@ Map<DayOfWeek, Map<int, Class>> parseClassTimeTable(String body) {
   for (var i = 0; i < topStorytitle.length; i++) {
     final day = i ~/ 7;
     final period = i % 7 + 1;
-    final classesParse = topStorytitle[i].querySelector('> td > div');
-    final childNodes = classesParse?.nodes;
+    final contents = topStorytitle[i].querySelector('> td > div')?.nodes;
     final texts = <String>[];
-    if (childNodes != null) {
-      for (final node in childNodes) {
-        if (node.nodeType == html.Node.TEXT_NODE) {
-          final spaceTrimTextList =
-              node.text!.replaceAll('	', '').trim().split('\n');
-          texts.addAll(spaceTrimTextList);
+    if (contents != null) {
+      for (final node in contents) {
+        final text = node.text!.trim();
+        if (text != '') {
+          texts.add(text);
         }
       }
     }
@@ -216,7 +213,7 @@ Map<DayOfWeek, Map<int, Class>> parseClassTimeTable(String body) {
         case 1: // 教員
           teacher = text;
         case 2: // 教室
-          classRoom = text.replaceAll('八草', '').replaceAll(' ', '');
+          classRoom = text.replaceAll('八草', '').trim();
       }
       c++;
     }
@@ -309,16 +306,30 @@ ClassSyllabusDetail parseSyllabus(String body) {
   final texts = <String>[];
   for (final tr in topStorytitle) {
     final tds = tr.querySelectorAll('td');
+    var index = 0;
     for (final tdtext in tds) {
-      for (final text in tdtext.text!
-          .replaceAll('	', '')
-          .replaceAll(' ', '')
-          .replaceAll(' ', '')
-          .trim()
-          .split('\n')) {
-        if (text != '' && text != ' ') {
-          texts.add(text.trim().replaceAll(' ', ''));
+      if (index == 0) {
+        for (final text in tdtext.text!
+            .replaceAll('	', '')
+            .replaceAll(' ', '')
+            .trim()
+            .split('\n')) {
+          if (text != '' && text != ' ') {
+            texts.add(text);
+            if (text == '計画') {
+              index = 1;
+            }
+          }
         }
+      } else {
+        final contents = tdtext.nodes;
+        for (final content in contents) {
+          final text = content.text!.trim();
+          if (text != '') {
+            texts.add(text);
+          }
+        }
+        index = 0;
       }
     }
   }
@@ -342,7 +353,10 @@ ClassSyllabusDetail parseSyllabus(String body) {
       : '';
   final semester = texts[texts.indexOf('開講学期') + 1];
   final content = texts[texts.indexOf('概要') + 1];
-  final plan = texts[texts.indexOf('計画') + 1];
+  final plan = <String>[];
+  for (var i = texts.indexOf('計画') + 1; i < texts.indexOf('教科書'); i++) {
+    plan.add(texts[i]);
+  }
   final learningGoal = texts[texts.indexOf('学習到達目標') + 1];
   final feature = texts[texts.indexOf('方法と特徴') + 1];
   final record = texts[texts.indexOf('成績評価の方法') + 1];
