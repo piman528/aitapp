@@ -2,8 +2,6 @@
 import 'package:http/http.dart' as http;
 import 'package:universal_html/parsing.dart';
 
-final _regexSplitSetCookies = RegExp(',(?=[^ ])');
-
 Future<List<String>> getCookie() async {
   final headers = {
     'Accept': '*/*',
@@ -24,7 +22,7 @@ Future<List<String>> getCookie() async {
 
   final setCookie = _getSetCookie(res.headers);
   if (setCookie.isNotEmpty) {
-    for (final cookie in setCookie.split(_regexSplitSetCookies)) {
+    for (final cookie in setCookie.split(RegExp(',(?=[^ ])'))) {
       cookies.add(cookie.split(';')[0]);
     }
   }

@@ -1,6 +1,7 @@
 import 'package:aitapp/models/get_notice.dart';
 import 'package:aitapp/models/univ_notice.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/link.dart';
 
 class UnivNoticeDetailScreen extends StatelessWidget {
   const UnivNoticeDetailScreen({
@@ -14,6 +15,10 @@ class UnivNoticeDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final regExp = RegExp(
+      r"(http(s)?:\/\/[a-zA-Z0-9-.!'()*;/?:@&=+$,%_#]+)",
+      caseSensitive: false,
+    );
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -62,7 +67,18 @@ class UnivNoticeDetailScreen extends StatelessWidget {
                           ),
                           for (final text in getnotice.content) ...{
                             if (text != '') ...{
-                              Text(text),
+                              if (regExp.stringMatch(text) != null) ...{
+                                Link(
+                                  uri: Uri.parse(regExp.stringMatch(text)!),
+                                  target: LinkTarget.blank,
+                                  builder: (context, followLink) => TextButton(
+                                    onPressed: followLink,
+                                    child: Text(text),
+                                  ),
+                                ),
+                              } else ...{
+                                Text(text),
+                              },
                               const SizedBox(
                                 height: 20,
                               ),
