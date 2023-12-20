@@ -42,19 +42,34 @@ class ClassNoticeItem extends StatelessWidget {
               children: [
                 Text(
                   notice.title,
-                  style: const TextStyle(fontWeight: FontWeight.bold),
+                  style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                        color: Theme.of(context).colorScheme.inverseSurface,
+                      ),
                 ),
                 // Text(notice.content),
                 const SizedBox(
                   height: 30,
                 ),
-                Text(notice.subject),
+                Text(
+                  notice.subject,
+                  style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                        color: Theme.of(context).colorScheme.secondary,
+                      ),
+                ),
                 const SizedBox(
                   height: 10,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [Text(notice.sender), Text(notice.sendAt)],
+                  children: [
+                    Text(
+                      notice.sender,
+                      style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                            color: Theme.of(context).colorScheme.secondary,
+                          ),
+                    ),
+                    Text(notice.sendAt)
+                  ],
                 ),
               ],
             ),

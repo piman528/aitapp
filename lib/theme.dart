@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
 ColorScheme kColorScheme = ColorScheme.fromSeed(
-  seedColor: const Color.fromARGB(255, 35, 207, 255),
+  seedColor: const Color.fromARGB(255, 0, 89, 175),
 );
 
 ColorScheme kDarkColorScheme = ColorScheme.fromSeed(
   brightness: Brightness.dark,
-  seedColor: const Color.fromARGB(255, 35, 207, 255),
+  seedColor: const Color.fromARGB(255, 0, 89, 175),
 );
 
 ThemeData buildThemeLight() {
@@ -23,6 +23,7 @@ ThemeData buildThemeDark() {
   return ThemeData.dark().copyWith(
     useMaterial3: true,
     colorScheme: kDarkColorScheme,
+    scaffoldBackgroundColor: kDarkColorScheme.background,
     appBarTheme: const AppBarTheme(
       iconTheme: IconThemeData(color: Colors.blue),
       color: Color.fromRGBO(46, 46, 46, 255),

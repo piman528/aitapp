@@ -94,11 +94,11 @@ class _ClassNoticeListState extends ConsumerState<ClassNoticeList> {
     return Expanded(
       child: Column(
         children: [
-          if (isLoading &&
-              ref.read(classNoticesProvider) != null &&
-              !isManual) ...{
-            const LinearProgressIndicator(),
-          },
+          isLoading && ref.read(classNoticesProvider) != null && !isManual
+              ? const LinearProgressIndicator(minHeight: 2)
+              : const SizedBox(
+                  height: 2,
+                ),
           Expanded(
             child: RefreshIndicator(
               onRefresh: () async {

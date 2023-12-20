@@ -43,7 +43,10 @@ class ClassTime extends StatelessWidget {
             ),
             child: Text(
               '$number',
-              style: const TextStyle(fontWeight: FontWeight.bold),
+              style: Theme.of(context).textTheme.labelLarge!.copyWith(
+                    color: Theme.of(context).colorScheme.secondary,
+                    fontWeight: FontWeight.bold,
+                  ),
             ),
           ),
           Text(
@@ -73,7 +76,9 @@ class WeekGridContainer extends StatelessWidget {
       height: 35,
       child: Text(
         dayofweek,
-        style: const TextStyle(fontWeight: FontWeight.bold),
+        style: Theme.of(context).textTheme.labelLarge!.copyWith(
+              color: Theme.of(context).colorScheme.secondary,
+            ),
       ),
     );
   }
@@ -122,14 +127,18 @@ class ClassGridContainer extends StatelessWidget {
                 children: [
                   Text(
                     clas!.title,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 9.5,
+                      color: Theme.of(context).colorScheme.inverseSurface,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   Text(
                     clas!.classRoom,
-                    style: const TextStyle(fontSize: 9),
+                    style: TextStyle(
+                      fontSize: 9,
+                      color: Theme.of(context).colorScheme.secondary,
+                    ),
                   ),
                 ],
               )

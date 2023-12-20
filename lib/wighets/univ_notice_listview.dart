@@ -91,11 +91,11 @@ class _UnivNoticeListState extends ConsumerState<UnivNoticeList> {
     return Expanded(
       child: Column(
         children: [
-          if (isLoading &&
-              ref.read(univNoticesProvider) != null &&
-              !isManual) ...{
-            const LinearProgressIndicator(),
-          },
+          isLoading && ref.read(univNoticesProvider) != null && !isManual
+              ? const LinearProgressIndicator(minHeight: 2)
+              : const SizedBox(
+                  height: 2,
+                ),
           Expanded(
             child: RefreshIndicator(
               onRefresh: () async {

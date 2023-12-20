@@ -42,7 +42,9 @@ class UnivNoticeItem extends StatelessWidget {
               children: [
                 Text(
                   notice.title,
-                  style: const TextStyle(fontWeight: FontWeight.bold),
+                  style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                        color: Theme.of(context).colorScheme.inverseSurface,
+                      ),
                 ),
                 // Text(notice.content),
                 const SizedBox(
@@ -50,7 +52,21 @@ class UnivNoticeItem extends StatelessWidget {
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [Text(notice.sender), Text(notice.sendAt)],
+                  children: [
+                    Text(
+                      notice.sender,
+                      style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                            color: Theme.of(context).colorScheme.secondary,
+                          ),
+                    ),
+                    Text(
+                      notice.sendAt,
+                      style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                            color: Theme.of(context).colorScheme.secondary,
+                            fontWeight: FontWeight.bold,
+                          ),
+                    )
+                  ],
                 ),
               ],
             ),

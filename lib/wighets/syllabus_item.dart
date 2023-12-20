@@ -36,7 +36,9 @@ class SyllabusItem extends StatelessWidget {
               children: [
                 Text(
                   syllabus.subject,
-                  style: const TextStyle(fontWeight: FontWeight.bold),
+                  style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                        color: Theme.of(context).colorScheme.inverseSurface,
+                      ),
                 ),
                 const SizedBox(
                   height: 20,
@@ -44,9 +46,17 @@ class SyllabusItem extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(syllabus.teacher),
+                    Text(
+                      syllabus.teacher,
+                      style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                            color: Theme.of(context).colorScheme.secondary,
+                          ),
+                    ),
                     Text(
                       '${classificationToString[syllabus.classification]!}   ${syllabus.unitsNumber} 単位',
+                      style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                            color: Theme.of(context).colorScheme.secondary,
+                          ),
                     ),
                   ],
                 ),
