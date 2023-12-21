@@ -1,6 +1,7 @@
 import 'package:aitapp/screens/class_timetable.dart';
 import 'package:aitapp/screens/notices.dart';
 import 'package:aitapp/screens/vehicle_timetable.dart';
+import 'package:aitapp/wighets/drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -30,7 +31,7 @@ class _TabScreenState extends ConsumerState<TabScreen> {
         title: Text(appBarTitle[_currentPageIndex]),
         centerTitle: true,
       ),
-      drawer: const Drawer(),
+      drawer: const MainDrawer(),
       body: currentPages[_currentPageIndex],
       bottomNavigationBar: NavigationBar(
         selectedIndex: _currentPageIndex,
