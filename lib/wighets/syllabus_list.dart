@@ -49,11 +49,13 @@ class SyllabusList extends StatelessWidget {
         } else if (snapshot.hasError) {
           return const Text('データが存在しません');
         } else {
-          return const Center(
-            child: SizedBox(
-              height: 25, //指定
-              width: 25, //指定
-              child: CircularProgressIndicator(),
+          return const Expanded(
+            child: Center(
+              child: SizedBox(
+                height: 25, //指定
+                width: 25, //指定
+                child: CircularProgressIndicator(),
+              ),
             ),
           );
         }

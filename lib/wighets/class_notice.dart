@@ -68,7 +68,7 @@ class ClassNoticeItem extends StatelessWidget {
                             color: Theme.of(context).colorScheme.secondary,
                           ),
                     ),
-                    Text(notice.sendAt)
+                    Text(notice.sendAt),
                   ],
                 ),
               ],
@@ -77,7 +77,7 @@ class ClassNoticeItem extends StatelessWidget {
         ),
         Divider(
           thickness: 1,
-          color: Theme.of(context).hoverColor,
+          color: Theme.of(context).dividerColor,
         ),
       ],
     );

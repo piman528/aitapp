@@ -48,7 +48,6 @@ class _SyllabusSearchScreenState extends State<SyllabusSearchScreen> {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        // backgroundColor: Colors.white,
         centerTitle: true,
         title: Text(
           '${dayOfWeekToString[widget.dayOfWeek]} ${widget.classPeriod}限から検索',

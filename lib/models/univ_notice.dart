@@ -1,5 +1,5 @@
 class UnivNotice {
-  UnivNotice(this.sender, this.title, this.content, this.sendAt);
+  UnivNotice(this.sender, this.title, this.content, this.sendAt, this.url);
   // 発信者
   final String sender;
   // タイトル
@@ -8,4 +8,6 @@ class UnivNotice {
   final List<String> content;
   // 送信日時
   final String sendAt;
+
+  final List<String> url;
 }

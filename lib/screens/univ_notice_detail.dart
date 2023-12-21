@@ -50,7 +50,7 @@ class UnivNoticeDetailScreen extends StatelessWidget {
                       ],
                     ),
                     const SizedBox(
-                      height: 40,
+                      height: 30,
                     ),
                     SelectionArea(
                       child: Column(
@@ -84,6 +84,31 @@ class UnivNoticeDetailScreen extends StatelessWidget {
                               ),
                             },
                           },
+                          if (getnotice.url.isNotEmpty) ...{
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            const Text(
+                              '参考URL',
+                              style: TextStyle(
+                                fontSize: 17,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            for (final url in getnotice.url) ...{
+                              Link(
+                                uri: Uri.parse(regExp.stringMatch(url)!),
+                                target: LinkTarget.blank,
+                                builder: (context, followLink) => TextButton(
+                                  onPressed: followLink,
+                                  child: Text(url),
+                                ),
+                              ),
+                            },
+                          },
+                          const SizedBox(
+                            height: 40,
+                          ),
                         ],
                       ),
                     ),

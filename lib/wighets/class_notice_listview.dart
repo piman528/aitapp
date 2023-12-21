@@ -3,29 +3,42 @@ import 'package:aitapp/models/get_notice.dart';
 import 'package:aitapp/provider/class_notices_provider.dart';
 import 'package:aitapp/provider/id_password_provider.dart';
 import 'package:aitapp/wighets/class_notice.dart';
+import 'package:aitapp/wighets/search_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class ClassNoticeList extends ConsumerStatefulWidget {
   const ClassNoticeList({
     super.key,
-    required this.filterText,
     required this.getNotice,
   });
 
   final GetNotice getNotice;
-  final String filterText;
 
   @override
   ConsumerState<ClassNoticeList> createState() => _ClassNoticeListState();
 }
 
 class _ClassNoticeListState extends ConsumerState<ClassNoticeList> {
+  final classController = TextEditingController();
+  String classFilter = '';
   bool isLoading = true;
   bool isManual = false;
+  void _setClassFilterValue2() {
+    setState(() {
+      classFilter = classController.text;
+    });
+  }
+
+  @override
+  void dispose() {
+    classController.dispose();
+    super.dispose();
+  }
 
   @override
   void initState() {
+    classController.addListener(_setClassFilterValue2);
     _load();
     super.initState();
   }
@@ -50,13 +63,13 @@ class _ClassNoticeListState extends ConsumerState<ClassNoticeList> {
         .where(
           (classNotice) =>
               classNotice.subject.toLowerCase().contains(
-                    widget.filterText.toLowerCase(),
+                    classFilter.toLowerCase(),
                   ) ||
               classNotice.title.toLowerCase().contains(
-                    widget.filterText.toLowerCase(),
+                    classFilter.toLowerCase(),
                   ) ||
               classNotice.sender.toLowerCase().contains(
-                    widget.filterText.toLowerCase(),
+                    classFilter.toLowerCase(),
                   ),
         )
         .toList();
@@ -91,27 +104,29 @@ class _ClassNoticeListState extends ConsumerState<ClassNoticeList> {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Column(
-        children: [
-          isLoading && ref.read(classNoticesProvider) != null && !isManual
-              ? const LinearProgressIndicator(minHeight: 2)
-              : const SizedBox(
-                  height: 2,
-                ),
-          Expanded(
-            child: RefreshIndicator(
-              onRefresh: () async {
-                setState(() {
-                  isManual = true;
-                });
-                await _load();
-              },
-              child: _content(),
-            ),
+    return Column(
+      children: [
+        isLoading && ref.read(classNoticesProvider) != null && !isManual
+            ? const LinearProgressIndicator(minHeight: 2)
+            : const SizedBox(
+                height: 2,
+              ),
+        SearchBarWidget(
+          controller: classController,
+          hintText: '送信元、キーワードで検索',
+        ),
+        Expanded(
+          child: RefreshIndicator(
+            onRefresh: () async {
+              setState(() {
+                isManual = true;
+              });
+              await _load();
+            },
+            child: _content(),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

@@ -2,6 +2,7 @@ import 'package:aitapp/models/get_notice.dart';
 import 'package:aitapp/models/univ_notice.dart';
 import 'package:aitapp/provider/id_password_provider.dart';
 import 'package:aitapp/provider/univ_notices_provider.dart';
+import 'package:aitapp/wighets/search_bar.dart';
 import 'package:aitapp/wighets/univ_notice.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -9,23 +10,35 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 class UnivNoticeList extends ConsumerStatefulWidget {
   const UnivNoticeList({
     super.key,
-    required this.filterText,
     required this.getNotice,
   });
 
   final GetNotice getNotice;
-  final String filterText;
 
   @override
   ConsumerState<UnivNoticeList> createState() => _UnivNoticeListState();
 }
 
 class _UnivNoticeListState extends ConsumerState<UnivNoticeList> {
+  final univController = TextEditingController();
+  String univFilter = '';
   bool isLoading = true;
   bool isManual = false;
+  void _printUnivFilterValue1() {
+    setState(() {
+      univFilter = univController.text;
+    });
+  }
+
+  @override
+  void dispose() {
+    univController.dispose();
+    super.dispose();
+  }
 
   @override
   void initState() {
+    univController.addListener(_printUnivFilterValue1);
     _load();
     super.initState();
   }
@@ -50,10 +63,10 @@ class _UnivNoticeListState extends ConsumerState<UnivNoticeList> {
         .where(
           (univNotice) =>
               univNotice.title.toLowerCase().contains(
-                    widget.filterText.toLowerCase(),
+                    univFilter.toLowerCase(),
                   ) ||
               univNotice.sender.toLowerCase().contains(
-                    widget.filterText.toLowerCase(),
+                    univFilter.toLowerCase(),
                   ),
         )
         .toList();
@@ -88,27 +101,29 @@ class _UnivNoticeListState extends ConsumerState<UnivNoticeList> {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Column(
-        children: [
-          isLoading && ref.read(univNoticesProvider) != null && !isManual
-              ? const LinearProgressIndicator(minHeight: 2)
-              : const SizedBox(
-                  height: 2,
-                ),
-          Expanded(
-            child: RefreshIndicator(
-              onRefresh: () async {
-                setState(() {
-                  isManual = true;
-                });
-                await _load();
-              },
-              child: _content(),
-            ),
+    return Column(
+      children: [
+        isLoading && ref.read(univNoticesProvider) != null && !isManual
+            ? const LinearProgressIndicator(minHeight: 2)
+            : const SizedBox(
+                height: 2,
+              ),
+        SearchBarWidget(
+          controller: univController,
+          hintText: '送信元、キーワードで検索',
+        ),
+        Expanded(
+          child: RefreshIndicator(
+            onRefresh: () async {
+              setState(() {
+                isManual = true;
+              });
+              await _load();
+            },
+            child: _content(),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

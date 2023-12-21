@@ -13,8 +13,9 @@ ThemeData buildThemeLight() {
   return ThemeData.light().copyWith(
     useMaterial3: true,
     colorScheme: kColorScheme,
-    appBarTheme: const AppBarTheme(
-      iconTheme: IconThemeData(color: Colors.blue),
+    scaffoldBackgroundColor: kColorScheme.background,
+    appBarTheme: AppBarTheme(
+      iconTheme: IconThemeData(color: kColorScheme.primary),
     ),
   );
 }
@@ -24,9 +25,8 @@ ThemeData buildThemeDark() {
     useMaterial3: true,
     colorScheme: kDarkColorScheme,
     scaffoldBackgroundColor: kDarkColorScheme.background,
-    appBarTheme: const AppBarTheme(
-      iconTheme: IconThemeData(color: Colors.blue),
-      color: Color.fromRGBO(46, 46, 46, 255),
+    appBarTheme: AppBarTheme(
+      iconTheme: IconThemeData(color: kDarkColorScheme.primary),
     ),
   );
 }

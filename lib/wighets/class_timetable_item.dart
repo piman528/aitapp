@@ -170,55 +170,61 @@ class TimeTable extends ConsumerWidget {
         ),
       ),
       error: (_, __) => const Text('An error occurred'),
-      data: (data) => Container(
-        padding: const EdgeInsets.all(4),
-        child: Row(
-          children: [
-            Column(
+      data: (data) => ListView(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(4),
+            child: Row(
               children: [
-                Container(
-                  alignment: Alignment.centerLeft,
-                  margin: const EdgeInsets.all(2),
-                  height: 35,
+                Column(
+                  children: [
+                    Container(
+                      alignment: Alignment.centerLeft,
+                      margin: const EdgeInsets.all(2),
+                      height: 35,
+                    ),
+                    for (int i = 0; i < classPeriods.length; i++) ...{
+                      ClassTime(
+                        start: classPeriods[i][0],
+                        end: classPeriods[i][1],
+                        number: i + 1,
+                      ),
+                    },
+                  ],
                 ),
-                for (int i = 0; i < classPeriods.length; i++) ...{
-                  ClassTime(
-                    start: classPeriods[i][0],
-                    end: classPeriods[i][1],
-                    number: i + 1,
+                const SizedBox(
+                  width: 4,
+                ),
+                Expanded(
+                  child: Row(
+                    children: [
+                      for (final week in activeWeek) ...{
+                        Expanded(
+                          child: Column(
+                            children: [
+                              WeekGridContainer(
+                                dayofweek: dayOfWeekToString[week]!,
+                              ),
+                              for (int i = 1;
+                                  i <= classPeriods.length;
+                                  i++) ...{
+                                ClassGridContainer(
+                                  dayOfWeek: week,
+                                  classPeriod: i,
+                                  clas: data[week]?[i],
+                                ),
+                              },
+                            ],
+                          ),
+                        ),
+                      },
+                    ],
                   ),
-                },
+                ),
               ],
             ),
-            const SizedBox(
-              width: 4,
-            ),
-            Expanded(
-              child: Row(
-                children: [
-                  for (final week in activeWeek) ...{
-                    Expanded(
-                      child: Column(
-                        children: [
-                          WeekGridContainer(
-                            dayofweek: dayOfWeekToString[week]!,
-                          ),
-                          for (int i = 1; i <= classPeriods.length; i++) ...{
-                            ClassGridContainer(
-                              dayOfWeek: week,
-                              classPeriod: i,
-                              clas: data[week]?[i],
-                            ),
-                          },
-                        ],
-                      ),
-                    ),
-                  },
-                ],
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

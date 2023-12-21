@@ -18,9 +18,19 @@ class _TabScreenState extends ConsumerState<TabScreen> {
     const ClassTimeTableScreen(),
     const TimeTableScreen(),
   ];
+  List<String> appBarTitle = [
+    'お知らせ',
+    '時間割',
+    '時刻表',
+  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text(appBarTitle[_currentPageIndex]),
+        centerTitle: true,
+      ),
+      drawer: const Drawer(),
       body: currentPages[_currentPageIndex],
       bottomNavigationBar: NavigationBar(
         selectedIndex: _currentPageIndex,

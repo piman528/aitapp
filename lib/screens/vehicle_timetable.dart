@@ -6,30 +6,19 @@ class TimeTableScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        // backgroundColor: Colors.white,
-        centerTitle: true,
-        title: const Text(
-          '時刻表',
-          // style: TextStyle(color: Colors.black),
-        ),
-      ),
-      body: const Padding(
-        padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-        child: Column(
-          children: [
-            TimeTableCard(
-              vehicle: 'bus',
-              destination: 'toAIT',
-            ),
-            TimeTableCard(
-              vehicle: 'bus',
-              destination: 'toYakusa',
-            ),
-          ],
-        ),
+    return const Padding(
+      padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+      child: Column(
+        children: [
+          TimeTableCard(
+            vehicle: 'bus',
+            destination: 'toAIT',
+          ),
+          TimeTableCard(
+            vehicle: 'bus',
+            destination: 'toYakusa',
+          ),
+        ],
       ),
     );
   }

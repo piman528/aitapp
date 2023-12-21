@@ -6,29 +6,16 @@ class ClassTimeTableScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        centerTitle: true,
-        title: const Text(
-          '時間割',
+    return const Column(
+      children: [
+        SizedBox(
+          height: 60,
+          child: Row(),
         ),
-      ),
-      body: Column(
-        children: [
-          const SizedBox(
-            height: 60,
-            child: Row(),
-          ),
-          Expanded(
-            child: ListView(
-              children: const [
-                TimeTable(),
-              ],
-            ),
-          ),
-        ],
-      ),
+        Expanded(
+          child: TimeTable(),
+        ),
+      ],
     );
   }
 }

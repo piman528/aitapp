@@ -135,7 +135,7 @@ List<UnivNotice> parseUnivNotice(String body) {
       }
       c++;
     }
-    univNoticeList.add(UnivNotice(sender, title, content, sendAt));
+    univNoticeList.add(UnivNotice(sender, title, content, sendAt, []));
   }
   return univNoticeList;
 }
@@ -181,7 +181,11 @@ UnivNotice parseUnivNoticeDetail(String body) {
     content.add(texts[i]);
   }
   final sendAt = texts[texts.indexOf('連絡日時') + 1];
-  return UnivNotice(sender, title, content, sendAt);
+  final url = <String>[];
+  for (var i = texts.indexOf('参考URL') + 1; i < texts.indexOf('連絡日時'); i++) {
+    url.add(texts[i]);
+  }
+  return UnivNotice(sender, title, content, sendAt, url);
 }
 
 Map<DayOfWeek, Map<int, Class>> parseClassTimeTable(String body) {
