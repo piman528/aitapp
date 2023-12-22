@@ -17,6 +17,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   final passwordController = TextEditingController();
   bool _isObscure = true;
+  bool _isError = false;
+  bool _isLoading = false;
 
   @override
   void dispose() {
@@ -28,111 +30,148 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Card(
+      body: Stack(
+        children: [
+          Center(
             child: Padding(
-              padding: const EdgeInsets.all(20),
-              child: AutofillGroup(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      '愛工大へログイン',
-                      style: Theme.of(context).textTheme.titleLarge,
-                    ),
-                    const SizedBox(
-                      height: 50,
-                    ),
-                    TextField(
-                      autofillHints: const [AutofillHints.email],
-                      controller: idController,
-                      keyboardType: TextInputType.emailAddress,
-                      decoration: InputDecoration(
-                        hintText: '愛工大ID',
-                        isDense: true,
-                        prefixIcon: const Icon(Icons.account_circle),
-                        fillColor: Theme.of(context).hoverColor,
-                        filled: true,
-                        // border: InputBorder.none,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide.none,
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: AutofillGroup(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          '愛工大へログイン',
+                          style: Theme.of(context).textTheme.titleLarge,
                         ),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 50,
-                    ),
-                    TextField(
-                      autofillHints: const [AutofillHints.password],
-                      keyboardType: TextInputType.visiblePassword,
-                      controller: passwordController,
-                      obscureText: _isObscure,
-                      decoration: InputDecoration(
-                        hintText: 'パスワード',
-                        isDense: true,
-                        prefixIcon: const Icon(Icons.lock),
-                        fillColor: Theme.of(context).hoverColor,
-                        filled: true,
-                        // border: InputBorder.none,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide.none,
+                        const SizedBox(
+                          height: 30,
                         ),
-                        suffixIcon: IconButton(
-                          icon: Icon(
-                            _isObscure
-                                ? Icons.visibility_off
-                                : Icons.visibility,
+                        SizedBox(
+                          height: 20,
+                          child: _isError
+                              ? Text(
+                                  'ID パスワードが異なります',
+                                  style: TextStyle(
+                                    color: Theme.of(context).colorScheme.error,
+                                  ),
+                                )
+                              : null,
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        TextField(
+                          autofillHints: const [AutofillHints.email],
+                          controller: idController,
+                          keyboardType: TextInputType.emailAddress,
+                          decoration: InputDecoration(
+                            hintText: '愛工大ID',
+                            isDense: true,
+                            prefixIcon: const Icon(Icons.account_circle),
+                            fillColor: Theme.of(context).hoverColor,
+                            filled: true,
+                            // border: InputBorder.none,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: BorderSide.none,
+                            ),
                           ),
-                          onPressed: () {
-                            setState(() {
-                              _isObscure = !_isObscure;
-                            });
-                          },
                         ),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 40,
-                    ),
-                    ElevatedButton(
-                      onPressed: () async {
-                        final cookies = await getCookie();
-                        final loginBool = await loginLcam(
-                          idController.text,
-                          passwordController.text,
-                          cookies[0],
-                          cookies[1],
-                        );
-                        if (loginBool) {
-                          final prefs = await SharedPreferences.getInstance();
-                          await prefs.setString('id', idController.text);
-                          await prefs.setString(
-                            'password',
-                            passwordController.text,
-                          );
-                          ref.read(idPasswordProvider.notifier).setIdPassword(
-                                idController.text,
+                        const SizedBox(
+                          height: 50,
+                        ),
+                        TextField(
+                          autofillHints: const [AutofillHints.password],
+                          keyboardType: TextInputType.visiblePassword,
+                          controller: passwordController,
+                          obscureText: _isObscure,
+                          decoration: InputDecoration(
+                            hintText: 'パスワード',
+                            isDense: true,
+                            prefixIcon: const Icon(Icons.lock),
+                            fillColor: Theme.of(context).hoverColor,
+                            filled: true,
+                            // border: InputBorder.none,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: BorderSide.none,
+                            ),
+                            suffixIcon: IconButton(
+                              icon: Icon(
+                                _isObscure
+                                    ? Icons.visibility_off
+                                    : Icons.visibility,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  _isObscure = !_isObscure;
+                                });
+                              },
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 40,
+                        ),
+                        ElevatedButton(
+                          onPressed: () async {
+                            setState(() {
+                              _isLoading = true;
+                            });
+                            final cookies = await getCookie();
+                            final loginBool = await loginLcam(
+                              idController.text,
+                              passwordController.text,
+                              cookies[0],
+                              cookies[1],
+                            );
+                            if (loginBool) {
+                              setState(() {
+                                _isError = false;
+                              });
+                              final prefs =
+                                  await SharedPreferences.getInstance();
+                              await prefs.setString('id', idController.text);
+                              await prefs.setString(
+                                'password',
                                 passwordController.text,
                               );
-                          Navigator.of(context).pushReplacement(
-                            MaterialPageRoute<void>(
-                              builder: (ctx) => const TabScreen(),
-                            ),
-                          );
-                        }
-                      },
-                      child: const Text('ログイン'),
+                              ref
+                                  .read(idPasswordProvider.notifier)
+                                  .setIdPassword(
+                                    idController.text,
+                                    passwordController.text,
+                                  );
+                              Navigator.of(context).pushReplacement(
+                                MaterialPageRoute<void>(
+                                  builder: (ctx) => const TabScreen(),
+                                ),
+                              );
+                            } else {
+                              setState(() {
+                                _isError = true;
+                                _isLoading = false;
+                              });
+                            }
+                          },
+                          child: const Text('ログイン'),
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
               ),
             ),
           ),
-        ),
+          if (_isLoading) ...{
+            const Center(
+              child: CircularProgressIndicator(),
+            ),
+          },
+        ],
       ),
     );
   }

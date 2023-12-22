@@ -1,5 +1,6 @@
 import 'package:aitapp/provider/id_password_provider.dart';
 import 'package:aitapp/screens/login.dart';
+import 'package:aitapp/screens/map.dart';
 import 'package:aitapp/screens/settings.dart';
 import 'package:aitapp/screens/student_handbook.dart';
 import 'package:aitapp/screens/syllabus_search.dart';
@@ -32,14 +33,18 @@ class MainDrawer extends ConsumerWidget {
                       builder: (ctx) => const StudentHandbookScreen(),
                     ),
                   );
-                  // launchUrl(
-                  //   Uri.parse(
-                  //     'https://www.ait.ac.jp/assets/docs/binran2023.pdf',
-                  //   ),
-                  // );
                 },
               ),
-              DrawerTile(icon: Icons.map_rounded, title: '学内マップ', onTap: () {}),
+              DrawerTile(
+                  icon: Icons.map_rounded,
+                  title: '学内マップ',
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute<void>(
+                        builder: (ctx) => const MapScreen(),
+                      ),
+                    );
+                  }),
               DrawerTile(
                 icon: Icons.search,
                 title: 'シラバス検索',
@@ -51,6 +56,9 @@ class MainDrawer extends ConsumerWidget {
                   );
                 },
               ),
+              const Divider(),
+              DrawerTile(icon: Icons.link, title: '各種リンク', onTap: () {}),
+              DrawerTile(icon: Icons.phone, title: '各所連絡先', onTap: () {}),
               const Divider(),
               DrawerTile(
                 icon: Icons.settings,

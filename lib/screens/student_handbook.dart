@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_pdfview/flutter_pdfview.dart';
+import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
 class StudentHandbookScreen extends StatelessWidget {
   const StudentHandbookScreen({super.key});
@@ -10,10 +10,7 @@ class StudentHandbookScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('学生便覧'),
       ),
-      body: const PDFView(
-        filePath: 'assets/pdfs/binran2023.pdf',
-        // pageFling: true,
-      ),
+      body: SfPdfViewer.asset('assets/pdfs/binran_2023.pdf'),
     );
   }
 }
