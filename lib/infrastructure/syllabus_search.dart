@@ -34,10 +34,11 @@ Future<String> getSyllabusSessionId() async {
 Future<String> getSyllabusListBody(
   int campus,
   int semester,
-  int week,
-  int hour,
+  int? week,
+  int? hour,
   String year,
   String jSessionId,
+  String? searchWord,
 ) async {
   final headers = {
     'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
@@ -59,11 +60,11 @@ Future<String> getSyllabusListBody(
     'subFolderFlag': 'on',
     'syllabusCampus': '$campus',
     'syllabusSemester': '$semester',
-    'syllabusWeek': '$week',
-    'syllabusHour': '$hour',
+    'syllabusWeek': '${week ?? ''}',
+    'syllabusHour': '${hour ?? ''}',
     'kamokuName': '',
     'editorName': '',
-    'freeWord': '',
+    'freeWord': searchWord ?? '',
     'actionStatus': 'search',
     'subFolderFlag2': 'on',
     'bottonType': 'search',

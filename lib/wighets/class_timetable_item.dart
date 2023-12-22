@@ -2,7 +2,7 @@ import 'package:aitapp/const.dart';
 import 'package:aitapp/models/class.dart';
 import 'package:aitapp/provider/class_timetable_provider.dart';
 import 'package:aitapp/provider/id_password_provider.dart';
-import 'package:aitapp/screens/syllabus_search.dart';
+import 'package:aitapp/screens/syllabus_filter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -103,7 +103,7 @@ class ClassGridContainer extends StatelessWidget {
       onTap: () {
         Navigator.of(context).push(
           MaterialPageRoute<void>(
-            builder: (ctx) => SyllabusSearchScreen(
+            builder: (ctx) => SyllabusFilterScreen(
               dayOfWeek: dayOfWeek,
               classPeriod: classPeriod,
               teacher: clas?.teacher,

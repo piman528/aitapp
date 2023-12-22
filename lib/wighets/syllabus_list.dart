@@ -7,19 +7,21 @@ import 'package:flutter/material.dart';
 class SyllabusList extends StatelessWidget {
   SyllabusList({
     super.key,
-    required this.dayOfWeek,
-    required this.classPeriod,
-    required this.filterText,
+    this.dayOfWeek,
+    this.classPeriod,
+    this.filterText,
+    this.searchText,
   });
-  final DayOfWeek dayOfWeek;
-  final int classPeriod;
-  final String filterText;
+  final DayOfWeek? dayOfWeek;
+  final int? classPeriod;
+  final String? filterText;
+  final String? searchText;
   final getSyllabus = GetSyllabus();
 
   Future<List<ClassSyllabus>> _syllabusList() async {
     await getSyllabus.create();
     final syllabusList =
-        await getSyllabus.getSyllabusList(dayOfWeek, classPeriod);
+        await getSyllabus.getSyllabusList(dayOfWeek, classPeriod, searchText);
     return syllabusList;
   }
 
@@ -30,13 +32,18 @@ class SyllabusList extends StatelessWidget {
       builder:
           (BuildContext context, AsyncSnapshot<List<ClassSyllabus>> snapshot) {
         if (snapshot.hasData) {
-          final result = snapshot.data!
-              .where(
-                (syllabus) =>
-                    syllabus.teacher.toLowerCase().contains(filterText) ||
-                    syllabus.subject.toLowerCase().contains(filterText),
-              )
-              .toList();
+          late final List<ClassSyllabus> result;
+          if (filterText != null) {
+            result = snapshot.data!
+                .where(
+                  (syllabus) =>
+                      syllabus.teacher.toLowerCase().contains(filterText!) ||
+                      syllabus.subject.toLowerCase().contains(filterText!),
+                )
+                .toList();
+          } else {
+            result = snapshot.data!;
+          }
           return Expanded(
             child: ListView.builder(
               itemCount: result.length,

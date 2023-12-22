@@ -10,16 +10,18 @@ class GetSyllabus {
   }
 
   Future<List<ClassSyllabus>> getSyllabusList(
-    DayOfWeek dayOfWeek,
-    int classPeriod,
+    DayOfWeek? dayOfWeek,
+    int? classPeriod,
+    String? searchWord,
   ) async {
     final body = await getSyllabusListBody(
       1,
       2,
-      dayOfWeekToInt[dayOfWeek]!,
+      dayOfWeekToInt[dayOfWeek],
       classPeriod,
       '02',
       jSessionId,
+      searchWord,
     );
     return parseSyllabusList(body);
   }

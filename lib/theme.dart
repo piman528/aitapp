@@ -15,7 +15,7 @@ ThemeData buildThemeLight() {
     colorScheme: kColorScheme,
     scaffoldBackgroundColor: kColorScheme.background,
     appBarTheme: AppBarTheme(
-      iconTheme: IconThemeData(color: kColorScheme.primary),
+      backgroundColor: kColorScheme.background,
     ),
   );
 }
@@ -26,7 +26,7 @@ ThemeData buildThemeDark() {
     colorScheme: kDarkColorScheme,
     scaffoldBackgroundColor: kDarkColorScheme.background,
     appBarTheme: AppBarTheme(
-      iconTheme: IconThemeData(color: kDarkColorScheme.primary),
+      backgroundColor: kDarkColorScheme.background,
     ),
   );
 }

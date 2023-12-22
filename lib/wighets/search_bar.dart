@@ -5,15 +5,18 @@ class SearchBarWidget extends StatelessWidget {
     super.key,
     required this.hintText,
     required this.controller,
+    this.onSubmitted,
   });
   final String hintText;
   final TextEditingController controller;
+  final void Function(String)? onSubmitted;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 14),
       child: TextField(
+        onSubmitted: onSubmitted,
         controller: controller,
         decoration: InputDecoration(
           isDense: true,

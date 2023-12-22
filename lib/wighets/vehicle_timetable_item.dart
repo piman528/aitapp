@@ -92,9 +92,17 @@ class TimeCard extends StatefulWidget {
 class _TimeCardState extends State<TimeCard> {
   late DateTime _time;
   late Timer _timer;
+  late DateTime? nextDepartureTime;
+
+  final f = DateFormat('HH:mm');
 
   @override
   void initState() {
+    nextDepartureTime = NextDeparture(
+      vehicle: widget.vehicle,
+      destination: widget.destination,
+      order: widget.order,
+    ).searchNextDeparture();
     _time = DateTime.now();
     _timer = Timer.periodic(const Duration(milliseconds: 1000), (timer) {
       setState(() {
@@ -110,16 +118,23 @@ class _TimeCardState extends State<TimeCard> {
     super.dispose();
   }
 
+  void reflashtime() {
+    setState(() {
+      nextDepartureTime = NextDeparture(
+        vehicle: widget.vehicle,
+        destination: widget.destination,
+        order: widget.order,
+      ).searchNextDeparture();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    final nextDepartureTime = NextDeparture(
-      vehicle: widget.vehicle,
-      destination: widget.destination,
-      order: widget.order,
-    ).searchNextDeparture();
     if (nextDepartureTime != null) {
-      final remainTime = nextDepartureTime.difference(_time);
-      final f = DateFormat('HH:mm');
+      final remainTime = nextDepartureTime!.difference(_time);
+      if (remainTime.inSeconds % 60 == 0 && remainTime.inMinutes % 5 == 0) {
+        reflashtime();
+      }
       return Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
@@ -149,7 +164,7 @@ class _TimeCardState extends State<TimeCard> {
               ],
             ),
             Text(
-              f.format(nextDepartureTime),
+              f.format(nextDepartureTime!),
               style: const TextStyle(
                 // color: Colors.black,
                 fontSize: 48,

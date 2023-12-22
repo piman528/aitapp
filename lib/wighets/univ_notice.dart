@@ -48,7 +48,7 @@ class UnivNoticeItem extends StatelessWidget {
                 ),
                 // Text(notice.content),
                 const SizedBox(
-                  height: 40,
+                  height: 25,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,

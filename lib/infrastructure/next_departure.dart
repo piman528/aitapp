@@ -12,11 +12,15 @@ class NextDeparture {
   DateTime? searchNextDeparture() {
     final now = DateTime.now();
     var counter = 0;
+    final todayDaiya = dayDaiya['${now.year}-${now.month}-${now.day}'];
+    if (todayDaiya == null) {
+      return null;
+    }
 
-    final hours = daiya[vehicle]![destination]!['A']!.keys;
+    final hours = daiya[vehicle]![destination]![todayDaiya]!.keys;
     for (final hour in hours) {
       if (hour >= now.hour) {
-        final minutes = daiya[vehicle]![destination]!['A']![hour];
+        final minutes = daiya[vehicle]![destination]![todayDaiya]![hour];
         if (minutes != null) {
           for (final minute in minutes) {
             if (minute > now.minute || hour > now.hour) {

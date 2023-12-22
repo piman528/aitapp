@@ -48,7 +48,7 @@ class ClassNoticeItem extends StatelessWidget {
                 ),
                 // Text(notice.content),
                 const SizedBox(
-                  height: 30,
+                  height: 20,
                 ),
                 Text(
                   notice.subject,
