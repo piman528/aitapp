@@ -29,7 +29,7 @@ class SyllabusItem extends StatelessWidget {
             );
           },
           child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
@@ -66,6 +66,7 @@ class SyllabusItem extends StatelessWidget {
         ),
         Divider(
           thickness: 1,
+          height: 1,
           color: Theme.of(context).dividerColor,
         ),
       ],

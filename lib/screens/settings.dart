@@ -13,6 +13,7 @@ class Settings extends StatelessWidget {
       body: ListView(
         children: [
           ListTile(
+            leading: const Icon(Icons.info_outline),
             title: const Text('ライセンス表示'),
             onTap: () {
               Navigator.of(context).push(
