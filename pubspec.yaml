@@ -31,9 +31,10 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_riverpod:
-  # flutter_secure_storage:
   http:
   universal_html:
+  flutter_localizations: 
+    sdk: flutter
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -71,6 +72,7 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
+    - assets\pdfs\annual-events.pdf
     - assets/pdfs/binran_2023.pdf
     - assets/pdfs/guide-campus-yakusa.pdf
   #   - images/a_dot_burr.jpeg

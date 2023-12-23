@@ -36,7 +36,7 @@ class SyllabusItem extends StatelessWidget {
               children: [
                 Text(
                   syllabus.subject,
-                  style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                         color: Theme.of(context).colorScheme.inverseSurface,
                       ),
                 ),
@@ -48,13 +48,13 @@ class SyllabusItem extends StatelessWidget {
                   children: [
                     Text(
                       syllabus.teacher,
-                      style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                             color: Theme.of(context).colorScheme.secondary,
                           ),
                     ),
                     Text(
                       '${classificationToString[syllabus.classification]!}   ${syllabus.unitsNumber} 単位',
-                      style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                             color: Theme.of(context).colorScheme.secondary,
                           ),
                     ),

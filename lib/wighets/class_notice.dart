@@ -42,7 +42,7 @@ class ClassNoticeItem extends StatelessWidget {
               children: [
                 Text(
                   notice.title,
-                  style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                         color: Theme.of(context).colorScheme.inverseSurface,
                       ),
                 ),
@@ -52,7 +52,7 @@ class ClassNoticeItem extends StatelessWidget {
                 ),
                 Text(
                   notice.subject,
-                  style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                         color: Theme.of(context).colorScheme.secondary,
                       ),
                 ),
@@ -64,7 +64,7 @@ class ClassNoticeItem extends StatelessWidget {
                   children: [
                     Text(
                       notice.sender,
-                      style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                             color: Theme.of(context).colorScheme.secondary,
                           ),
                     ),

@@ -1,17 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
-class MapScreen extends StatelessWidget {
-  const MapScreen({super.key});
+class OpenPdf extends StatelessWidget {
+  const OpenPdf({
+    super.key,
+    required this.title,
+    required this.path,
+  });
+
+  final String title;
+  final String path;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('学内マップ'),
+        title: Text(title),
       ),
       body: SfPdfViewer.asset(
-        'assets/pdfs/guide-campus-yakusa.pdf',
+        path,
       ),
     );
   }

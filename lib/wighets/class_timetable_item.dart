@@ -44,7 +44,6 @@ class ClassTime extends StatelessWidget {
             child: Text(
               '$number',
               style: Theme.of(context).textTheme.labelLarge!.copyWith(
-                    color: Theme.of(context).colorScheme.secondary,
                     fontWeight: FontWeight.bold,
                   ),
             ),
@@ -77,7 +76,7 @@ class WeekGridContainer extends StatelessWidget {
       child: Text(
         dayofweek,
         style: Theme.of(context).textTheme.labelLarge!.copyWith(
-              color: Theme.of(context).colorScheme.secondary,
+              fontWeight: FontWeight.bold,
             ),
       ),
     );
@@ -114,7 +113,9 @@ class ClassGridContainer extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           borderRadius: const BorderRadius.all(Radius.circular(6)),
-          color: Theme.of(context).hoverColor,
+          color: clas != null
+              ? Theme.of(context).colorScheme.secondaryContainer
+              : Theme.of(context).hoverColor,
         ),
         width: double.infinity,
         margin: const EdgeInsets.all(2),
@@ -133,11 +134,20 @@ class ClassGridContainer extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  Text(
-                    clas!.classRoom,
-                    style: TextStyle(
-                      fontSize: 9,
-                      color: Theme.of(context).colorScheme.secondary,
+                  Container(
+                    padding: const EdgeInsets.all(2),
+                    alignment: Alignment.center,
+                    width: double.infinity - 5,
+                    decoration: BoxDecoration(
+                      borderRadius: const BorderRadius.all(Radius.circular(10)),
+                      color: Theme.of(context).focusColor,
+                    ),
+                    child: Text(
+                      clas!.classRoom,
+                      style: TextStyle(
+                        fontSize: 9,
+                        color: Theme.of(context).colorScheme.inverseSurface,
+                      ),
                     ),
                   ),
                 ],

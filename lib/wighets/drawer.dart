@@ -1,12 +1,14 @@
 import 'package:aitapp/provider/id_password_provider.dart';
+import 'package:aitapp/screens/contacts.dart';
+import 'package:aitapp/screens/links.dart';
 import 'package:aitapp/screens/login.dart';
-import 'package:aitapp/screens/map.dart';
+import 'package:aitapp/screens/open_pdf.dart';
 import 'package:aitapp/screens/settings.dart';
-import 'package:aitapp/screens/student_handbook.dart';
 import 'package:aitapp/screens/syllabus_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class MainDrawer extends ConsumerWidget {
   const MainDrawer({super.key});
@@ -22,7 +24,16 @@ class MainDrawer extends ConsumerWidget {
               DrawerTile(
                 icon: Icons.calendar_today,
                 title: '行事予定',
-                onTap: () {},
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute<void>(
+                      builder: (ctx) => const OpenPdf(
+                        title: '行事予定',
+                        path: 'assets/pdfs/annual-events.pdf',
+                      ),
+                    ),
+                  );
+                },
               ),
               DrawerTile(
                 icon: Icons.book,
@@ -30,21 +41,28 @@ class MainDrawer extends ConsumerWidget {
                 onTap: () {
                   Navigator.of(context).push(
                     MaterialPageRoute<void>(
-                      builder: (ctx) => const StudentHandbookScreen(),
+                      builder: (ctx) => const OpenPdf(
+                        title: '学生便覧',
+                        path: 'assets/pdfs/binran_2023.pdf',
+                      ),
                     ),
                   );
                 },
               ),
               DrawerTile(
-                  icon: Icons.map_rounded,
-                  title: '学内マップ',
-                  onTap: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute<void>(
-                        builder: (ctx) => const MapScreen(),
+                icon: Icons.map_rounded,
+                title: '学内マップ',
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute<void>(
+                      builder: (ctx) => const OpenPdf(
+                        title: '学内マップ',
+                        path: 'assets/pdfs/guide-campus-yakusa.pdf',
                       ),
-                    );
-                  }),
+                    ),
+                  );
+                },
+              ),
               DrawerTile(
                 icon: Icons.search,
                 title: 'シラバス検索',
@@ -56,9 +74,53 @@ class MainDrawer extends ConsumerWidget {
                   );
                 },
               ),
+              DrawerTile(
+                icon: Icons.link,
+                title: 'L-Cam',
+                onTap: () {
+                  launchUrl(
+                    mode: LaunchMode.externalApplication,
+                    Uri.parse(
+                      'https://lcam.aitech.ac.jp/portalv2/',
+                    ),
+                  );
+                },
+              ),
+              DrawerTile(
+                icon: Icons.link,
+                title: 'Moodle',
+                onTap: () {
+                  launchUrl(
+                    mode: LaunchMode.externalApplication,
+                    Uri.parse(
+                      'https://cms.aitech.ac.jp/',
+                    ),
+                  );
+                },
+              ),
               const Divider(),
-              DrawerTile(icon: Icons.link, title: '各種リンク', onTap: () {}),
-              DrawerTile(icon: Icons.phone, title: '各所連絡先', onTap: () {}),
+              DrawerTile(
+                icon: Icons.link,
+                title: '各種リンク',
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute<void>(
+                      builder: (ctx) => const Links(),
+                    ),
+                  );
+                },
+              ),
+              DrawerTile(
+                icon: Icons.phone,
+                title: '各所連絡先',
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute<void>(
+                      builder: (ctx) => const Contacts(),
+                    ),
+                  );
+                },
+              ),
               const Divider(),
               DrawerTile(
                 icon: Icons.settings,

@@ -3,6 +3,7 @@ import 'package:aitapp/screens/login.dart';
 import 'package:aitapp/screens/tabs.dart';
 import 'package:aitapp/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -37,6 +38,7 @@ class _AppState extends ConsumerState<App> {
     return MaterialApp(
       theme: buildThemeLight(),
       darkTheme: buildThemeDark(),
+      // themeMode: mode,
       home: FutureBuilder(
         future: loadIdPass(),
         builder: (context, snapshot) {
@@ -53,6 +55,20 @@ class _AppState extends ConsumerState<App> {
           }
         },
       ),
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+
+      // localeに英語と日本語を登録する
+      supportedLocales: const [
+        Locale('en'),
+        Locale('ja'),
+      ],
+
+      // アプリのlocaleを日本語に変更する
+      locale: const Locale('ja', 'JP'),
     );
   }
 }

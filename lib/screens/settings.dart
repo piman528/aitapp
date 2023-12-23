@@ -1,3 +1,4 @@
+import 'package:aitapp/screens/license.dart';
 import 'package:flutter/material.dart';
 
 class Settings extends StatelessWidget {
@@ -9,7 +10,20 @@ class Settings extends StatelessWidget {
       appBar: AppBar(
         title: const Text('設定'),
       ),
-      // body: Column(children: [SwitchListTile(value: value, onChanged: (isCheck){})],),
+      body: ListView(
+        children: [
+          ListTile(
+            title: const Text('ライセンス表示'),
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute<void>(
+                  builder: (ctx) => const LicenseScreen(),
+                ),
+              );
+            },
+          ),
+        ],
+      ),
     );
   }
 }

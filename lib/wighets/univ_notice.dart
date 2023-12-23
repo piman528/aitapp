@@ -42,7 +42,7 @@ class UnivNoticeItem extends StatelessWidget {
               children: [
                 Text(
                   notice.title,
-                  style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                         color: Theme.of(context).colorScheme.inverseSurface,
                       ),
                 ),
@@ -55,13 +55,13 @@ class UnivNoticeItem extends StatelessWidget {
                   children: [
                     Text(
                       notice.sender,
-                      style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                             color: Theme.of(context).colorScheme.secondary,
                           ),
                     ),
                     Text(
                       notice.sendAt,
-                      style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                             color: Theme.of(context).colorScheme.secondary,
                             fontWeight: FontWeight.bold,
                           ),
