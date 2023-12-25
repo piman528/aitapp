@@ -36,7 +36,6 @@ const List<DayOfWeek> activeWeek = [
   DayOfWeek.thurstay,
   DayOfWeek.friday,
 ];
-
 const List<List<String>> classPeriods = [
   [
     '09:00',
@@ -434,7 +433,7 @@ const Map<String, String> destinationName = {
   'toHujigaoka': '(藤が丘行)',
 };
 
-Map<String, List<Contact>> contacts = {
+const Map<String, List<Contact>> contacts = {
   '事務部門': [
     Contact(
       name: '教務・学生サービス課 教務グループ',

@@ -11,9 +11,11 @@ class ClassNoticeList extends ConsumerStatefulWidget {
   const ClassNoticeList({
     super.key,
     required this.getNotice,
+    required this.loading,
   });
 
   final GetNotice getNotice;
+  final void Function({required bool state}) loading;
 
   @override
   ConsumerState<ClassNoticeList> createState() => _ClassNoticeListState();
@@ -46,6 +48,7 @@ class _ClassNoticeListState extends ConsumerState<ClassNoticeList> {
   }
 
   Future<void> _load(bool withLogin) async {
+    widget.loading(state: true);
     setState(() {
       isLoading = true;
     });
@@ -60,6 +63,7 @@ class _ClassNoticeListState extends ConsumerState<ClassNoticeList> {
         isLoading = false;
       });
     }
+    widget.loading(state: false);
   }
 
   List<ClassNotice> _filteredList(List<ClassNotice> list) {
