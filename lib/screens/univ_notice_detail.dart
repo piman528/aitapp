@@ -104,6 +104,23 @@ class UnivNoticeDetailScreen extends StatelessWidget {
                               ),
                             },
                           },
+                          if (getnotice.files!.isNotEmpty) ...{
+                            const Text(
+                              '添付ファイル',
+                              style: TextStyle(
+                                fontSize: 17,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            for (final entries in getnotice.files!.entries) ...{
+                              TextButton(
+                                onPressed: () async {
+                                  await getNotice.shareFile(entries);
+                                },
+                                child: Text(entries.key),
+                              ),
+                            },
+                          },
                           const SizedBox(
                             height: 40,
                           ),

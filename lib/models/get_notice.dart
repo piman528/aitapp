@@ -1,7 +1,11 @@
+import 'dart:io';
 import 'package:aitapp/infrastructure/access_lcan.dart';
 import 'package:aitapp/infrastructure/parse_html.dart';
 import 'package:aitapp/models/class_notice.dart';
 import 'package:aitapp/models/univ_notice.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:universal_html/parsing.dart';
 
 class GetNotice {
   late List<String> cookies;
@@ -69,5 +73,22 @@ class GetNotice {
       token,
     );
     return parseClassNoticeDetail(body);
+  }
+
+  Future<void> shareFile(MapEntry<String, String> entry) async {
+    final response = await getFile(
+      cookies[0],
+      cookies[1],
+      entry.value,
+    );
+    try {
+      final document = parseHtmlDocument(response.body);
+      document.querySelectorAll('body').first.text;
+    } catch (err) {
+      final directory = await getApplicationDocumentsDirectory();
+      final file = File('${directory.path}/${entry.key}');
+      await file.writeAsBytes(response.bodyBytes);
+      await Share.shareFiles(['${directory.path}/${entry.key}']);
+    }
   }
 }

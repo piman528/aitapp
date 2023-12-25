@@ -1,5 +1,12 @@
 class UnivNotice {
-  UnivNotice(this.sender, this.title, this.content, this.sendAt, this.url);
+  UnivNotice(
+    this.sender,
+    this.title,
+    this.content,
+    this.sendAt,
+    this.url,
+    this.files,
+  );
   // 発信者
   final String sender;
   // タイトル
@@ -10,4 +17,6 @@ class UnivNotice {
   final String sendAt;
 
   final List<String> url;
+
+  final Map<String, String>? files;
 }

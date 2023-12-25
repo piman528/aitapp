@@ -45,6 +45,8 @@ dependencies:
   url_launcher: ^6.2.2
   package_info: ^2.0.2
   syncfusion_flutter_pdfviewer: ^24.1.41
+  share_plus: ^7.2.1
+  path_provider: ^2.1.1
 
 dev_dependencies:
   flutter_launcher_icons:

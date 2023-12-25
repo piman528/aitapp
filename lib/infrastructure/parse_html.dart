@@ -139,7 +139,8 @@ List<UnivNotice> parseUnivNotice(String body) {
       }
       c++;
     }
-    univNoticeList.add(UnivNotice(sender, title, content, sendAt, []));
+    univNoticeList
+        .add(UnivNotice(sender, title, content, sendAt, [], {'': ''}));
   }
   return univNoticeList;
 }
@@ -149,16 +150,18 @@ UnivNotice parseUnivNoticeDetail(String body) {
     'body > form > table > tbody > tr',
   );
   final texts = <String>[];
-  var isMaincontent = false;
+  var mainContent = 0;
+  final fileMap = <String, String>{};
   for (final tr in topStorytitle) {
-    if (!isMaincontent) {
+    if (mainContent == 0 || mainContent == 2) {
       final contents = tr.text!.replaceAll('	', '').trim().split('\n');
       for (final text in contents) {
         if (text != '') {
           texts.add(text);
+          // print(text);
         }
       }
-    } else {
+    } else if (mainContent == 1) {
       final maincontents = tr.querySelector('td > div')!.nodes;
       for (final mainContent in maincontents) {
         if (mainContent.nodeType == html.Node.ELEMENT_NODE) {
@@ -166,14 +169,36 @@ UnivNotice parseUnivNoticeDetail(String body) {
             final text = childNode.text!.trim();
             if (text != '') {
               texts.add(text);
+              // print(text);
             }
           }
         }
       }
-      isMaincontent = false;
+      mainContent = 0;
     }
-    if (texts.last == '連絡内容') {
-      isMaincontent = true;
+    if (mainContent == 2) {
+      if (texts.last != '参考URL') {
+        final maincontents = tr.querySelectorAll('td > div');
+        for (final childContents in maincontents) {
+          for (final content in childContents.querySelectorAll('div > a')) {
+            fileMap.addEntries(
+              [
+                MapEntry(
+                  content.text!.trim(),
+                  content.attributes['href']!,
+                ),
+              ],
+            );
+          }
+        }
+      }
+      mainContent = 0;
+    }
+    switch (texts.last) {
+      case '連絡内容':
+        mainContent = 1;
+      case '添付ファイル':
+        mainContent = 2;
     }
   }
   final sender = texts[texts.indexOf('管理所属') + 1];
@@ -189,7 +214,7 @@ UnivNotice parseUnivNoticeDetail(String body) {
   for (var i = texts.indexOf('参考URL') + 1; i < texts.indexOf('連絡日時'); i++) {
     url.add(texts[i]);
   }
-  return UnivNotice(sender, title, content, sendAt, url);
+  return UnivNotice(sender, title, content, sendAt, url, fileMap);
 }
 
 Map<DayOfWeek, Map<int, Class>> parseClassTimeTable(String body) {

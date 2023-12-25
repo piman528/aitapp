@@ -19,7 +19,6 @@ class _NoticeScreenState extends State<NoticeScreen>
   int _currentPage = 0;
   static const pageLength = 2;
   bool isLoading = false;
-  bool loadingState = false;
 
   @override
   void initState() {
@@ -34,13 +33,21 @@ class _NoticeScreenState extends State<NoticeScreen>
 
   void loading({required bool state}) {
     if (state != isLoading) {
-      isLoading = state;
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        setState(() {
-          loadingState = state;
-        });
+        if (mounted) {
+          setState(() {
+            isLoading = state;
+          });
+        }
       });
     }
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    _pageController.dispose();
+    super.dispose();
   }
 
   @override
@@ -48,7 +55,7 @@ class _NoticeScreenState extends State<NoticeScreen>
     return Column(
       children: [
         IgnorePointer(
-          ignoring: loadingState,
+          ignoring: isLoading,
           child: TabBar(
             tabs: const [
               Tab(text: '学内'),

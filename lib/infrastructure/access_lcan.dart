@@ -1,5 +1,6 @@
 // ignore_for_file: lines_longer_than_80_chars
 import 'package:http/http.dart' as http;
+import 'package:http/http.dart';
 import 'package:universal_html/parsing.dart';
 
 Future<List<String>> getCookie() async {
@@ -412,6 +413,31 @@ Future<String> getUnivNoticeDetailBody(
   }
 
   return res.body;
+}
+
+Future<Response> getFile(
+  String jSessionId,
+  String liveAppsCookie,
+  String fileUrl,
+) async {
+  final headers = {
+    'Accept': '*/*',
+    'Cookie':
+        '$jSessionId; $liveAppsCookie; $jSessionId; L-CamApp=Y; $liveAppsCookie',
+    'User-Agent': 'L-Cam/1.12.03 CFNetwork/1490.0.4 Darwin/23.2.0',
+    'Accept-Language': 'ja',
+    'Connection': 'keep-alive',
+    'Accept-Encoding': 'gzip',
+  };
+  final url = Uri.parse('https://lcam.aitech.ac.jp$fileUrl');
+
+  final res = await http.get(url, headers: headers);
+  final status = res.statusCode;
+  if (status != 200) {
+    throw Exception('http.get error: statusCode= $status');
+  }
+
+  return res;
 }
 
 String _getSetCookie(Map<String, dynamic> headers) {
