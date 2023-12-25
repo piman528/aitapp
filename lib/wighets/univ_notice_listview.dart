@@ -24,6 +24,8 @@ class _UnivNoticeListState extends ConsumerState<UnivNoticeList> {
   String univFilter = '';
   bool isLoading = true;
   bool isManual = false;
+  int page = 10;
+  int beforeReloadLengh = 0;
   void _printUnivFilterValue1() {
     setState(() {
       univFilter = univController.text;
@@ -39,17 +41,19 @@ class _UnivNoticeListState extends ConsumerState<UnivNoticeList> {
   @override
   void initState() {
     univController.addListener(_printUnivFilterValue1);
-    _load();
+    _load(true);
     super.initState();
   }
 
-  Future<void> _load() async {
+  Future<void> _load(bool withLogin) async {
     setState(() {
       isLoading = true;
     });
-    final identity = ref.read(idPasswordProvider);
-    await widget.getNotice.create(identity[0], identity[1]);
-    final result = await widget.getNotice.getUnivNoticelist();
+    if (withLogin) {
+      final identity = ref.read(idPasswordProvider);
+      await widget.getNotice.create(identity[0], identity[1]);
+    }
+    final result = await widget.getNotice.getUnivNoticelist(page);
     if (mounted) {
       setState(() {
         ref.read(univNoticesProvider.notifier).reloadNotices(result);
@@ -80,6 +84,15 @@ class _UnivNoticeListState extends ConsumerState<UnivNoticeList> {
       return ListView.builder(
         itemCount: filteredResult.length,
         itemBuilder: (c, i) {
+          if (i == filteredResult.length - 3) {
+            if (!isLoading && filteredResult.length != beforeReloadLengh) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                page += 10;
+                beforeReloadLengh = filteredResult.length;
+                _load(false);
+              });
+            }
+          }
           return UnivNoticeItem(
             notice: filteredResult[i],
             index: result.indexOf(filteredResult[i]),
@@ -118,7 +131,8 @@ class _UnivNoticeListState extends ConsumerState<UnivNoticeList> {
               setState(() {
                 isManual = true;
               });
-              await _load();
+              page = 5;
+              await _load(true);
             },
             child: _content(),
           ),

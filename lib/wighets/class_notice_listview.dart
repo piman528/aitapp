@@ -24,6 +24,8 @@ class _ClassNoticeListState extends ConsumerState<ClassNoticeList> {
   String classFilter = '';
   bool isLoading = true;
   bool isManual = false;
+  int page = 10;
+  int beforeReloadLengh = 0;
   void _setClassFilterValue2() {
     setState(() {
       classFilter = classController.text;
@@ -39,16 +41,18 @@ class _ClassNoticeListState extends ConsumerState<ClassNoticeList> {
   @override
   void initState() {
     classController.addListener(_setClassFilterValue2);
-    _load();
+    _load(true);
     super.initState();
   }
 
-  Future<void> _load() async {
+  Future<void> _load(bool withLogin) async {
     setState(() {
       isLoading = true;
     });
-    final identity = ref.read(idPasswordProvider);
-    await widget.getNotice.create(identity[0], identity[1]);
+    if (withLogin) {
+      final identity = ref.read(idPasswordProvider);
+      await widget.getNotice.create(identity[0], identity[1]);
+    }
     final result = await widget.getNotice.getClassNoticelist();
     if (mounted) {
       setState(() {
@@ -83,6 +87,15 @@ class _ClassNoticeListState extends ConsumerState<ClassNoticeList> {
       return ListView.builder(
         itemCount: filteredResult.length,
         itemBuilder: (c, i) {
+          if (i == filteredResult.length - 3) {
+            if (!isLoading && filteredResult.length != beforeReloadLengh) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                page += 10;
+                beforeReloadLengh = filteredResult.length;
+                _load(false);
+              });
+            }
+          }
           return ClassNoticeItem(
             notice: filteredResult[i],
             index: result.indexOf(filteredResult[i]),
@@ -121,7 +134,7 @@ class _ClassNoticeListState extends ConsumerState<ClassNoticeList> {
               setState(() {
                 isManual = true;
               });
-              await _load();
+              await _load(false);
             },
             child: _content(),
           ),

@@ -135,6 +135,11 @@ class _TimeCardState extends State<TimeCard> {
       if (remainTime.inSeconds % 60 == 0 && remainTime.inMinutes % 5 == 0) {
         reflashtime();
       }
+      final remainHour =
+          remainTime.inMinutes < 60 ? '' : '${remainTime.inHours}時間';
+      final remainMinutes =
+          remainTime.inSeconds < 60 ? '' : '${remainTime.inMinutes % 60}分';
+      final remainSeconds = '${remainTime.inSeconds % 60}秒';
       return Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
@@ -155,7 +160,7 @@ class _TimeCardState extends State<TimeCard> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'あと${remainTime.inMinutes % 60}分${remainTime.inSeconds % 60}秒',
+                  'あと$remainHour$remainMinutes$remainSeconds',
                   style: const TextStyle(
                     // color: Colors.black,
                     fontSize: 20,

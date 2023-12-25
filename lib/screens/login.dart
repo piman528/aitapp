@@ -135,20 +135,25 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               final prefs =
                                   await SharedPreferences.getInstance();
                               await prefs.setString('id', idController.text);
-                              await prefs.setString(
+                              await prefs
+                                  .setString(
                                 'password',
                                 passwordController.text,
-                              );
-                              ref
-                                  .read(idPasswordProvider.notifier)
-                                  .setIdPassword(
-                                    idController.text,
-                                    passwordController.text,
+                              )
+                                  .then(
+                                (value) {
+                                  ref
+                                      .read(idPasswordProvider.notifier)
+                                      .setIdPassword(
+                                        idController.text,
+                                        passwordController.text,
+                                      );
+                                  Navigator.of(context).pushReplacement(
+                                    MaterialPageRoute<void>(
+                                      builder: (ctx) => const TabScreen(),
+                                    ),
                                   );
-                              Navigator.of(context).pushReplacement(
-                                MaterialPageRoute<void>(
-                                  builder: (ctx) => const TabScreen(),
-                                ),
+                                },
                               );
                             } else {
                               setState(() {

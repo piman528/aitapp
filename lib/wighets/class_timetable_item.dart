@@ -96,6 +96,12 @@ class ClassGridContainer extends StatelessWidget {
   final int classPeriod;
   final Class? clas;
 
+  String alphanumericToHalfLength(String input) {
+    return input.replaceAllMapped(RegExp(r'[Ａ-Ｚａ-ｚ０-９]'), (match) {
+      return String.fromCharCode(match.group(0)!.codeUnitAt(0) - 0xfee0);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -143,9 +149,9 @@ class ClassGridContainer extends StatelessWidget {
                       color: Theme.of(context).focusColor,
                     ),
                     child: Text(
-                      clas!.classRoom,
+                      alphanumericToHalfLength(clas!.classRoom),
                       style: TextStyle(
-                        fontSize: 9,
+                        fontSize: 10,
                         color: Theme.of(context).colorScheme.inverseSurface,
                       ),
                     ),

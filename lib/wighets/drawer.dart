@@ -139,12 +139,17 @@ class MainDrawer extends ConsumerWidget {
                 onTap: () async {
                   final prefs = await SharedPreferences.getInstance();
                   await prefs.remove('id');
-                  await prefs.remove('password');
-                  ref.read(idPasswordProvider.notifier).setIdPassword('', '');
-                  Navigator.of(context).pushReplacement(
-                    MaterialPageRoute<void>(
-                      builder: (ctx) => const LoginScreen(),
-                    ),
+                  await prefs.remove('password').then(
+                    (value) {
+                      ref
+                          .read(idPasswordProvider.notifier)
+                          .setIdPassword('', '');
+                      Navigator.of(context).pushReplacement(
+                        MaterialPageRoute<void>(
+                          builder: (ctx) => const LoginScreen(),
+                        ),
+                      );
+                    },
                   );
                 },
               ),

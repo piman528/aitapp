@@ -11,7 +11,7 @@ class GetNotice {
     await loginLcam(id, password, cookies[0], cookies[1]);
   }
 
-  Future<List<UnivNotice>> getUnivNoticelist() async {
+  Future<List<UnivNotice>> getUnivNoticelist(int page) async {
     const isCommon = true;
     final token1 = parseStrutsToken(
       body: await getStrutsToken(
@@ -26,7 +26,7 @@ class GetNotice {
       isCommon: isCommon,
     );
     final body =
-        await getUnivNoticeBodyNext(cookies[0], cookies[1], token2, 20);
+        await getUnivNoticeBodyNext(cookies[0], cookies[1], token2, page);
     token = parseStrutsToken(body: body, isCommon: isCommon);
     return parseUnivNotice(body);
   }
