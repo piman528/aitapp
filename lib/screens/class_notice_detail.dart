@@ -1,6 +1,7 @@
 import 'package:aitapp/models/class_notice.dart';
 import 'package:aitapp/models/get_notice.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/link.dart';
 
 class ClassNoticeDetailScreen extends StatelessWidget {
   const ClassNoticeDetailScreen({
@@ -14,6 +15,10 @@ class ClassNoticeDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final regExp = RegExp(
+      r"(http(s)?:\/\/[a-zA-Z0-9-.!'()*;/?:@&=+$,%_#]+)",
+      caseSensitive: false,
+    );
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -60,12 +65,48 @@ class ClassNoticeDetailScreen extends StatelessWidget {
                           ),
                           for (final text in getnotice.content) ...{
                             if (text != '') ...{
-                              Text(text),
+                              if (regExp.stringMatch(text) != null) ...{
+                                Link(
+                                  uri: Uri.parse(regExp.stringMatch(text)!),
+                                  target: LinkTarget.blank,
+                                  builder: (context, followLink) => TextButton(
+                                    onPressed: followLink,
+                                    child: Text(text),
+                                  ),
+                                ),
+                              } else ...{
+                                Text(text),
+                              },
                               const SizedBox(
                                 height: 20,
                               ),
                             },
                           },
+                          if (getnotice.url.isNotEmpty) ...{
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            const Text(
+                              '参考URL',
+                              style: TextStyle(
+                                fontSize: 17,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            for (final url in getnotice.url) ...{
+                              Link(
+                                uri: Uri.parse(regExp.stringMatch(url)!),
+                                target: LinkTarget.blank,
+                                builder: (context, followLink) => TextButton(
+                                  onPressed: followLink,
+                                  child: Text(url),
+                                ),
+                              ),
+                            },
+                          },
+                          const SizedBox(
+                            height: 40,
+                          ),
                         ],
                       ),
                     ),

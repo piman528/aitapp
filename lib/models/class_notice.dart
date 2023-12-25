@@ -1,12 +1,6 @@
 class ClassNotice {
-  ClassNotice(
-    this.sender,
-    this.title,
-    this.content,
-    this.sendAt,
-    this.subject,
-    this.makeupClassAt,
-  );
+  ClassNotice(this.sender, this.title, this.content, this.sendAt, this.subject,
+      this.makeupClassAt, this.url);
   // 発信者
   final String sender;
   // タイトル
@@ -19,4 +13,6 @@ class ClassNotice {
   final String subject;
   // 補講日日付
   final String makeupClassAt;
+
+  final List<String> url;
 }
