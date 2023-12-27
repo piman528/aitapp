@@ -14,6 +14,10 @@ List<ClassNotice> parseClassNotice(String body) {
     '#smartPhoneClassContactList > form:nth-child(4) > div.listItem',
   );
 
+  if (topStorytitle.isEmpty) {
+    throw Exception('データの取得に失敗しました');
+  }
+
   for (final div in topStorytitle) {
     final texts = <String>[];
     final contents =
@@ -57,6 +61,9 @@ ClassNotice parseClassNoticeDetail(String body) {
   final topStorytitle = parseHtmlDocument(body).querySelectorAll(
     'body > form > table > tbody > tr',
   );
+  if (topStorytitle.isEmpty) {
+    throw Exception('データの取得に失敗しました');
+  }
   final texts = <String>[];
   var isMaincontent = false;
   for (final tr in topStorytitle) {
@@ -107,6 +114,9 @@ List<UnivNotice> parseUnivNotice(String body) {
   final topStorytitle = parseHtmlDocument(body).querySelectorAll(
     '#smartPhoneCommonContactList > form:nth-child(4) > div.listItem',
   ); //記事のリスト
+  if (topStorytitle.isEmpty) {
+    throw Exception('データの取得に失敗しました');
+  }
 
   for (final parentDiv in topStorytitle) {
     final texts = <String>[];
@@ -149,6 +159,9 @@ UnivNotice parseUnivNoticeDetail(String body) {
   final topStorytitle = parseHtmlDocument(body).querySelectorAll(
     'body > form > table > tbody > tr',
   );
+  if (topStorytitle.isEmpty) {
+    throw Exception('データの取得に失敗しました');
+  }
   final texts = <String>[];
   var mainContent = 0;
   final fileMap = <String, String>{};
@@ -222,6 +235,9 @@ Map<DayOfWeek, Map<int, Class>> parseClassTimeTable(String body) {
   final topStorytitle = parseHtmlDocument(body).querySelectorAll(
     'body > form > table > tbody > tr',
   );
+  if (topStorytitle.isEmpty) {
+    throw Exception('データの取得に失敗しました');
+  }
   for (var i = 0; i < topStorytitle.length; i++) {
     final day = i ~/ 7;
     final period = i % 7 + 1;
@@ -273,6 +289,9 @@ List<ClassSyllabus> parseSyllabusList(String body) {
   final topStorytitle = parseHtmlDocument(body).querySelectorAll(
     'body > form > table:nth-child(2) > tbody > tr > td > table > tbody > tr',
   );
+  if (topStorytitle.isEmpty) {
+    throw Exception('データの取得に失敗しました');
+  }
   var i = 0;
   for (final tr in topStorytitle) {
     if (i == 0) {
@@ -336,6 +355,9 @@ ClassSyllabusDetail parseSyllabus(String body) {
   final topStorytitle = parseHtmlDocument(body).querySelectorAll(
     'body > table:nth-child(16) > tbody > tr > td > table > tbody > tr',
   );
+  if (topStorytitle.isEmpty) {
+    throw Exception('データの取得に失敗しました');
+  }
   final texts = <String>[];
   for (final tr in topStorytitle) {
     final tds = tr.querySelectorAll('td');
@@ -426,10 +448,12 @@ String parseStrutsToken({
     selector =
         '#smartPhoneClassContactList > form:nth-child(3) > div:nth-child(1) > input';
   }
-  final document = parseHtmlDocument(body);
-  final topStorytitle = document.querySelectorAll(
+  final topStorytitle = parseHtmlDocument(body).querySelectorAll(
     selector,
   );
+  if (topStorytitle.isEmpty) {
+    throw Exception('データの取得に失敗しました');
+  }
   final value = topStorytitle[0].attributes['value'];
   return value!;
 }

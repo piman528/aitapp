@@ -1,6 +1,6 @@
 import 'package:aitapp/const.dart';
 import 'package:aitapp/wighets/search_bar.dart';
-import 'package:aitapp/wighets/syllabus_list.dart';
+import 'package:aitapp/wighets/syllabus_filtered_list.dart';
 import 'package:flutter/material.dart';
 
 class SyllabusFilterScreen extends StatefulWidget {

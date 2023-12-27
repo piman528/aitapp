@@ -1,5 +1,5 @@
 import 'package:aitapp/wighets/search_bar.dart';
-import 'package:aitapp/wighets/syllabus_list.dart';
+import 'package:aitapp/wighets/syllabus_search_list.dart';
 import 'package:flutter/material.dart';
 
 class SyllabusSearchScreen extends StatefulWidget {
@@ -13,7 +13,6 @@ class SyllabusSearchScreen extends StatefulWidget {
 
 class _SyllabusSearchScreenState extends State<SyllabusSearchScreen> {
   final controller = TextEditingController();
-  String filter = '';
   Widget syllabusList = const SizedBox();
 
   @override
@@ -24,8 +23,7 @@ class _SyllabusSearchScreenState extends State<SyllabusSearchScreen> {
 
   void onSubmit(String word) {
     setState(() {
-      syllabusList = SyllabusList(
-        filterText: filter,
+      syllabusList = SyllabusSearchList(
         searchText: word,
       );
     });

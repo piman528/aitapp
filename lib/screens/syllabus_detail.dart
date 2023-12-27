@@ -1,5 +1,6 @@
 // ignore_for_file: lines_longer_than_80_chars
 
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:aitapp/models/class_syllabus.dart';
@@ -173,7 +174,18 @@ class SyllabusDetail extends StatelessWidget {
               ),
             );
           } else if (snapshot.hasError) {
-            return const Text('データが存在しません');
+            if (snapshot.error is SocketException) {
+              return const Center(
+                child: Text(
+                  'インターネットに接続できません',
+                ),
+              );
+            }
+            return Center(
+              child: Text(
+                snapshot.error.toString(),
+              ),
+            );
           } else {
             return const Center(
               child: SizedBox(

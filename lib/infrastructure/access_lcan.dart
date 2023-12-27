@@ -72,13 +72,10 @@ Future<bool> loginLcam(
     throw Exception('http.post error: statusCode= $status');
   }
 
-  final document = parseHtmlDocument(res.body);
-  try {
-    document
-        .querySelectorAll('#_errorInformation > ul > li:nth-child(1)')
-        .first
-        .text;
-  } catch (err) {
+  final isLogin = parseHtmlDocument(res.body)
+      .querySelectorAll('#_errorInformation > ul > li:nth-child(1)')
+      .isEmpty;
+  if (isLogin) {
     return true;
   }
   return false;

@@ -5,7 +5,6 @@ import 'package:aitapp/models/class_notice.dart';
 import 'package:aitapp/models/univ_notice.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:universal_html/parsing.dart';
 
 class GetNotice {
   late List<String> cookies;
@@ -56,6 +55,9 @@ class GetNotice {
   }
 
   Future<UnivNotice> getUnivNoticeDetail(int pageNumber) async {
+    if (cookies.isEmpty) {
+      throw Exception('ログインできません');
+    }
     final body = await getUnivNoticeDetailBody(
       pageNumber,
       cookies[0],
@@ -66,6 +68,9 @@ class GetNotice {
   }
 
   Future<ClassNotice> getClassNoticeDetail(int pageNumber) async {
+    if (cookies.isEmpty) {
+      throw Exception('ログインできません');
+    }
     final body = await getClassNoticeDetailBody(
       pageNumber,
       cookies[0],
@@ -81,14 +86,14 @@ class GetNotice {
       cookies[1],
       entry.value,
     );
-    try {
-      final document = parseHtmlDocument(response.body);
-      document.querySelectorAll('body').first.text;
-    } catch (err) {
+    final contentType = response.headers['content-type']!;
+    if (contentType != 'text/html;charset=utf-8') {
       final directory = await getApplicationDocumentsDirectory();
       final file = File('${directory.path}/${entry.key}');
       await file.writeAsBytes(response.bodyBytes);
       await Share.shareFiles(['${directory.path}/${entry.key}']);
+    } else {
+      throw Exception('データの取得に失敗しました');
     }
   }
 }

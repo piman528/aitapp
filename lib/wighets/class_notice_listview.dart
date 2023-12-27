@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:aitapp/models/class_notice.dart';
 import 'package:aitapp/models/get_notice.dart';
 import 'package:aitapp/provider/class_notices_provider.dart';
@@ -6,6 +8,7 @@ import 'package:aitapp/wighets/class_notice.dart';
 import 'package:aitapp/wighets/search_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class ClassNoticeList extends ConsumerStatefulWidget {
   const ClassNoticeList({
@@ -24,10 +27,19 @@ class ClassNoticeList extends ConsumerStatefulWidget {
 class _ClassNoticeListState extends ConsumerState<ClassNoticeList> {
   final classController = TextEditingController();
   String classFilter = '';
+  String? error;
   bool isLoading = true;
   bool isManual = false;
   int page = 10;
   int beforeReloadLengh = 0;
+  Widget content = const Center(
+    child: SizedBox(
+      height: 25, //指定
+      width: 25, //指定
+      child: CircularProgressIndicator(),
+    ),
+  );
+
   void _setClassFilterValue2() {
     setState(() {
       classFilter = classController.text;
@@ -48,21 +60,40 @@ class _ClassNoticeListState extends ConsumerState<ClassNoticeList> {
   }
 
   Future<void> _load(bool withLogin) async {
+    late final List<ClassNotice> result;
     widget.loading(state: true);
     setState(() {
       isLoading = true;
     });
-    if (withLogin) {
-      final identity = ref.read(idPasswordProvider);
-      await widget.getNotice.create(identity[0], identity[1]);
+
+    try {
+      if (withLogin) {
+        final identity = ref.read(idPasswordProvider);
+        await widget.getNotice.create(identity[0], identity[1]);
+      }
+      result = await widget.getNotice.getClassNoticelist();
+      if (mounted) {
+        ref.watch(classNoticesProvider.notifier).reloadNotices(result);
+      }
+    } on SocketException {
+      if (mounted) {
+        setState(() {
+          error = 'インターネットに接続できません';
+        });
+      }
+    } on Exception catch (err) {
+      if (mounted) {
+        setState(() {
+          error = err.toString();
+        });
+      }
     }
-    final result = await widget.getNotice.getClassNoticelist();
     if (mounted) {
       setState(() {
-        ref.read(classNoticesProvider.notifier).reloadNotices(result);
         isLoading = false;
       });
     }
+
     widget.loading(state: false);
   }
 
@@ -84,43 +115,40 @@ class _ClassNoticeListState extends ConsumerState<ClassNoticeList> {
     return result;
   }
 
-  Widget _content() {
-    if (ref.read(classNoticesProvider) != null) {
-      final result = ref.read(classNoticesProvider)!;
-      final filteredResult = _filteredList(result);
-      return ListView.builder(
-        itemCount: filteredResult.length,
-        itemBuilder: (c, i) {
-          if (i == filteredResult.length - 3) {
-            if (!isLoading && filteredResult.length != beforeReloadLengh) {
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                page += 10;
-                beforeReloadLengh = filteredResult.length;
-                _load(false);
-              });
-            }
-          }
-          return ClassNoticeItem(
-            notice: filteredResult[i],
-            index: result.indexOf(filteredResult[i]),
-            getNotice: widget.getNotice,
-            tap: !isLoading,
-          );
-        },
-      );
-    } else {
-      return const Center(
-        child: SizedBox(
-          height: 25, //指定
-          width: 25, //指定
-          child: CircularProgressIndicator(),
-        ),
-      );
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
+    if (ref.read(classNoticesProvider) != null) {
+      if (error == null) {
+        final result = ref.read(classNoticesProvider)!;
+        final filteredResult = _filteredList(result);
+        content = ListView.builder(
+          itemCount: filteredResult.length,
+          itemBuilder: (c, i) {
+            if (i == filteredResult.length - 3) {
+              if (!isLoading && filteredResult.length != beforeReloadLengh) {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  page += 10;
+                  beforeReloadLengh = filteredResult.length;
+                  _load(false);
+                });
+              }
+            }
+            return ClassNoticeItem(
+              notice: filteredResult[i],
+              index: result.indexOf(filteredResult[i]),
+              getNotice: widget.getNotice,
+              tap: !isLoading,
+            );
+          },
+        );
+      } else {
+        Fluttertoast.showToast(msg: error.toString());
+      }
+    } else if (error != null) {
+      content = Center(
+        child: Text(error!),
+      );
+    }
     return Column(
       children: [
         isLoading && ref.read(classNoticesProvider) != null && !isManual
@@ -138,9 +166,9 @@ class _ClassNoticeListState extends ConsumerState<ClassNoticeList> {
               setState(() {
                 isManual = true;
               });
-              await _load(false);
+              await _load(true);
             },
-            child: _content(),
+            child: content,
           ),
         ),
       ],

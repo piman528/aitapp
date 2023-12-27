@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:aitapp/const.dart';
 import 'package:aitapp/models/class.dart';
 import 'package:aitapp/provider/class_timetable_provider.dart';
@@ -185,7 +187,17 @@ class TimeTable extends ConsumerWidget {
           child: CircularProgressIndicator(),
         ),
       ),
-      error: (_, __) => const Text('An error occurred'),
+      error: (error, __) {
+        if (error is SocketException) {
+          return const Center(
+            child: Text('インターネットに接続できません'),
+          );
+        } else {
+          return Center(
+            child: Text(error.toString()),
+          );
+        }
+      },
       data: (data) => ListView(
         children: [
           Container(
