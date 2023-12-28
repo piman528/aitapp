@@ -37,30 +37,12 @@ const List<DayOfWeek> activeWeek = [
   DayOfWeek.friday,
 ];
 const List<List<String>> classPeriods = [
-  [
-    '09:00',
-    '10:30',
-  ],
-  [
-    '10:40',
-    '12:10',
-  ],
-  [
-    '13:00',
-    '14:30',
-  ],
-  [
-    '14:40',
-    '16:10',
-  ],
-  [
-    '16:20',
-    '17:50',
-  ],
-  [
-    '18:00',
-    '19:30',
-  ],
+  ['09:00', '10:30'],
+  ['10:40', '12:10'],
+  ['13:00', '14:30'],
+  ['14:40', '16:10'],
+  ['16:20', '17:50'],
+  ['18:00', '19:30'],
 ];
 
 const Map<String, Map<String, Map<String, Map<int, List<int>>>>> daiya = {
@@ -433,181 +415,192 @@ const Map<String, String> destinationName = {
   'toHujigaoka': '(藤が丘行)',
 };
 
-const Map<String, List<Contact>> contacts = {
-  '事務部門': [
-    Contact(
-      name: '教務・学生サービス課 教務グループ',
-      phone: '0565-48-8121',
-      mail: 'kyoumu@aitech.ac.jp',
-    ),
-    Contact(
-      name: '学生サービスグループ (学生生活／課外活動)',
-      phone: '0565-48-8121',
-      mail: 'gakusei@aitech.ac.jp',
-    ),
-    Contact(
-      name: '学生サービスグループ (クラブ活動)',
-      phone: '0565-48-8121',
-      mail: 'club@aitech.ac.jp',
-    ),
-    Contact(
-      name: '教務・学生サービス課 学習支援センター',
-      phone: '0565-48-8121',
-      mail: 'gshien@aitech.ac.jp',
-    ),
-    Contact(
-      name: '保健室',
-      phone: '0565-48-1131',
-      mail: 'hokenshitsu@aitech.ac.jp',
-    ),
-    Contact(
-      name: '学生寮',
-      phone: '0565-48-8121',
-    ),
-    Contact(
-      name: '学生相談室',
-      phone: '0565-43-3858',
-      mail: 'gakusou@aitech.ac.jp',
-    ),
-    Contact(
-      name: 'ハラスメント相談窓口',
-      phone: '0565-43-3858',
-      mail: 'gakusou@aitech.ac.jp',
-    ),
-    Contact(
-      name: 'キャリアセンター(就職／求人／アルバイト／資格)',
-      phone: '0565-48-4655',
-      mail: 'syusyoku@aitech.ac.jp',
-    ),
-    Contact(
-      name: 'キャリアセンター(インターンシップ)',
-      phone: '0565-48-4680',
-      mail: 'inship@aitech.ac.jp',
-    ),
-    Contact(
-      name: '入試センター 入試広報課',
-      phone: '0120-188-651',
-      mail: 'koho@aitech.ac.jp',
-    ),
-  ],
-  '工学部': [
-    Contact(
-      name: '八草キャンパス事務室',
-      phone: '0565-48-8121',
-      mail: 'kougakubu@aitech.ac.jp',
-    ),
-    Contact(
-      name: '電気学科事務室',
-      phone: '0565-48-8121',
-      mail: 'denki@aitech.ac.jp',
-    ),
-    Contact(
-      name: '応用化学科事務室',
-      phone: '0565-48-8121',
-      mail: 'oukajimu@aitech.ac.jp',
-    ),
-    Contact(
-      name: '機械学科事務室',
-      phone: '0565-48-8121',
-      mail: 'kikai@aitech.ac.jp',
-    ),
-    Contact(
-      name: '土木工学科事務室',
-      phone: '0565-48-8121',
-      mail: 'd-jimu@aitech.ac.jp',
-    ),
-    Contact(
-      name: '建築学科事務室',
-      phone: '0565-48-8121',
-      mail: 'kenchiku@aitech.ac.jp',
-    ),
-  ],
-  '経営学部・情報科学部': [
-    Contact(
-      name: '経営学部事務室(自由ヶ丘キャンパス事務室)',
-      phone: '052-757-0810',
-      mail: 'jiyugaoka-c@aitech.ac.jp',
-    ),
-    Contact(
-      name: '情報科学部事務室',
-      phone: '0565-48-8121',
-      mail: 'daihyo-is@aitech.ac.jp',
-    ),
-  ],
-  '大学院 工学研究科': [
-    Contact(
-      name: '八草キャンパス事務室',
-      phone: '0565-48-8121',
-      mail: 'kougakubu@aitech.ac.jp',
-    ),
-  ],
-  '大学院 経営情報科学研究科': [
-    Contact(
-      name: '自由ヶ丘キャンパス事務室',
-      phone: '052-757-0810',
-      mail: 'jiyugaoka-c@aitech.ac.jp',
-    ),
-    Contact(
-      name: '情報科学部事務室',
-      phone: '0565-48-8121',
-      mail: 'daihyo-is@aitech.ac.jp',
-    ),
-  ],
-  '教育・研究施設・附属施設': [
-    Contact(
-      name: '基礎教育センター',
-      phone: '0565-48-8121',
-      mail: 'g-jimu@aitech.ac.jp',
-    ),
-    Contact(
-      name: '愛知工業大学附属図書館',
-      phone: '0565-48-8121',
-      mail: 'library@aitech.ac.jp',
-    ),
-    Contact(
-      name: '総合技術研究所',
-      phone: '0565-48-8121',
-      mail: 'so-kenjimu@aitech.ac.jp',
-    ),
-    Contact(
-      name: '耐震実験センター',
-      phone: '0565-48-8121',
-      mail: 'seirex@aitech.ac.jp',
-    ),
-    Contact(
-      name: '地域防災研究センター',
-      phone: '0565-48-8121',
-      mail: 'dprec@aitech.ac.jp',
-    ),
-    Contact(
-      name: 'エコ電力研究センター',
-      phone: '0565-48-8121',
-      mail: 'eeprec@aitech.ac.jp',
-    ),
-    Contact(
-      name: '計算センター',
-      phone: '0565-48-8121',
-      mail: 'request@aitech.ac.jp',
-    ),
-    Contact(
-      name: '情報教育センター',
-      phone: '0565-48-8121',
-      mail: 'request@aitech.ac.jp',
-    ),
-    Contact(
-      name: 'エクステンションセンター',
-      phone: '0565-48-8121',
-      mail: 'e-center@aitech.ac.jp',
-    ),
-    Contact(
-      name: 'ロボット研究ミュージアム',
-      phone: '0565-48-8121',
-      mail: 'rmuseum@aitech.ac.jp',
-    ),
-    Contact(
-      name: 'みらい工房',
-      phone: '0565-48-8121',
-      mail: 'koubou@aitech.ac.jp',
-    ),
-  ],
+const List<dynamic> contacts = [
+  '事務部門',
+  Contact(
+    name: '教務・学生サービス課 教務グループ',
+    phone: '0565-48-8121',
+    mail: 'kyoumu@aitech.ac.jp',
+  ),
+  Contact(
+    name: '学生サービスグループ (学生生活／課外活動)',
+    phone: '0565-48-8121',
+    mail: 'gakusei@aitech.ac.jp',
+  ),
+  Contact(
+    name: '学生サービスグループ (クラブ活動)',
+    phone: '0565-48-8121',
+    mail: 'club@aitech.ac.jp',
+  ),
+  Contact(
+    name: '教務・学生サービス課 学習支援センター',
+    phone: '0565-48-8121',
+    mail: 'gshien@aitech.ac.jp',
+  ),
+  Contact(
+    name: '保健室',
+    phone: '0565-48-1131',
+    mail: 'hokenshitsu@aitech.ac.jp',
+  ),
+  Contact(
+    name: '学生寮',
+    phone: '0565-48-8121',
+  ),
+  Contact(
+    name: '学生相談室',
+    phone: '0565-43-3858',
+    mail: 'gakusou@aitech.ac.jp',
+  ),
+  Contact(
+    name: 'ハラスメント相談窓口',
+    phone: '0565-43-3858',
+    mail: 'gakusou@aitech.ac.jp',
+  ),
+  Contact(
+    name: 'キャリアセンター(就職／求人／アルバイト／資格)',
+    phone: '0565-48-4655',
+    mail: 'syusyoku@aitech.ac.jp',
+  ),
+  Contact(
+    name: 'キャリアセンター(インターンシップ)',
+    phone: '0565-48-4680',
+    mail: 'inship@aitech.ac.jp',
+  ),
+  Contact(
+    name: '入試センター 入試広報課',
+    phone: '0120-188-651',
+    mail: 'koho@aitech.ac.jp',
+  ),
+  '工学部',
+  Contact(
+    name: '八草キャンパス事務室',
+    phone: '0565-48-8121',
+    mail: 'kougakubu@aitech.ac.jp',
+  ),
+  Contact(
+    name: '電気学科事務室',
+    phone: '0565-48-8121',
+    mail: 'denki@aitech.ac.jp',
+  ),
+  Contact(
+    name: '応用化学科事務室',
+    phone: '0565-48-8121',
+    mail: 'oukajimu@aitech.ac.jp',
+  ),
+  Contact(
+    name: '機械学科事務室',
+    phone: '0565-48-8121',
+    mail: 'kikai@aitech.ac.jp',
+  ),
+  Contact(
+    name: '土木工学科事務室',
+    phone: '0565-48-8121',
+    mail: 'd-jimu@aitech.ac.jp',
+  ),
+  Contact(
+    name: '建築学科事務室',
+    phone: '0565-48-8121',
+    mail: 'kenchiku@aitech.ac.jp',
+  ),
+  '経営学部・情報科学部',
+  Contact(
+    name: '経営学部事務室(自由ヶ丘キャンパス事務室)',
+    phone: '052-757-0810',
+    mail: 'jiyugaoka-c@aitech.ac.jp',
+  ),
+  Contact(
+    name: '情報科学部事務室',
+    phone: '0565-48-8121',
+    mail: 'daihyo-is@aitech.ac.jp',
+  ),
+  '大学院 工学研究科',
+  Contact(
+    name: '八草キャンパス事務室',
+    phone: '0565-48-8121',
+    mail: 'kougakubu@aitech.ac.jp',
+  ),
+  '大学院 経営情報科学研究科',
+  Contact(
+    name: '自由ヶ丘キャンパス事務室',
+    phone: '052-757-0810',
+    mail: 'jiyugaoka-c@aitech.ac.jp',
+  ),
+  Contact(
+    name: '情報科学部事務室',
+    phone: '0565-48-8121',
+    mail: 'daihyo-is@aitech.ac.jp',
+  ),
+  '教育・研究施設・附属施設',
+  Contact(
+    name: '基礎教育センター',
+    phone: '0565-48-8121',
+    mail: 'g-jimu@aitech.ac.jp',
+  ),
+  Contact(
+    name: '愛知工業大学附属図書館',
+    phone: '0565-48-8121',
+    mail: 'library@aitech.ac.jp',
+  ),
+  Contact(
+    name: '総合技術研究所',
+    phone: '0565-48-8121',
+    mail: 'so-kenjimu@aitech.ac.jp',
+  ),
+  Contact(
+    name: '耐震実験センター',
+    phone: '0565-48-8121',
+    mail: 'seirex@aitech.ac.jp',
+  ),
+  Contact(
+    name: '地域防災研究センター',
+    phone: '0565-48-8121',
+    mail: 'dprec@aitech.ac.jp',
+  ),
+  Contact(
+    name: 'エコ電力研究センター',
+    phone: '0565-48-8121',
+    mail: 'eeprec@aitech.ac.jp',
+  ),
+  Contact(
+    name: '計算センター',
+    phone: '0565-48-8121',
+    mail: 'request@aitech.ac.jp',
+  ),
+  Contact(
+    name: '情報教育センター',
+    phone: '0565-48-8121',
+    mail: 'request@aitech.ac.jp',
+  ),
+  Contact(
+    name: 'エクステンションセンター',
+    phone: '0565-48-8121',
+    mail: 'e-center@aitech.ac.jp',
+  ),
+  Contact(
+    name: 'ロボット研究ミュージアム',
+    phone: '0565-48-8121',
+    mail: 'rmuseum@aitech.ac.jp',
+  ),
+  Contact(
+    name: 'みらい工房',
+    phone: '0565-48-8121',
+    mail: 'koubou@aitech.ac.jp',
+  ),
+];
+const Map<String, String> links = {
+  'MyKiTS 教科書販売': 'https://gomykits.kinokuniya.co.jp/aichikogyo/',
+  '愛知工業大学附属図書館': 'https://library.aitech.ac.jp/',
+  '授業・試験時間について': 'https://www.ait.ac.jp/campuslife/schedule/',
+  '学生生活について': 'https://www.ait.ac.jp/campuslife/services/students/',
+  '各種証明書の発行': 'https://www.ait.ac.jp/campuslife/services/certificates/',
+  '学習支援': 'https://www.ait.ac.jp/campuslife/services/academic-sup/',
+  'キャンパスルール': 'https://www.ait.ac.jp/campuslife/services/campus-rules/',
+  '各種保険': 'https://www.ait.ac.jp/campuslife/services/insurances/',
+  '自動車・バイク・自転車通学': 'https://www.ait.ac.jp/campuslife/services/vehicles/',
+  '通学定期券': 'https://www.ait.ac.jp/campuslife/services/commuter-pass/',
+  '健康管理': 'https://www.ait.ac.jp/campuslife/services/staying-healthy/',
+  '障がい学習支援に関するガイドライン':
+      'https://www.ait.ac.jp/campuslife/services/disabled-support/',
+  'ハラスメントへの取り組み': 'https://www.ait.ac.jp/campuslife/disasters/',
+  '緊急災害時の対応': 'https://www.ait.ac.jp/campuslife/disasters/',
 };

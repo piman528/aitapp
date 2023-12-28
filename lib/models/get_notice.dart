@@ -91,7 +91,8 @@ class GetNotice {
       final directory = await getApplicationDocumentsDirectory();
       final file = File('${directory.path}/${entry.key}');
       await file.writeAsBytes(response.bodyBytes);
-      await Share.shareFiles(['${directory.path}/${entry.key}']);
+      final xfile = [XFile(file.path)];
+      await Share.shareXFiles(xfile);
     } else {
       throw Exception('データの取得に失敗しました');
     }

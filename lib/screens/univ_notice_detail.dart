@@ -69,9 +69,12 @@ class _UnivNoticeDetailScreenState extends State<UnivNoticeDetailScreen> {
       await Fluttertoast.showToast(msg: err.toString());
     }
 
-    setState(() {
-      isDownloading = false;
-    });
+    await Future<void>.delayed(const Duration(seconds: 1));
+    if (mounted) {
+      setState(() {
+        isDownloading = false;
+      });
+    }
   }
 
   @override
