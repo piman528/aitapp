@@ -34,7 +34,15 @@ class GetNotice {
     return parseUnivNotice(body);
   }
 
-  Future<List<ClassNotice>> getClassNoticelist() async {
+  Future<List<UnivNotice>> getUnivNoticelistNext(int page) async {
+    const isCommon = true;
+    final body =
+        await getUnivNoticeBodyNext(cookies[0], cookies[1], token, page);
+    token = parseStrutsToken(body: body, isCommon: isCommon);
+    return parseUnivNotice(body);
+  }
+
+  Future<List<ClassNotice>> getClassNoticelist(int page) async {
     const isCommon = false;
     final token1 = parseStrutsToken(
       body: await getStrutsToken(
@@ -49,7 +57,15 @@ class GetNotice {
       isCommon: isCommon,
     );
     final body =
-        await getClassNoticeBodyNext(cookies[0], cookies[1], token2, 10);
+        await getClassNoticeBodyNext(cookies[0], cookies[1], token2, page);
+    token = parseStrutsToken(body: body, isCommon: isCommon);
+    return parseClassNotice(body);
+  }
+
+  Future<List<ClassNotice>> getClassNoticelistNext(int page) async {
+    const isCommon = false;
+    final body =
+        await getClassNoticeBodyNext(cookies[0], cookies[1], token, page);
     token = parseStrutsToken(body: body, isCommon: isCommon);
     return parseClassNotice(body);
   }

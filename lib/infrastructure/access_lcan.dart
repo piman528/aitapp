@@ -4,6 +4,7 @@ import 'package:http/http.dart';
 import 'package:universal_html/parsing.dart';
 
 Future<List<String>> getCookie() async {
+  print('getcookie');
   final headers = {
     'Accept': '*/*',
     'Accept-Language': 'ja-JP;q=1, en-JP;q=0.9',
@@ -36,6 +37,7 @@ Future<bool> loginLcam(
   String jSessionId,
   String liveAppsCookie,
 ) async {
+  print('loginlcam');
   final headers = {
     'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
     'Sec-Fetch-Site': 'same-origin',
@@ -86,6 +88,7 @@ Future<String> getStrutsToken({
   required String liveAppsCookie,
   required bool isCommon,
 }) async {
+  print('gettoken');
   String contactType;
   if (isCommon) {
     contactType = 'commonContact';
@@ -122,6 +125,7 @@ Future<String> getClassNoticeBody(
   String liveAppsCookie,
   String token,
 ) async {
+  print('getClassNoticeBody');
   final headers = {
     'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
     'Sec-Fetch-Site': 'same-origin',
@@ -167,6 +171,7 @@ Future<String> getClassNoticeBodyNext(
   String token,
   int pageNumber,
 ) async {
+  print('getClassNoticeBodyNext');
   final headers = {
     'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
     'Sec-Fetch-Site': 'same-origin',
@@ -212,6 +217,7 @@ Future<String> getUnivNoticeBody(
   String liveAppsCookie,
   String token,
 ) async {
+  print('getUnivNoticeBody');
   final headers = {
     'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
     'Sec-Fetch-Site': 'same-origin',
@@ -257,6 +263,7 @@ Future<String> getUnivNoticeBodyNext(
   String token,
   int pageNumber,
 ) async {
+  print('getUnivNoticeBodyNext');
   final headers = {
     'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
     'Sec-Fetch-Site': 'same-origin',
@@ -301,6 +308,7 @@ Future<String> getClassTimeTableBody(
   String jSessionId,
   String liveAppsCookie,
 ) async {
+  print('getClassTimeTableBody');
   final headers = {
     'Sec-Fetch-Site': 'none',
     'Cookie':
@@ -332,6 +340,7 @@ Future<String> getClassNoticeDetailBody(
   String liveAppsCookie,
   String token,
 ) async {
+  print('getClassNoticeDetailBody');
   final headers = {
     'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
     'Sec-Fetch-Site': 'same-origin',
@@ -372,6 +381,7 @@ Future<String> getUnivNoticeDetailBody(
   String liveAppsCookie,
   String token,
 ) async {
+  print('getUnivNoticeDetailBody');
   final headers = {
     'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
     'Sec-Fetch-Site': 'same-origin',
@@ -417,6 +427,7 @@ Future<Response> getFile(
   String liveAppsCookie,
   String fileUrl,
 ) async {
+  print('getfile');
   final headers = {
     'Accept': '*/*',
     'Cookie':

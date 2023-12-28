@@ -55,11 +55,11 @@ class _UnivNoticeListState extends ConsumerState<UnivNoticeList> {
   @override
   void initState() {
     univController.addListener(_printUnivFilterValue1);
-    _load(true);
+    _load(true, false);
     super.initState();
   }
 
-  Future<void> _load(bool withLogin) async {
+  Future<void> _load(bool withLogin, bool isContinuation) async {
     late final List<UnivNotice> result;
     widget.loading(state: true);
     setState(() {
@@ -70,7 +70,11 @@ class _UnivNoticeListState extends ConsumerState<UnivNoticeList> {
         final identity = ref.read(idPasswordProvider);
         await widget.getNotice.create(identity[0], identity[1]);
       }
-      result = await widget.getNotice.getUnivNoticelist(page);
+      if (!isContinuation) {
+        result = await widget.getNotice.getUnivNoticelist(page);
+      } else {
+        result = await widget.getNotice.getUnivNoticelistNext(page);
+      }
       if (mounted) {
         ref.watch(univNoticesProvider.notifier).reloadNotices(result);
       }
@@ -124,7 +128,7 @@ class _UnivNoticeListState extends ConsumerState<UnivNoticeList> {
                 WidgetsBinding.instance.addPostFrameCallback((_) {
                   page += 10;
                   beforeReloadLengh = filteredResult.length;
-                  _load(false);
+                  _load(false, true);
                 });
               }
             }
@@ -162,7 +166,7 @@ class _UnivNoticeListState extends ConsumerState<UnivNoticeList> {
                 isManual = true;
               });
               page = 5;
-              await _load(true);
+              await _load(true, false);
             },
             child: content,
           ),

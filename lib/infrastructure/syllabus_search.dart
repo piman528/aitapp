@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 final _regexSplitSetCookies = RegExp(',(?=[^ ])');
 
 Future<String> getSyllabusSessionId() async {
+  print('getSyllabusSessionId');
   final headers = {
     'Sec-Fetch-Site': 'none',
     'Connection': 'keep-alive',
@@ -40,6 +41,7 @@ Future<String> getSyllabusListBody(
   String jSessionId,
   String? searchWord,
 ) async {
+  print('getSyllabusListBody');
   final headers = {
     'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
     'Sec-Fetch-Site': 'same-origin',
@@ -82,6 +84,7 @@ Future<String> getSyllabusListBody(
 }
 
 Future<String> getSyllabus(String detailUrl, String jSessionId) async {
+  print('getSyllabus');
   final headers = {
     'Sec-Fetch-Site': 'same-origin',
     'Cookie': jSessionId,

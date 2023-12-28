@@ -55,23 +55,26 @@ class _ClassNoticeListState extends ConsumerState<ClassNoticeList> {
   @override
   void initState() {
     classController.addListener(_setClassFilterValue2);
-    _load(true);
+    _load(true, false);
     super.initState();
   }
 
-  Future<void> _load(bool withLogin) async {
+  Future<void> _load(bool withLogin, bool isContinuation) async {
     late final List<ClassNotice> result;
     widget.loading(state: true);
     setState(() {
       isLoading = true;
     });
-
     try {
       if (withLogin) {
         final identity = ref.read(idPasswordProvider);
         await widget.getNotice.create(identity[0], identity[1]);
       }
-      result = await widget.getNotice.getClassNoticelist();
+      if (!isContinuation) {
+        result = await widget.getNotice.getClassNoticelist(page);
+      } else {
+        result = await widget.getNotice.getClassNoticelistNext(page);
+      }
       if (mounted) {
         ref.watch(classNoticesProvider.notifier).reloadNotices(result);
       }
@@ -129,7 +132,7 @@ class _ClassNoticeListState extends ConsumerState<ClassNoticeList> {
                 WidgetsBinding.instance.addPostFrameCallback((_) {
                   page += 10;
                   beforeReloadLengh = filteredResult.length;
-                  _load(false);
+                  _load(false, true);
                 });
               }
             }
@@ -166,7 +169,7 @@ class _ClassNoticeListState extends ConsumerState<ClassNoticeList> {
               setState(() {
                 isManual = true;
               });
-              await _load(true);
+              await _load(true, false);
             },
             child: content,
           ),
