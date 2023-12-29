@@ -43,7 +43,7 @@ class UnivNoticeItem extends StatelessWidget {
                 Text(
                   notice.title,
                   style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                        color: Theme.of(context).colorScheme.inverseSurface,
+                        color: Theme.of(context).colorScheme.onBackground,
                       ),
                 ),
                 // Text(notice.content),

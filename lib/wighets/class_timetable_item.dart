@@ -41,12 +41,13 @@ class ClassTime extends StatelessWidget {
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               // color: Colors.grey,
-              color: Theme.of(context).hoverColor,
+              color: Theme.of(context).colorScheme.primaryContainer,
             ),
             child: Text(
               '$number',
               style: Theme.of(context).textTheme.labelLarge!.copyWith(
                     fontWeight: FontWeight.bold,
+                    color: Theme.of(context).colorScheme.onPrimaryContainer,
                   ),
             ),
           ),
@@ -71,7 +72,7 @@ class WeekGridContainer extends StatelessWidget {
       alignment: Alignment.center,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(6),
-        color: Theme.of(context).hoverColor,
+        color: Theme.of(context).colorScheme.primaryContainer,
       ),
       margin: const EdgeInsets.all(2),
       height: 35,
@@ -79,6 +80,7 @@ class WeekGridContainer extends StatelessWidget {
         dayofweek,
         style: Theme.of(context).textTheme.labelLarge!.copyWith(
               fontWeight: FontWeight.bold,
+              color: Theme.of(context).colorScheme.onPrimaryContainer,
             ),
       ),
     );
@@ -123,7 +125,7 @@ class ClassGridContainer extends StatelessWidget {
           borderRadius: const BorderRadius.all(Radius.circular(6)),
           color: clas != null
               ? Theme.of(context).colorScheme.secondaryContainer
-              : Theme.of(context).hoverColor,
+              : Theme.of(context).colorScheme.primaryContainer,
         ),
         width: double.infinity,
         margin: const EdgeInsets.all(2),
@@ -138,7 +140,7 @@ class ClassGridContainer extends StatelessWidget {
                     clas!.title,
                     style: TextStyle(
                       fontSize: 9.5,
-                      color: Theme.of(context).colorScheme.inverseSurface,
+                      color: Theme.of(context).colorScheme.onSecondaryContainer,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -148,13 +150,14 @@ class ClassGridContainer extends StatelessWidget {
                     width: double.infinity - 5,
                     decoration: BoxDecoration(
                       borderRadius: const BorderRadius.all(Radius.circular(10)),
-                      color: Theme.of(context).focusColor,
+                      color: Theme.of(context).colorScheme.tertiaryContainer,
                     ),
                     child: Text(
                       alphanumericToHalfLength(clas!.classRoom),
                       style: TextStyle(
                         fontSize: 10,
-                        color: Theme.of(context).colorScheme.inverseSurface,
+                        color:
+                            Theme.of(context).colorScheme.onTertiaryContainer,
                       ),
                     ),
                   ),

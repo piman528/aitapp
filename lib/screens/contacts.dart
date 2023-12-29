@@ -104,7 +104,7 @@ class Contacts extends StatelessWidget {
               title: Text(
                 contacts[index] as String,
               ),
-              tileColor: Theme.of(context).colorScheme.primaryContainer,
+              tileColor: Theme.of(context).colorScheme.secondaryContainer,
             );
           }
         },

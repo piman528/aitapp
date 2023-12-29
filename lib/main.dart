@@ -15,26 +15,21 @@ void main() {
   );
 }
 
-class App extends ConsumerStatefulWidget {
+class App extends ConsumerWidget {
   const App({
     super.key,
   });
 
   @override
-  ConsumerState<App> createState() => _AppState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    Future<List<String>> loadIdPass() async {
+      final prefs = await SharedPreferences.getInstance();
+      final id = prefs.getString('id') ?? '';
+      final password = prefs.getString('password') ?? '';
+      ref.watch(idPasswordProvider.notifier).setIdPassword(id, password);
+      return [id, password];
+    }
 
-class _AppState extends ConsumerState<App> {
-  Future<List<String>> loadIdPass() async {
-    final prefs = await SharedPreferences.getInstance();
-    final id = prefs.getString('id') ?? '';
-    final password = prefs.getString('password') ?? '';
-    ref.watch(idPasswordProvider.notifier).setIdPassword(id, password);
-    return [id, password];
-  }
-
-  @override
-  Widget build(BuildContext context) {
     return MaterialApp(
       theme: buildThemeLight(),
       darkTheme: buildThemeDark(),

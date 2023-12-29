@@ -3,38 +3,33 @@ import 'package:aitapp/screens/notices.dart';
 import 'package:aitapp/screens/vehicle_timetable.dart';
 import 'package:aitapp/wighets/drawer.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 
-class TabScreen extends ConsumerStatefulWidget {
+class TabScreen extends HookWidget {
   const TabScreen({super.key});
 
   @override
-  ConsumerState<TabScreen> createState() => _TabScreenState();
-}
-
-class _TabScreenState extends ConsumerState<TabScreen> {
-  int _currentPageIndex = 0;
-  List<Widget> currentPages = [
-    const NoticeScreen(),
-    const ClassTimeTableScreen(),
-    const TimeTableScreen(),
-  ];
-  List<String> appBarTitle = [
-    'お知らせ',
-    '時間割',
-    '時刻表',
-  ];
-  @override
   Widget build(BuildContext context) {
+    final currentPageIndex = useState(0);
+    final appBarTitle = [
+      'お知らせ',
+      '時間割',
+      '時刻表',
+    ];
+    final currentPages = [
+      const NoticeScreen(),
+      const ClassTimeTableScreen(),
+      const TimeTableScreen(),
+    ];
     return Scaffold(
       appBar: AppBar(
-        title: Text(appBarTitle[_currentPageIndex]),
+        title: Text(appBarTitle[currentPageIndex.value]),
         centerTitle: true,
       ),
       drawer: const MainDrawer(),
-      body: currentPages[_currentPageIndex],
+      body: currentPages[currentPageIndex.value],
       bottomNavigationBar: NavigationBar(
-        selectedIndex: _currentPageIndex,
+        selectedIndex: currentPageIndex.value,
         destinations: const [
           NavigationDestination(
             icon: Icon(Icons.article),
@@ -50,9 +45,7 @@ class _TabScreenState extends ConsumerState<TabScreen> {
           ),
         ],
         onDestinationSelected: (index) {
-          setState(() {
-            _currentPageIndex = index;
-          });
+          currentPageIndex.value = index;
         },
       ),
     );
