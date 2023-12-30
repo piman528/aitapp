@@ -2,11 +2,13 @@ import 'dart:io';
 
 import 'package:aitapp/models/get_notice.dart';
 import 'package:aitapp/models/univ_notice.dart';
+import 'package:async/async.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:url_launcher/link.dart';
 
-class UnivNoticeDetailScreen extends StatefulWidget {
+class UnivNoticeDetailScreen extends HookWidget {
   const UnivNoticeDetailScreen({
     super.key,
     required this.index,
@@ -17,70 +19,66 @@ class UnivNoticeDetailScreen extends StatefulWidget {
   final GetNotice getNotice;
 
   @override
-  State<UnivNoticeDetailScreen> createState() => _UnivNoticeDetailScreenState();
-}
-
-class _UnivNoticeDetailScreenState extends State<UnivNoticeDetailScreen> {
-  bool isDownloading = false;
-  String? error;
-  UnivNotice? univNotice;
-  final _regExp = RegExp(
-    r"(http(s)?:\/\/[a-zA-Z0-9-.!'()*;/?:@&=+$,%_#]+)",
-    caseSensitive: false,
-  );
-  Widget content = const Center(
-    child: SizedBox(
-      height: 25, //指定
-      width: 25, //指定
-      child: CircularProgressIndicator(),
-    ),
-  );
-
-  @override
-  void initState() {
-    super.initState();
-    _loadData();
-  }
-
-  Future<void> _loadData() async {
-    try {
-      univNotice = await widget.getNotice.getUnivNoticeDetail(widget.index);
-    } on SocketException {
-      setState(() {
-        error = 'インターネットに接続できません';
-      });
-    } on Exception catch (err) {
-      setState(() {
-        error = err.toString();
-      });
-    }
-    setState(() {});
-  }
-
-  Future<void> _fileShare(MapEntry<String, String> entries) async {
-    setState(() {
-      isDownloading = true;
-    });
-    try {
-      await widget.getNotice.shareFile(entries);
-    } on SocketException {
-      await Fluttertoast.showToast(msg: 'インターネットに接続できません');
-    } on Exception catch (err) {
-      await Fluttertoast.showToast(msg: err.toString());
-    }
-
-    await Future<void>.delayed(const Duration(seconds: 1));
-    if (mounted) {
-      setState(() {
-        isDownloading = false;
-      });
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
-    if (univNotice != null) {
-      content = SingleChildScrollView(
+    final regExp = useRef(
+      RegExp(
+        r"(http(s)?:\/\/[a-zA-Z0-9-.!'()*;/?:@&=+$,%_#]+)",
+        caseSensitive: false,
+      ),
+    );
+    final isDownloading = useState(false);
+    final error = useState<String?>(null);
+    final univNotice = useState<UnivNotice?>(null);
+    final operation = useRef<CancelableOperation<void>?>(null);
+    final content = useState<Widget>(
+      const Center(
+        child: SizedBox(
+          height: 25, //指定
+          width: 25, //指定
+          child: CircularProgressIndicator(),
+        ),
+      ),
+    );
+
+    Future<void> loadData() async {
+      try {
+        univNotice.value = await getNotice.getUnivNoticeDetail(index);
+      } on SocketException {
+        error.value = 'インターネットに接続できません';
+      } on Exception catch (err) {
+        error.value = err.toString();
+      }
+    }
+
+    Future<void> fileShare(MapEntry<String, String> entries) async {
+      isDownloading.value = true;
+      try {
+        await getNotice.shareFile(entries);
+      } on SocketException {
+        await Fluttertoast.showToast(msg: 'インターネットに接続できません');
+      } on Exception catch (err) {
+        await Fluttertoast.showToast(msg: err.toString());
+      }
+
+      await Future<void>.delayed(const Duration(seconds: 1));
+      isDownloading.value = false;
+    }
+
+    useEffect(
+      () {
+        operation.value = CancelableOperation.fromFuture(
+          loadData(),
+        );
+
+        return () {
+          operation.value!.cancel();
+        };
+      },
+      [],
+    );
+
+    if (univNotice.value != null) {
+      content.value = SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15),
           child: Column(
@@ -91,8 +89,8 @@ class _UnivNoticeDetailScreenState extends State<UnivNoticeDetailScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(univNotice!.sendAt),
-                  Text(univNotice!.sender),
+                  Text(univNotice.value!.sendAt),
+                  Text(univNotice.value!.sender),
                 ],
               ),
               const SizedBox(
@@ -102,7 +100,7 @@ class _UnivNoticeDetailScreenState extends State<UnivNoticeDetailScreen> {
                 child: Column(
                   children: [
                     Text(
-                      univNotice!.title,
+                      univNotice.value!.title,
                       style: const TextStyle(
                         fontSize: 17,
                         fontWeight: FontWeight.bold,
@@ -111,11 +109,11 @@ class _UnivNoticeDetailScreenState extends State<UnivNoticeDetailScreen> {
                     const SizedBox(
                       height: 60,
                     ),
-                    for (final text in univNotice!.content) ...{
+                    for (final text in univNotice.value!.content) ...{
                       if (text != '') ...{
-                        if (_regExp.stringMatch(text) != null) ...{
+                        if (regExp.value.stringMatch(text) != null) ...{
                           Link(
-                            uri: Uri.parse(_regExp.stringMatch(text)!),
+                            uri: Uri.parse(regExp.value.stringMatch(text)!),
                             target: LinkTarget.blank,
                             builder: (context, followLink) => TextButton(
                               onPressed: followLink,
@@ -130,7 +128,7 @@ class _UnivNoticeDetailScreenState extends State<UnivNoticeDetailScreen> {
                         ),
                       },
                     },
-                    if (univNotice!.url.isNotEmpty) ...{
+                    if (univNotice.value!.url.isNotEmpty) ...{
                       const SizedBox(
                         height: 10,
                       ),
@@ -141,9 +139,9 @@ class _UnivNoticeDetailScreenState extends State<UnivNoticeDetailScreen> {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      for (final url in univNotice!.url) ...{
+                      for (final url in univNotice.value!.url) ...{
                         Link(
-                          uri: Uri.parse(_regExp.stringMatch(url)!),
+                          uri: Uri.parse(regExp.value.stringMatch(url)!),
                           target: LinkTarget.blank,
                           builder: (context, followLink) => TextButton(
                             onPressed: followLink,
@@ -152,7 +150,7 @@ class _UnivNoticeDetailScreenState extends State<UnivNoticeDetailScreen> {
                         ),
                       },
                     },
-                    if (univNotice!.files!.isNotEmpty) ...{
+                    if (univNotice.value!.files!.isNotEmpty) ...{
                       const Text(
                         '添付ファイル',
                         style: TextStyle(
@@ -160,12 +158,13 @@ class _UnivNoticeDetailScreenState extends State<UnivNoticeDetailScreen> {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      for (final entries in univNotice!.files!.entries) ...{
+                      for (final entries
+                          in univNotice.value!.files!.entries) ...{
                         TextButton(
-                          onPressed: isDownloading
+                          onPressed: isDownloading.value
                               ? null
                               : () {
-                                  _fileShare(entries);
+                                  fileShare(entries);
                                 },
                           child: Text(entries.key),
                         ),
@@ -182,9 +181,9 @@ class _UnivNoticeDetailScreenState extends State<UnivNoticeDetailScreen> {
         ),
       );
     }
-    if (error != null) {
-      content = Center(
-        child: Text(error!),
+    if (error.value != null) {
+      content.value = Center(
+        child: Text(error.value!),
       );
     }
 
@@ -196,7 +195,7 @@ class _UnivNoticeDetailScreenState extends State<UnivNoticeDetailScreen> {
           '詳細',
         ),
       ),
-      body: content,
+      body: content.value,
     );
   }
 }

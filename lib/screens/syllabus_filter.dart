@@ -2,8 +2,9 @@ import 'package:aitapp/const.dart';
 import 'package:aitapp/wighets/search_bar.dart';
 import 'package:aitapp/wighets/syllabus_filtered_list.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 
-class SyllabusFilterScreen extends StatefulWidget {
+class SyllabusFilterScreen extends HookWidget {
   const SyllabusFilterScreen({
     super.key,
     required this.dayOfWeek,
@@ -16,41 +17,27 @@ class SyllabusFilterScreen extends StatefulWidget {
   final String? teacher;
 
   @override
-  State<SyllabusFilterScreen> createState() => _SyllabusSearchScreenState();
-}
-
-class _SyllabusSearchScreenState extends State<SyllabusFilterScreen> {
-  final controller = TextEditingController();
-  String filter = '';
-
-  void _setFilterValue() {
-    setState(() {
-      filter = controller.text;
-    });
-  }
-
-  @override
-  void initState() {
-    controller
-      ..addListener(_setFilterValue)
-      ..text = widget.teacher ?? '';
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final controller = useTextEditingController();
+    final filter = useState('');
+
+    useEffect(
+      () {
+        controller
+          ..addListener(() {
+            filter.value = controller.text;
+          })
+          ..text = teacher ?? '';
+        return null;
+      },
+      [],
+    );
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
         centerTitle: true,
         title: Text(
-          '${dayOfWeekToString[widget.dayOfWeek]} ${widget.classPeriod}限から検索',
+          '${dayOfWeekToString[dayOfWeek]} $classPeriod限から検索',
           // style: TextStyle(color: Colors.black),
         ),
       ),
@@ -61,9 +48,9 @@ class _SyllabusSearchScreenState extends State<SyllabusFilterScreen> {
             hintText: '教授名、授業名で検索',
           ),
           SyllabusList(
-            classPeriod: widget.classPeriod,
-            dayOfWeek: widget.dayOfWeek,
-            filterText: filter,
+            classPeriod: classPeriod,
+            dayOfWeek: dayOfWeek,
+            filterText: filter.value,
           ),
         ],
       ),

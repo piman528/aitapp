@@ -1,36 +1,24 @@
 import 'package:aitapp/wighets/search_bar.dart';
 import 'package:aitapp/wighets/syllabus_search_list.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 
-class SyllabusSearchScreen extends StatefulWidget {
+class SyllabusSearchScreen extends HookWidget {
   const SyllabusSearchScreen({
     super.key,
   });
 
   @override
-  State<SyllabusSearchScreen> createState() => _SyllabusSearchScreenState();
-}
+  Widget build(BuildContext context) {
+    final controller = useTextEditingController();
+    final syllabusList = useState<Widget>(const SizedBox());
 
-class _SyllabusSearchScreenState extends State<SyllabusSearchScreen> {
-  final controller = TextEditingController();
-  Widget syllabusList = const SizedBox();
-
-  @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
-  }
-
-  void onSubmit(String word) {
-    setState(() {
-      syllabusList = SyllabusSearchList(
+    void onSubmit(String word) {
+      syllabusList.value = SyllabusSearchList(
         searchText: word,
       );
-    });
-  }
+    }
 
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -47,7 +35,7 @@ class _SyllabusSearchScreenState extends State<SyllabusSearchScreen> {
             controller: controller,
             hintText: '教授名、授業名で検索',
           ),
-          syllabusList,
+          syllabusList.value,
         ],
       ),
     );

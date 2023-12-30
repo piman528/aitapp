@@ -1,95 +1,82 @@
 import 'dart:io';
 
 import 'package:aitapp/const.dart';
-import 'package:aitapp/models/class_syllabus.dart';
 import 'package:aitapp/models/get_syllabus.dart';
 import 'package:aitapp/wighets/syllabus_item.dart';
+import 'package:async/async.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 
-class SyllabusSearchList extends StatefulWidget {
+class SyllabusSearchList extends HookWidget {
   const SyllabusSearchList({
     super.key,
     this.dayOfWeek,
     this.classPeriod,
-    this.filterText,
     this.searchText,
   });
   final DayOfWeek? dayOfWeek;
   final int? classPeriod;
-  final String? filterText;
   final String? searchText;
 
   @override
-  State<SyllabusSearchList> createState() => _SyllabusListState();
-}
-
-class _SyllabusListState extends State<SyllabusSearchList> {
-  final getSyllabus = GetSyllabus();
-  List<ClassSyllabus>? syllabusList;
-  Widget content = const Expanded(
-    child: Center(
-      child: SizedBox(
-        height: 25, //指定
-        width: 25, //指定
-        child: CircularProgressIndicator(),
-      ),
-    ),
-  );
-
-  Future<void> _load() async {
-    try {
-      await getSyllabus.create();
-      final list = await getSyllabus.getSyllabusList(
-        widget.dayOfWeek,
-        widget.classPeriod,
-        widget.searchText,
-      );
-      setState(() {
-        syllabusList = list;
-      });
-    } on SocketException {
-      setState(() {
-        content = const Center(
-          child: Text('インターネットに接続できません'),
-        );
-      });
-    } on Exception catch (err) {
-      setState(() {
-        content = Center(
-          child: Text(err.toString()),
-        );
-      });
-    }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _load();
-  }
-
-  @override
-  void didUpdateWidget(covariant SyllabusSearchList oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    setState(() {
-      syllabusList = null;
-    });
-    _load();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    if (syllabusList != null) {
-      return Expanded(
-        child: ListView.builder(
-          itemCount: syllabusList!.length,
-          itemBuilder: (c, i) => SyllabusItem(
-            syllabus: syllabusList![i],
-            getSyllabus: getSyllabus,
+    final getSyllabus = useRef(GetSyllabus());
+    final operation = useRef<CancelableOperation<void>?>(null);
+    final content = useState<Widget>(const SizedBox());
+
+    Future<void> load() async {
+      content.value = const Expanded(
+        child: Center(
+          child: SizedBox(
+            height: 25, //指定
+            width: 25, //指定
+            child: CircularProgressIndicator(),
           ),
         ),
       );
+      try {
+        await getSyllabus.value.create();
+        final list = await getSyllabus.value.getSyllabusList(
+          dayOfWeek,
+          classPeriod,
+          searchText,
+        );
+        content.value = Expanded(
+          child: ListView.builder(
+            itemCount: list.length,
+            itemBuilder: (c, i) => SyllabusItem(
+              syllabus: list[i],
+              getSyllabus: getSyllabus.value,
+            ),
+          ),
+        );
+      } on SocketException {
+        content.value = const Center(
+          child: Text('インターネットに接続できません'),
+        );
+      } on Exception catch (err) {
+        content.value = Center(
+          child: Text(err.toString()),
+        );
+      }
     }
-    return content;
+
+    useEffect(
+      () {
+        return () {
+          operation.value!.cancel();
+        };
+      },
+      [],
+    );
+    useEffect(
+      () {
+        operation.value = CancelableOperation.fromFuture(load());
+        return () {};
+      },
+      [searchText],
+    );
+
+    return content.value;
   }
 }

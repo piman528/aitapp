@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:aitapp/const.dart';
 import 'package:aitapp/infrastructure/next_departure.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:intl/intl.dart';
 
 class TimeTableCard extends StatelessWidget {
@@ -74,7 +75,7 @@ class TimeTableCard extends StatelessWidget {
   }
 }
 
-class TimeCard extends StatefulWidget {
+class TimeCard extends HookWidget {
   const TimeCard({
     super.key,
     required this.vehicle,
@@ -86,52 +87,39 @@ class TimeCard extends StatefulWidget {
   final int order;
 
   @override
-  State<TimeCard> createState() => _TimeCardState();
-}
-
-class _TimeCardState extends State<TimeCard> {
-  late DateTime _time;
-  late Timer _timer;
-  late DateTime? nextDepartureTime;
-
-  final f = DateFormat('HH:mm');
-
-  @override
-  void initState() {
-    nextDepartureTime = NextDeparture(
-      vehicle: widget.vehicle,
-      destination: widget.destination,
-      order: widget.order,
-    ).searchNextDeparture();
-    _time = DateTime.now();
-    _timer = Timer.periodic(const Duration(milliseconds: 1000), (timer) {
-      setState(() {
-        _time = DateTime.now();
-      });
-    });
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _timer.cancel();
-    super.dispose();
-  }
-
-  void reflashtime() {
-    setState(() {
-      nextDepartureTime = NextDeparture(
-        vehicle: widget.vehicle,
-        destination: widget.destination,
-        order: widget.order,
-      ).searchNextDeparture();
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
-    if (nextDepartureTime != null) {
-      final remainTime = nextDepartureTime!.difference(_time);
+    final f = useRef(DateFormat('HH:mm'));
+    final nextDepartureTime = useState<DateTime?>(null);
+    final time = useState<DateTime?>(null);
+    final timer = useRef<Timer?>(null);
+
+    void reflashtime() {
+      nextDepartureTime.value = NextDeparture(
+        vehicle: vehicle,
+        destination: destination,
+        order: order,
+      ).searchNextDeparture();
+    }
+
+    useEffect(
+      () {
+        nextDepartureTime.value = NextDeparture(
+          vehicle: vehicle,
+          destination: destination,
+          order: order,
+        ).searchNextDeparture();
+        time.value = DateTime.now();
+        timer.value =
+            Timer.periodic(const Duration(milliseconds: 1000), (timer) {
+          time.value = DateTime.now();
+        });
+        return () {
+          timer.value!.cancel();
+        };
+      },
+    );
+    if (nextDepartureTime.value != null) {
+      final remainTime = nextDepartureTime.value!.difference(time.value!);
       if (remainTime.inSeconds % 60 == 0 && remainTime.inMinutes % 5 == 0) {
         reflashtime();
       }
@@ -150,7 +138,7 @@ class _TimeCardState extends State<TimeCard> {
               blurRadius: 3,
             ),
           ],
-          color: Theme.of(context).hoverColor,
+          color: Theme.of(context).colorScheme.primaryContainer,
           borderRadius: const BorderRadius.all(Radius.circular(8)),
         ),
         child: Row(
@@ -169,7 +157,7 @@ class _TimeCardState extends State<TimeCard> {
               ],
             ),
             Text(
-              f.format(nextDepartureTime!),
+              f.value.format(nextDepartureTime.value!),
               style: const TextStyle(
                 // color: Colors.black,
                 fontSize: 48,

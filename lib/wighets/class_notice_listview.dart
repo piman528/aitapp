@@ -6,11 +6,13 @@ import 'package:aitapp/provider/class_notices_provider.dart';
 import 'package:aitapp/provider/id_password_provider.dart';
 import 'package:aitapp/wighets/class_notice.dart';
 import 'package:aitapp/wighets/search_bar.dart';
+import 'package:async/async.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class ClassNoticeList extends ConsumerStatefulWidget {
+class ClassNoticeList extends HookConsumerWidget {
   const ClassNoticeList({
     super.key,
     required this.getNotice,
@@ -21,140 +23,127 @@ class ClassNoticeList extends ConsumerStatefulWidget {
   final void Function({required bool state}) loading;
 
   @override
-  ConsumerState<ClassNoticeList> createState() => _ClassNoticeListState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final content = useState<Widget>(
+      const Center(
+        child: SizedBox(
+          height: 25, //指定
+          width: 25, //指定
+          child: CircularProgressIndicator(),
+        ),
+      ),
+    );
+    final beforeReloadLengh = useRef(0);
+    final page = useRef(10);
+    final isManual = useRef(false);
+    final error = useState<String?>(null);
+    final isLoading = useState(true);
+    final classController = useTextEditingController();
+    final classFilter = useState('');
+    final operation = useRef<CancelableOperation<void>?>(null);
+    final isDispose = useRef(false);
 
-class _ClassNoticeListState extends ConsumerState<ClassNoticeList> {
-  final classController = TextEditingController();
-  String classFilter = '';
-  String? error;
-  bool isLoading = true;
-  bool isManual = false;
-  int page = 10;
-  int beforeReloadLengh = 0;
-  Widget content = const Center(
-    child: SizedBox(
-      height: 25, //指定
-      width: 25, //指定
-      child: CircularProgressIndicator(),
-    ),
-  );
-
-  void _setClassFilterValue2() {
-    setState(() {
-      classFilter = classController.text;
-    });
-  }
-
-  @override
-  void dispose() {
-    classController.dispose();
-    super.dispose();
-  }
-
-  @override
-  void initState() {
-    classController.addListener(_setClassFilterValue2);
-    _load(true, false);
-    super.initState();
-  }
-
-  Future<void> _load(bool withLogin, bool isContinuation) async {
-    late final List<ClassNotice> result;
-    widget.loading(state: true);
-    setState(() {
-      isLoading = true;
-    });
-    try {
-      if (withLogin) {
-        final identity = ref.read(idPasswordProvider);
-        await widget.getNotice.create(identity[0], identity[1]);
-      }
-      if (!isContinuation) {
-        result = await widget.getNotice.getClassNoticelist(page);
-      } else {
-        result = await widget.getNotice.getClassNoticelistNext(page);
-      }
-      if (mounted) {
-        ref.watch(classNoticesProvider.notifier).reloadNotices(result);
-      }
-    } on SocketException {
-      if (mounted) {
-        setState(() {
-          error = 'インターネットに接続できません';
-        });
-      }
-    } on Exception catch (err) {
-      if (mounted) {
-        setState(() {
-          error = err.toString();
-        });
-      }
-    }
-    if (mounted) {
-      setState(() {
-        isLoading = false;
-      });
+    List<ClassNotice> filteredList(List<ClassNotice> list) {
+      final result = list
+          .where(
+            (classNotice) =>
+                classNotice.subject.toLowerCase().contains(
+                      classFilter.value.toLowerCase(),
+                    ) ||
+                classNotice.title.toLowerCase().contains(
+                      classFilter.value.toLowerCase(),
+                    ) ||
+                classNotice.sender.toLowerCase().contains(
+                      classFilter.value.toLowerCase(),
+                    ),
+          )
+          .toList();
+      return result;
     }
 
-    widget.loading(state: false);
-  }
+    Future<void> load({
+      required bool withLogin,
+      required bool isContinuation,
+    }) async {
+      late final List<ClassNotice> result;
+      loading(state: true);
+      isLoading.value = true;
+      try {
+        if (withLogin) {
+          final identity = ref.read(idPasswordProvider);
+          await getNotice.create(identity[0], identity[1]);
+        }
+        if (!isContinuation) {
+          result = await getNotice.getClassNoticelist(page.value);
+        } else {
+          result = await getNotice.getClassNoticelistNext(page.value);
+        }
+        if (!isDispose.value) {
+          ref.read(classNoticesProvider.notifier).reloadNotices(result);
+        }
+      } on SocketException {
+        error.value = 'インターネットに接続できません';
+      } on Exception catch (err) {
+        error.value = err.toString();
+      }
+      isLoading.value = false;
+      loading(state: false);
+    }
 
-  List<ClassNotice> _filteredList(List<ClassNotice> list) {
-    final result = list
-        .where(
-          (classNotice) =>
-              classNotice.subject.toLowerCase().contains(
-                    classFilter.toLowerCase(),
-                  ) ||
-              classNotice.title.toLowerCase().contains(
-                    classFilter.toLowerCase(),
-                  ) ||
-              classNotice.sender.toLowerCase().contains(
-                    classFilter.toLowerCase(),
-                  ),
-        )
-        .toList();
-    return result;
-  }
+    useEffect(
+      () {
+        operation.value = CancelableOperation.fromFuture(
+          load(withLogin: true, isContinuation: false),
+        );
+        classController.addListener(() {
+          classFilter.value = classController.text;
+        });
+        return () {
+          operation.value!.cancel();
+          isDispose.value = true;
+        };
+      },
+      [],
+    );
 
-  @override
-  Widget build(BuildContext context) {
     if (ref.read(classNoticesProvider) != null) {
-      if (error == null) {
+      if (error.value == null) {
         final result = ref.read(classNoticesProvider)!;
-        final filteredResult = _filteredList(result);
-        content = ListView.builder(
+        final filteredResult = filteredList(result);
+        content.value = ListView.builder(
           itemCount: filteredResult.length,
           itemBuilder: (c, i) {
             if (i == filteredResult.length - 3) {
-              if (!isLoading && filteredResult.length != beforeReloadLengh) {
+              if (!isLoading.value &&
+                  filteredResult.length != beforeReloadLengh.value) {
                 WidgetsBinding.instance.addPostFrameCallback((_) {
-                  page += 10;
-                  beforeReloadLengh = filteredResult.length;
-                  _load(false, true);
+                  page.value += 10;
+                  beforeReloadLengh.value = filteredResult.length;
+                  load(withLogin: false, isContinuation: true);
                 });
               }
             }
             return ClassNoticeItem(
               notice: filteredResult[i],
               index: result.indexOf(filteredResult[i]),
-              getNotice: widget.getNotice,
-              tap: !isLoading,
+              getNotice: getNotice,
+              tap: !isLoading.value,
             );
           },
         );
       } else {
         Fluttertoast.showToast(msg: error.toString());
       }
-    } else if (error != null) {
-      content = Center(
-        child: Text(error!),
+    } else if (error.value != null) {
+      content.value = Center(
+        child: Text(error.value!),
       );
     }
     return Column(
       children: [
-        isLoading && ref.read(classNoticesProvider) != null && !isManual
+        isLoading.value &&
+                ref.read(classNoticesProvider) != null &&
+                !isManual.value
             ? const LinearProgressIndicator(minHeight: 2)
             : const SizedBox(
                 height: 2,
@@ -166,12 +155,12 @@ class _ClassNoticeListState extends ConsumerState<ClassNoticeList> {
         Expanded(
           child: RefreshIndicator(
             onRefresh: () async {
-              setState(() {
-                isManual = true;
-              });
-              await _load(true, false);
+              isManual.value = true;
+              page.value = 5;
+              await load(withLogin: true, isContinuation: false);
+              isManual.value = false;
             },
-            child: content,
+            child: content.value,
           ),
         ),
       ],
