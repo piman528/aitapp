@@ -138,13 +138,14 @@ class UnivNoticeList extends HookConsumerWidget {
     }
     return Column(
       children: [
-        isLoading.value &&
-                ref.read(univNoticesProvider) != null &&
-                !isManual.value
-            ? const LinearProgressIndicator(minHeight: 2)
-            : const SizedBox(
-                height: 2,
-              ),
+        LinearProgressIndicator(
+          minHeight: 2,
+          value: isLoading.value &&
+                  ref.read(univNoticesProvider) != null &&
+                  !isManual.value
+              ? null
+              : 0,
+        ),
         SearchBarWidget(
           controller: univController,
           hintText: '送信元、キーワードで検索',

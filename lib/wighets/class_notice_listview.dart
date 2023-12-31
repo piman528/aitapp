@@ -141,13 +141,14 @@ class ClassNoticeList extends HookConsumerWidget {
     }
     return Column(
       children: [
-        isLoading.value &&
-                ref.read(classNoticesProvider) != null &&
-                !isManual.value
-            ? const LinearProgressIndicator(minHeight: 2)
-            : const SizedBox(
-                height: 2,
-              ),
+        LinearProgressIndicator(
+          minHeight: 2,
+          value: isLoading.value &&
+                  ref.read(classNoticesProvider) != null &&
+                  !isManual.value
+              ? null
+              : 0,
+        ),
         SearchBarWidget(
           controller: classController,
           hintText: '送信元、キーワードで検索',
