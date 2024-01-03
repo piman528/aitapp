@@ -23,11 +23,11 @@ class GetSyllabus {
       jSessionId,
       searchWord,
     );
-    return parseSyllabusList(body);
+    return parseSyllabus(body);
   }
 
   Future<ClassSyllabusDetail> getSyllabusDetail(ClassSyllabus syllabus) async {
     final body = await getSyllabus(syllabus.url, jSessionId);
-    return parseSyllabus(body);
+    return parseSyllabusDetail(body);
   }
 }

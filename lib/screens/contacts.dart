@@ -12,6 +12,7 @@ class Contacts extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        scrolledUnderElevation: 0,
         centerTitle: true,
         title: const Text('各所連絡先'),
       ),
@@ -22,20 +23,13 @@ class Contacts extends StatelessWidget {
             final contact = contacts[index] as Contact;
             return ListTile(
               title: Text(contact.name),
-              subtitle: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(contact.phone),
-                  if (contact.mail != null) ...{
-                    Text(contact.mail!),
-                  },
-                ],
-              ),
+              subtitle: Text(contact.explain),
               onTap: () {
                 showDialog<Widget>(
                   context: context,
                   builder: (context) {
                     return SimpleDialog(
+                      insetPadding: const EdgeInsets.symmetric(horizontal: 16),
                       title: const Text(
                         '連絡方法の選択',
                       ),

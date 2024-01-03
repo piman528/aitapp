@@ -20,6 +20,7 @@ class SyllabusDetail extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        scrolledUnderElevation: 0,
         title: Text(syllabus.subject),
       ),
       body: FutureBuilder(

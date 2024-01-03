@@ -36,6 +36,7 @@ class TabScreen extends HookWidget {
     final currentPageIndex = useState(0);
     return Scaffold(
       appBar: AppBar(
+        scrolledUnderElevation: 0,
         title: Text(appBarTitle[currentPageIndex.value]),
         centerTitle: true,
       ),

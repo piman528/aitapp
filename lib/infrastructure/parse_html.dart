@@ -15,7 +15,7 @@ List<ClassNotice> parseClassNotice(String body) {
   );
 
   if (topStorytitle.isEmpty) {
-    throw Exception('データの取得に失敗しました');
+    throw Exception('[parseClassNotice]データの取得に失敗しました');
   }
 
   for (final div in topStorytitle) {
@@ -62,7 +62,7 @@ ClassNotice parseClassNoticeDetail(String body) {
     'body > form > table > tbody > tr',
   );
   if (topStorytitle.isEmpty) {
-    throw Exception('データの取得に失敗しました');
+    throw Exception('[parseClassNoticeDetail]データの取得に失敗しました');
   }
   final texts = <String>[];
   var isMaincontent = false;
@@ -115,7 +115,7 @@ List<UnivNotice> parseUnivNotice(String body) {
     '#smartPhoneCommonContactList > form:nth-child(4) > div.listItem',
   ); //記事のリスト
   if (topStorytitle.isEmpty) {
-    throw Exception('データの取得に失敗しました');
+    throw Exception('[parseUnivNotice]データの取得に失敗しました');
   }
 
   for (final parentDiv in topStorytitle) {
@@ -160,7 +160,7 @@ UnivNotice parseUnivNoticeDetail(String body) {
     'body > form > table > tbody > tr',
   );
   if (topStorytitle.isEmpty) {
-    throw Exception('データの取得に失敗しました');
+    throw Exception('[parseUnivNoticeDetail]データの取得に失敗しました');
   }
   final texts = <String>[];
   var mainContent = 0;
@@ -236,7 +236,7 @@ Map<DayOfWeek, Map<int, Class>> parseClassTimeTable(String body) {
     'body > form > table > tbody > tr',
   );
   if (topStorytitle.isEmpty) {
-    throw Exception('データの取得に失敗しました');
+    throw Exception('[parseClassTimeTable]データの取得に失敗しました');
   }
   for (var i = 0; i < topStorytitle.length; i++) {
     final day = i ~/ 7;
@@ -284,13 +284,13 @@ Map<DayOfWeek, Map<int, Class>> parseClassTimeTable(String body) {
   return classTimeTableMap;
 }
 
-List<ClassSyllabus> parseSyllabusList(String body) {
+List<ClassSyllabus> parseSyllabus(String body) {
   final classSyllabusList = <ClassSyllabus>[];
   final topStorytitle = parseHtmlDocument(body).querySelectorAll(
     'body > form > table:nth-child(2) > tbody > tr > td > table > tbody > tr',
   );
   if (topStorytitle.isEmpty) {
-    throw Exception('データの取得に失敗しました');
+    throw Exception('[parseSyllabusList]データの取得に失敗しました');
   }
   var i = 0;
   for (final tr in topStorytitle) {
@@ -351,12 +351,12 @@ List<ClassSyllabus> parseSyllabusList(String body) {
   return classSyllabusList;
 }
 
-ClassSyllabusDetail parseSyllabus(String body) {
+ClassSyllabusDetail parseSyllabusDetail(String body) {
   final topStorytitle = parseHtmlDocument(body).querySelectorAll(
     'body > table:nth-child(16) > tbody > tr > td > table > tbody > tr',
   );
   if (topStorytitle.isEmpty) {
-    throw Exception('データの取得に失敗しました');
+    throw Exception('[parseSyllabus]データの取得に失敗しました');
   }
   final texts = <String>[];
   for (final tr in topStorytitle) {
@@ -452,7 +452,7 @@ String parseStrutsToken({
     selector,
   );
   if (topStorytitle.isEmpty) {
-    throw Exception('データの取得に失敗しました');
+    throw Exception('[parseStrutsToken]データの取得に失敗しました');
   }
   final value = topStorytitle[0].attributes['value'];
   return value!;

@@ -34,6 +34,7 @@ class SyllabusFilterScreen extends HookWidget {
     );
     return Scaffold(
       appBar: AppBar(
+        scrolledUnderElevation: 0,
         elevation: 0,
         centerTitle: true,
         title: Text(

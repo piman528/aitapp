@@ -63,7 +63,6 @@ class ClassNoticeList extends HookConsumerWidget {
 
     Future<void> load({
       required bool withLogin,
-      required bool isContinuation,
     }) async {
       late final List<ClassNotice> result;
       loading(state: true);
@@ -72,8 +71,6 @@ class ClassNoticeList extends HookConsumerWidget {
         if (withLogin) {
           final identity = ref.read(idPasswordProvider);
           await getNotice.create(identity[0], identity[1]);
-        }
-        if (!isContinuation) {
           result = await getNotice.getClassNoticelist(page.value);
         } else {
           result = await getNotice.getClassNoticelistNext(page.value);
@@ -82,18 +79,24 @@ class ClassNoticeList extends HookConsumerWidget {
           ref.read(classNoticesProvider.notifier).reloadNotices(result);
         }
       } on SocketException {
-        error.value = 'インターネットに接続できません';
+        if (!isDispose.value) {
+          error.value = 'インターネットに接続できません';
+        }
       } on Exception catch (err) {
-        error.value = err.toString();
+        if (!isDispose.value) {
+          error.value = err.toString();
+        }
       }
-      isLoading.value = false;
-      loading(state: false);
+      if (!isDispose.value) {
+        isLoading.value = false;
+        loading(state: false);
+      }
     }
 
     useEffect(
       () {
         operation.value = CancelableOperation.fromFuture(
-          load(withLogin: true, isContinuation: false),
+          load(withLogin: true),
         );
         classController.addListener(() {
           classFilter.value = classController.text;
@@ -110,26 +113,44 @@ class ClassNoticeList extends HookConsumerWidget {
       if (error.value == null) {
         final result = ref.read(classNoticesProvider)!;
         final filteredResult = filteredList(result);
-        content.value = ListView.builder(
-          itemCount: filteredResult.length,
-          itemBuilder: (c, i) {
-            if (i == filteredResult.length - 3) {
-              if (!isLoading.value &&
-                  filteredResult.length != beforeReloadLengh.value) {
-                WidgetsBinding.instance.addPostFrameCallback((_) {
-                  page.value += 10;
-                  beforeReloadLengh.value = filteredResult.length;
-                  load(withLogin: false, isContinuation: true);
-                });
-              }
-            }
-            return ClassNoticeItem(
-              notice: filteredResult[i],
-              index: result.indexOf(filteredResult[i]),
-              getNotice: getNotice,
-              tap: !isLoading.value,
-            );
-          },
+        content.value = CustomScrollView(
+          slivers: [
+            SliverAppBar(
+              scrolledUnderElevation: 0,
+              backgroundColor: Theme.of(context).colorScheme.background,
+              automaticallyImplyLeading: false,
+              expandedHeight: 80,
+              snap: true,
+              floating: true,
+              flexibleSpace: SearchBarWidget(
+                controller: classController,
+                hintText: '送信元、キーワードで検索',
+              ),
+            ),
+            SliverList(
+              delegate: SliverChildBuilderDelegate(
+                (BuildContext c, int i) {
+                  if (i == filteredResult.length - 3) {
+                    if (!isLoading.value &&
+                        filteredResult.length != beforeReloadLengh.value) {
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                        page.value += 10;
+                        beforeReloadLengh.value = filteredResult.length;
+                        load(withLogin: false);
+                      });
+                    }
+                  }
+                  return ClassNoticeItem(
+                    notice: filteredResult[i],
+                    index: result.indexOf(filteredResult[i]),
+                    getNotice: getNotice,
+                    tap: !isLoading.value,
+                  );
+                },
+                childCount: filteredResult.length,
+              ),
+            ),
+          ],
         );
       } else {
         Fluttertoast.showToast(msg: error.toString());
@@ -149,17 +170,17 @@ class ClassNoticeList extends HookConsumerWidget {
               ? null
               : 0,
         ),
-        SearchBarWidget(
-          controller: classController,
-          hintText: '送信元、キーワードで検索',
-        ),
         Expanded(
           child: RefreshIndicator(
             onRefresh: () async {
               isManual.value = true;
-              page.value = 5;
-              await load(withLogin: true, isContinuation: false);
-              isManual.value = false;
+              if (!isLoading.value) {
+                page.value = 5;
+                await load(withLogin: true);
+              }
+              if (!isDispose.value) {
+                isManual.value = false;
+              }
             },
             child: content.value,
           ),
