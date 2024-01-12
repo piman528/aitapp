@@ -2,13 +2,15 @@ import 'dart:io';
 
 import 'package:aitapp/models/get_notice.dart';
 import 'package:aitapp/models/univ_notice.dart';
+import 'package:aitapp/provider/file_downloading_provider.dart';
 import 'package:async/async.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:url_launcher/link.dart';
 
-class UnivNoticeDetailScreen extends HookWidget {
+class UnivNoticeDetailScreen extends HookConsumerWidget {
   const UnivNoticeDetailScreen({
     super.key,
     required this.index,
@@ -19,14 +21,13 @@ class UnivNoticeDetailScreen extends HookWidget {
   final GetNotice getNotice;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final regExp = useRef(
       RegExp(
         r"(http(s)?:\/\/[a-zA-Z0-9-.!'()*;/?:@&=+$,%_#]+)",
         caseSensitive: false,
       ),
     );
-    final isDownloading = useState(false);
     final error = useState<String?>(null);
     final univNotice = useState<UnivNotice?>(null);
     final operation = useRef<CancelableOperation<void>?>(null);
@@ -51,7 +52,7 @@ class UnivNoticeDetailScreen extends HookWidget {
     }
 
     Future<void> fileShare(MapEntry<String, String> entries) async {
-      isDownloading.value = true;
+      ref.read(fileDownloadingProvider.notifier).state = true;
       try {
         await getNotice.shareFile(entries);
       } on SocketException {
@@ -60,8 +61,8 @@ class UnivNoticeDetailScreen extends HookWidget {
         await Fluttertoast.showToast(msg: err.toString());
       }
 
-      await Future<void>.delayed(const Duration(seconds: 1));
-      isDownloading.value = false;
+      await Future<void>.delayed(const Duration(milliseconds: 500));
+      ref.read(fileDownloadingProvider.notifier).state = false;
     }
 
     useEffect(
@@ -161,7 +162,7 @@ class UnivNoticeDetailScreen extends HookWidget {
                       for (final entries
                           in univNotice.value!.files!.entries) ...{
                         TextButton(
-                          onPressed: isDownloading.value
+                          onPressed: ref.watch(fileDownloadingProvider)
                               ? null
                               : () {
                                   fileShare(entries);

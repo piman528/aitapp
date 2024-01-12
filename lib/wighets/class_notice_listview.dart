@@ -3,7 +3,9 @@ import 'dart:io';
 import 'package:aitapp/models/class_notice.dart';
 import 'package:aitapp/models/get_notice.dart';
 import 'package:aitapp/provider/class_notices_provider.dart';
+import 'package:aitapp/provider/file_downloading_provider.dart';
 import 'package:aitapp/provider/id_password_provider.dart';
+import 'package:aitapp/provider/life_cycle_provider.dart';
 import 'package:aitapp/wighets/class_notice.dart';
 import 'package:aitapp/wighets/search_bar.dart';
 import 'package:async/async.dart';
@@ -92,6 +94,23 @@ class ClassNoticeList extends HookConsumerWidget {
         loading(state: false);
       }
     }
+
+    ref.listen<AppLifecycleState>(appLifecycleProvider, (previous, next) {
+      switch (next) {
+        case AppLifecycleState.resumed:
+          if (!ref.read(fileDownloadingProvider)) {
+            load(withLogin: true);
+          }
+        case AppLifecycleState.inactive:
+          break;
+        case AppLifecycleState.paused:
+          break;
+        case AppLifecycleState.detached:
+          break;
+        case AppLifecycleState.hidden:
+          break;
+      }
+    });
 
     useEffect(
       () {

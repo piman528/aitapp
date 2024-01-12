@@ -2,7 +2,9 @@ import 'dart:io';
 
 import 'package:aitapp/models/get_notice.dart';
 import 'package:aitapp/models/univ_notice.dart';
+import 'package:aitapp/provider/file_downloading_provider.dart';
 import 'package:aitapp/provider/id_password_provider.dart';
+import 'package:aitapp/provider/life_cycle_provider.dart';
 import 'package:aitapp/provider/univ_notices_provider.dart';
 import 'package:aitapp/wighets/search_bar.dart';
 import 'package:aitapp/wighets/univ_notice.dart';
@@ -89,6 +91,23 @@ class UnivNoticeList extends HookConsumerWidget {
         isLoading.value = false;
       }
     }
+
+    ref.listen<AppLifecycleState>(appLifecycleProvider, (previous, next) {
+      switch (next) {
+        case AppLifecycleState.resumed:
+          if (!ref.read(fileDownloadingProvider)) {
+            load(withLogin: true);
+          }
+        case AppLifecycleState.inactive:
+          break;
+        case AppLifecycleState.paused:
+          break;
+        case AppLifecycleState.detached:
+          break;
+        case AppLifecycleState.hidden:
+          break;
+      }
+    });
 
     useEffect(
       () {

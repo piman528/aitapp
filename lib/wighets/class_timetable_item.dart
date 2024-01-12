@@ -6,7 +6,8 @@ import 'package:aitapp/provider/class_timetable_provider.dart';
 import 'package:aitapp/provider/id_password_provider.dart';
 import 'package:aitapp/screens/syllabus_filter.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // 授業時間表示
 class ClassTime extends StatelessWidget {
@@ -170,7 +171,7 @@ class ClassGridContainer extends StatelessWidget {
 }
 
 // 時間割
-class TimeTable extends ConsumerWidget {
+class TimeTable extends HookConsumerWidget {
   const TimeTable({
     super.key,
   });
@@ -178,10 +179,20 @@ class TimeTable extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final asyncValue = ref.watch(classTimeTableProvider);
-    if (asyncValue.isLoading) {
-      final list = ref.read(idPasswordProvider);
-      ref.read(classTimeTableProvider.notifier).fetchData(list[0], list[1]);
-    }
+    useEffect(
+      () {
+        if (asyncValue.isLoading || asyncValue.hasError) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            final list = ref.read(idPasswordProvider);
+            ref
+                .read(classTimeTableProvider.notifier)
+                .fetchData(list[0], list[1]);
+          });
+        }
+        return null;
+      },
+      [],
+    );
     return asyncValue.when(
       loading: () => const Center(
         child: SizedBox(
