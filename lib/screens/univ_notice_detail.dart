@@ -54,7 +54,7 @@ class UnivNoticeDetailScreen extends HookConsumerWidget {
     Future<void> fileShare(MapEntry<String, String> entries) async {
       ref.read(fileDownloadingProvider.notifier).state = true;
       try {
-        await getNotice.shareFile(entries);
+        await getNotice.shareFile(entries, context);
       } on SocketException {
         await Fluttertoast.showToast(msg: 'インターネットに接続できません');
       } on Exception catch (err) {

@@ -2,26 +2,39 @@ import 'package:aitapp/const.dart';
 import 'package:aitapp/infrastructure/parse_html.dart';
 import 'package:aitapp/infrastructure/syllabus_search.dart';
 import 'package:aitapp/models/class_syllabus.dart';
+import 'package:aitapp/models/syllabus_filter.dart';
 
 class GetSyllabus {
   late String jSessionId;
-  Future<void> create() async {
-    jSessionId = await getSyllabusSessionId();
+  Future<SyllabusFilters> create() async {
+    final res = await getSyllabusSession();
+    final filters = parseSyllabusFilters(res);
+    jSessionId = filters.cookies[0];
+    return filters;
   }
 
-  Future<List<ClassSyllabus>> getSyllabusList(
+  Future<List<ClassSyllabus>> getSyllabusList({
     DayOfWeek? dayOfWeek,
     int? classPeriod,
     String? searchWord,
-  ) async {
+    String? altWeek,
+    String? altPeriod,
+    String? campus,
+    String? semester,
+    String? folder,
+    required String year,
+  }) async {
     final body = await getSyllabusListBody(
-      1,
-      2,
-      dayOfWeekToInt[dayOfWeek],
-      classPeriod,
-      '02',
-      jSessionId,
-      searchWord,
+      campus: campus,
+      semester: semester,
+      week: dayOfWeekToInt[dayOfWeek],
+      hour: classPeriod,
+      year: year,
+      jSessionId: jSessionId,
+      searchWord: searchWord,
+      altWeek: altWeek,
+      altPeriod: altPeriod,
+      folder: folder,
     );
     return parseSyllabus(body);
   }

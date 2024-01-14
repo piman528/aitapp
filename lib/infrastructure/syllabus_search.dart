@@ -1,9 +1,8 @@
 import 'package:http/http.dart' as http;
+import 'package:http/http.dart';
 
-final _regexSplitSetCookies = RegExp(',(?=[^ ])');
-
-Future<String> getSyllabusSessionId() async {
-  print('getSyllabusSessionId');
+Future<Response> getSyllabusSession() async {
+  print('getSyllabusSession');
   final headers = {
     'Sec-Fetch-Site': 'none',
     'Connection': 'keep-alive',
@@ -22,25 +21,21 @@ Future<String> getSyllabusSessionId() async {
     throw Exception('http.get error: statusCode= $status');
   }
 
-  final cookies = <String>[];
-  final setCookie = _getSetCookie(res.headers);
-  if (setCookie.isNotEmpty) {
-    for (final cookie in setCookie.split(_regexSplitSetCookies)) {
-      cookies.add(cookie.split(';')[0]);
-    }
-  }
-  return cookies[0];
+  return res;
 }
 
-Future<String> getSyllabusListBody(
-  int campus,
-  int semester,
+Future<String> getSyllabusListBody({
+  String? campus,
+  String? semester,
   int? week,
+  String? altWeek,
+  String? altPeriod,
   int? hour,
-  String year,
-  String jSessionId,
+  required String year,
+  required String jSessionId,
   String? searchWord,
-) async {
+  String? folder,
+}) async {
   print('getSyllabusListBody');
   final headers = {
     'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
@@ -57,13 +52,13 @@ Future<String> getSyllabusListBody(
   };
 
   final data = {
-    'syllabusTitleID': '0020',
-    'indexID': '',
+    'syllabusTitleID': year,
+    'indexID': folder ?? '',
     'subFolderFlag': 'on',
-    'syllabusCampus': '$campus',
-    'syllabusSemester': '$semester',
-    'syllabusWeek': '${week ?? ''}',
-    'syllabusHour': '${hour ?? ''}',
+    'syllabusCampus': campus ?? '',
+    'syllabusSemester': semester ?? '',
+    'syllabusWeek': altWeek ?? '${week ?? ''}',
+    'syllabusHour': altPeriod ?? '${hour ?? ''}',
     'kamokuName': '',
     'editorName': '',
     'freeWord': searchWord ?? '',
@@ -109,15 +104,4 @@ Future<String> getSyllabus(String detailUrl, String jSessionId) async {
   }
 
   return res.body;
-}
-
-String _getSetCookie(Map<String, dynamic> headers) {
-  for (final key in headers.keys) {
-    // システムによって返却される "set-cookie" のケースはバラバラです。
-    if (key.toLowerCase() == 'set-cookie') {
-      return headers[key] as String;
-    }
-  }
-
-  return '';
 }

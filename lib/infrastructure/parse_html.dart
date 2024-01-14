@@ -4,9 +4,13 @@ import 'package:aitapp/const.dart';
 import 'package:aitapp/models/class.dart';
 import 'package:aitapp/models/class_notice.dart';
 import 'package:aitapp/models/class_syllabus.dart';
+import 'package:aitapp/models/syllabus_filter.dart';
 import 'package:aitapp/models/univ_notice.dart';
+import 'package:http/http.dart';
 import 'package:universal_html/html.dart' as html;
 import 'package:universal_html/parsing.dart';
+
+final _regexSplitSetCookies = RegExp(',(?=[^ ])');
 
 List<ClassNotice> parseClassNotice(String body) {
   final classNoticeList = <ClassNotice>[];
@@ -284,6 +288,109 @@ Map<DayOfWeek, Map<int, Class>> parseClassTimeTable(String body) {
   return classTimeTableMap;
 }
 
+SyllabusFilters parseSyllabusFilters(Response res) {
+  final topStorytitle = parseHtmlDocument(res.body).querySelectorAll(
+    'body > form > table:nth-child(1) > tbody > tr > td > table > tbody > tr',
+  );
+  if (topStorytitle.isEmpty) {
+    throw Exception('[parseSyllabusList]データの取得に失敗しました');
+  }
+  final year = <String, String>{};
+  final faculty = <String, String>{};
+  final campus = <String, String>{};
+  final hour = <String, String>{};
+  final week = <String, String>{};
+  final semester = <String, String>{};
+  for (final tr in topStorytitle) {
+    final filterstring = tr.querySelector('td:nth-child(1)')!.text!.trim();
+    switch (filterstring) {
+      case '年度':
+        final filterlists =
+            tr.querySelectorAll('td:nth-child(2) > div > select > option');
+        var i = 0;
+        for (final option in filterlists) {
+          if (i == 0) {
+            i++;
+            continue;
+          }
+          year[option.text!] = option.attributes['value']!;
+        }
+      case 'フォルダ':
+        final filterlists =
+            tr.querySelectorAll('td:nth-child(2) > div > select > option');
+        var i = 0;
+        for (final option in filterlists) {
+          if (i == 0) {
+            i++;
+            continue;
+          }
+          faculty[option.text!] = option.attributes['value']!;
+        }
+      case '校舎区分':
+        final filterlists =
+            tr.querySelectorAll('td:nth-child(2) > div > select > option');
+        var i = 0;
+        for (final option in filterlists) {
+          if (i == 0) {
+            i++;
+            continue;
+          }
+          campus[option.text!] = option.attributes['value']!;
+        }
+      case '曜日':
+        final filterlists =
+            tr.querySelectorAll('td:nth-child(2) > div > select > option');
+        var i = 0;
+        for (final option in filterlists) {
+          if (i == 0) {
+            i++;
+            continue;
+          }
+          week[option.text!] = option.attributes['value']!;
+        }
+      case '時限':
+        final filterlists =
+            tr.querySelectorAll('td:nth-child(2) > div > select > option');
+        var i = 0;
+        for (final option in filterlists) {
+          if (i == 0) {
+            i++;
+            continue;
+          }
+          hour[option.text!] = option.attributes['value']!;
+        }
+      case '開講学期':
+        final filterlists =
+            tr.querySelectorAll('td:nth-child(2) > div > select > option');
+        var i = 0;
+        for (final option in filterlists) {
+          if (i == 0) {
+            i++;
+            continue;
+          }
+          semester[option.text!] = option.attributes['value']!;
+        }
+    }
+  }
+  final cookies = <String>[];
+  final setCookie = _getSetCookie(res.headers);
+  if (setCookie.isNotEmpty) {
+    for (final cookie in setCookie.split(_regexSplitSetCookies)) {
+      cookies.add(cookie.split(';')[0]);
+    }
+  }
+
+  return SyllabusFilters(
+    year: year,
+    folder: faculty,
+    campus: campus,
+    cookies: cookies,
+    hour: hour,
+    week: week,
+    semester: semester,
+  );
+}
+
 List<ClassSyllabus> parseSyllabus(String body) {
   final classSyllabusList = <ClassSyllabus>[];
   final topStorytitle = parseHtmlDocument(body).querySelectorAll(
@@ -456,4 +563,15 @@ String parseStrutsToken({
   }
   final value = topStorytitle[0].attributes['value'];
   return value!;
+}
+
+String _getSetCookie(Map<String, dynamic> headers) {
+  for (final key in headers.keys) {
+    // システムによって返却される "set-cookie" のケースはバラバラです。
+    if (key.toLowerCase() == 'set-cookie') {
+      return headers[key] as String;
+    }
+  }
+
+  return '';
 }

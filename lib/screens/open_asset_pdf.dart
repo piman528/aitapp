@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
-class OpenPdf extends StatelessWidget {
-  const OpenPdf({
+class OpenAssetPdf extends StatelessWidget {
+  const OpenAssetPdf({
     super.key,
     required this.title,
     required this.path,

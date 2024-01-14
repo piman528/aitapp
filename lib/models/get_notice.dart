@@ -3,6 +3,8 @@ import 'package:aitapp/infrastructure/access_lcan.dart';
 import 'package:aitapp/infrastructure/parse_html.dart';
 import 'package:aitapp/models/class_notice.dart';
 import 'package:aitapp/models/univ_notice.dart';
+import 'package:aitapp/screens/open_file_pdf.dart';
+import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -97,7 +99,10 @@ class GetNotice {
     return parseClassNoticeDetail(body);
   }
 
-  Future<void> shareFile(MapEntry<String, String> entry) async {
+  Future<void> shareFile(
+    MapEntry<String, String> entry,
+    BuildContext context,
+  ) async {
     final response = await getFile(
       cookies![0],
       cookies![1],
@@ -107,9 +112,22 @@ class GetNotice {
     if (contentType != 'text/html;charset=utf-8') {
       final directory = await getApplicationDocumentsDirectory();
       final file = File('${directory.path}/${entry.key}');
-      await file.writeAsBytes(response.bodyBytes);
-      final xfile = [XFile(file.path)];
-      await Share.shareXFiles(xfile);
+      if (entry.key.contains('.pdf')) {
+        await file.writeAsBytes(response.bodyBytes).then((value) {
+          Navigator.of(context).push<void>(
+            MaterialPageRoute(
+              builder: (BuildContext ctx) => OpenFilePdf(
+                title: entry.key,
+                file: file,
+              ),
+            ),
+          );
+        });
+      } else {
+        await file.writeAsBytes(response.bodyBytes);
+        final xfile = [XFile(file.path)];
+        await Share.shareXFiles(xfile);
+      }
     } else {
       throw Exception('[shareFile]データの取得に失敗しました');
     }

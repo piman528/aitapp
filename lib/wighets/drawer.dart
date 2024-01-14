@@ -1,8 +1,9 @@
+import 'package:aitapp/provider/filter_provider.dart';
 import 'package:aitapp/provider/id_password_provider.dart';
 import 'package:aitapp/screens/contacts.dart';
 import 'package:aitapp/screens/links.dart';
 import 'package:aitapp/screens/login.dart';
-import 'package:aitapp/screens/open_pdf.dart';
+import 'package:aitapp/screens/open_asset_pdf.dart';
 import 'package:aitapp/screens/settings.dart';
 import 'package:aitapp/screens/syllabus_search.dart';
 import 'package:flutter/material.dart';
@@ -27,7 +28,7 @@ class MainDrawer extends ConsumerWidget {
                 onTap: () {
                   Navigator.of(context).push(
                     MaterialPageRoute<void>(
-                      builder: (ctx) => const OpenPdf(
+                      builder: (ctx) => const OpenAssetPdf(
                         title: '行事予定',
                         path: 'assets/pdfs/annual-events.pdf',
                       ),
@@ -41,7 +42,7 @@ class MainDrawer extends ConsumerWidget {
                 onTap: () {
                   Navigator.of(context).push(
                     MaterialPageRoute<void>(
-                      builder: (ctx) => const OpenPdf(
+                      builder: (ctx) => const OpenAssetPdf(
                         title: '学生便覧',
                         path: 'assets/pdfs/binran_2023.pdf',
                       ),
@@ -55,7 +56,7 @@ class MainDrawer extends ConsumerWidget {
                 onTap: () {
                   Navigator.of(context).push(
                     MaterialPageRoute<void>(
-                      builder: (ctx) => const OpenPdf(
+                      builder: (ctx) => const OpenAssetPdf(
                         title: '学内マップ',
                         path: 'assets/pdfs/guide-campus-yakusa.pdf',
                       ),
@@ -66,12 +67,13 @@ class MainDrawer extends ConsumerWidget {
               DrawerTile(
                 icon: Icons.search,
                 title: 'シラバス検索',
-                onTap: () {
-                  Navigator.of(context).push(
+                onTap: () async {
+                  await Navigator.of(context).push(
                     MaterialPageRoute<void>(
-                      builder: (ctx) => const SyllabusSearchScreen(),
+                      builder: (ctx) => SyllabusSearchScreen(),
                     ),
                   );
+                  ref.read(selectFiltersProvider.notifier).state = null;
                 },
               ),
               DrawerTile(
