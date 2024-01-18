@@ -130,7 +130,7 @@ class ClassGridContainer extends StatelessWidget {
         ),
         width: double.infinity,
         margin: const EdgeInsets.all(2),
-        height: 80,
+        height: 82,
         padding: const EdgeInsets.all(4),
         alignment: Alignment.topCenter,
         child: clas != null

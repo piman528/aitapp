@@ -430,17 +430,20 @@ List<ClassSyllabus> parseSyllabus(String body) {
     for (final text in texts) {
       switch (c) {
         case 3: //教科
-          subject = text;
+          subject = text.trim();
         case 4: // 教員
-          teacher = text;
+          teacher = text.trim();
         case 10: // 単位数
           unitsNumber = int.parse(text);
         case 9: //区分
-          classification = text == '選必'
-              ? Classification.requiredElective
-              : text == '選択'
-                  ? Classification.choice
-                  : Classification.required;
+          switch (text.trim()) {
+            case '選必':
+              classification = Classification.requiredElective;
+            case '選択':
+              classification = Classification.choice;
+            case '必修':
+              classification = Classification.required;
+          }
       }
       c++;
     }
