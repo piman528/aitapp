@@ -102,7 +102,7 @@ class ClassGridContainer extends StatelessWidget {
   final Class? clas;
 
   String alphanumericToHalfLength(String input) {
-    return input.replaceAllMapped(RegExp(r'[Ａ-Ｚａ-ｚ０-９]'), (match) {
+    return input.replaceAllMapped(RegExp(r'[^\x00-\x7F]'), (match) {
       return String.fromCharCode(match.group(0)!.codeUnitAt(0) - 0xfee0);
     });
   }

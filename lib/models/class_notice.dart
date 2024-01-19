@@ -7,6 +7,7 @@ class ClassNotice {
     this.subject,
     this.makeupClassAt,
     this.url,
+    this.files,
   );
   // 発信者
   final String sender;
@@ -22,4 +23,6 @@ class ClassNotice {
   final String makeupClassAt;
 
   final List<String> url;
+
+  final Map<String, String>? files;
 }

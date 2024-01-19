@@ -55,7 +55,16 @@ List<ClassNotice> parseClassNotice(String body) {
       c++;
     }
     classNoticeList.add(
-      ClassNotice(sender, title, content, sendAt, subject, makeupClassAt, []),
+      ClassNotice(
+        sender,
+        title,
+        content,
+        sendAt,
+        subject,
+        makeupClassAt,
+        [],
+        {'': ''},
+      ),
     );
   }
   return classNoticeList;
@@ -69,16 +78,17 @@ ClassNotice parseClassNoticeDetail(String body) {
     throw Exception('[parseClassNoticeDetail]データの取得に失敗しました');
   }
   final texts = <String>[];
-  var isMaincontent = false;
+  var mainContent = 0;
+  final fileMap = <String, String>{};
   for (final tr in topStorytitle) {
-    if (!isMaincontent) {
+    if (mainContent == 0 || mainContent == 2) {
       final contents = tr.text!.replaceAll('	', '').trim().split('\n');
       for (final text in contents) {
         if (text != '') {
           texts.add(text);
         }
       }
-    } else {
+    } else if (mainContent == 1) {
       final maincontents = tr.querySelector('td > div')!.nodes;
       for (final mainContent in maincontents) {
         if (mainContent.nodeType == html.Node.ELEMENT_NODE) {
@@ -90,10 +100,31 @@ ClassNotice parseClassNoticeDetail(String body) {
           }
         }
       }
-      isMaincontent = false;
+      mainContent = 0;
     }
-    if (texts.last == '内容') {
-      isMaincontent = true;
+    if (mainContent == 2) {
+      if (texts.last != '参考URL') {
+        final maincontents = tr.querySelectorAll('td > div');
+        for (final childContents in maincontents) {
+          for (final content in childContents.querySelectorAll('div > a')) {
+            fileMap.addEntries(
+              [
+                MapEntry(
+                  content.text!.trim(),
+                  content.attributes['href']!,
+                ),
+              ],
+            );
+          }
+        }
+      }
+      mainContent = 0;
+    }
+    switch (texts.last) {
+      case '内容':
+        mainContent = 1;
+      case 'ファイル':
+        mainContent = 2;
     }
   }
   final subject = texts[texts.indexOf('授業科目') + 1];
@@ -110,7 +141,7 @@ ClassNotice parseClassNoticeDetail(String body) {
   for (var i = texts.indexOf('参考URL') + 1; i < texts.indexOf('連絡日時'); i++) {
     url.add(texts[i]);
   }
-  return ClassNotice(sender, title, content, sendAt, subject, '', url);
+  return ClassNotice(sender, title, content, sendAt, subject, '', url, fileMap);
 }
 
 List<UnivNotice> parseUnivNotice(String body) {

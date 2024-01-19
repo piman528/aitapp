@@ -2,12 +2,15 @@ import 'dart:io';
 
 import 'package:aitapp/models/class_notice.dart';
 import 'package:aitapp/models/get_notice.dart';
+import 'package:aitapp/provider/file_downloading_provider.dart';
 import 'package:async/async.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:url_launcher/link.dart';
 
-class ClassNoticeDetailScreen extends HookWidget {
+class ClassNoticeDetailScreen extends HookConsumerWidget {
   const ClassNoticeDetailScreen({
     super.key,
     required this.index,
@@ -18,7 +21,7 @@ class ClassNoticeDetailScreen extends HookWidget {
   final GetNotice getNotice;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final regExp = useRef(
       RegExp(
         r"(http(s)?:\/\/[a-zA-Z0-9-.!'()*;/?:@&=+$,%_#]+)",
@@ -46,6 +49,20 @@ class ClassNoticeDetailScreen extends HookWidget {
       } on Exception catch (err) {
         error.value = err.toString();
       }
+    }
+
+    Future<void> fileShare(MapEntry<String, String> entries) async {
+      ref.read(fileDownloadingProvider.notifier).state = true;
+      try {
+        await getNotice.shareFile(entries, context);
+      } on SocketException {
+        await Fluttertoast.showToast(msg: 'インターネットに接続できません');
+      } on Exception catch (err) {
+        await Fluttertoast.showToast(msg: err.toString());
+      }
+
+      await Future<void>.delayed(const Duration(milliseconds: 500));
+      ref.read(fileDownloadingProvider.notifier).state = false;
     }
 
     useEffect(
@@ -128,6 +145,26 @@ class ClassNoticeDetailScreen extends HookWidget {
                             onPressed: followLink,
                             child: Text(url),
                           ),
+                        ),
+                      },
+                    },
+                    if (classNotice.value!.files!.isNotEmpty) ...{
+                      const Text(
+                        '添付ファイル',
+                        style: TextStyle(
+                          fontSize: 17,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      for (final entries
+                          in classNotice.value!.files!.entries) ...{
+                        TextButton(
+                          onPressed: ref.watch(fileDownloadingProvider)
+                              ? null
+                              : () {
+                                  fileShare(entries);
+                                },
+                          child: Text(entries.key),
                         ),
                       },
                     },

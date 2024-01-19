@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:aitapp/provider/life_cycle_provider.dart';
+import 'package:aitapp/provider/file_downloading_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -20,11 +20,6 @@ class OpenFilePdf extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isSharefile = useState(false);
-    ref.listen<AppLifecycleState>(appLifecycleProvider, (previous, next) {
-      if (next == AppLifecycleState.resumed) {
-        isSharefile.value = false;
-      }
-    });
     return Scaffold(
       appBar: AppBar(
         scrolledUnderElevation: 0,
@@ -35,9 +30,15 @@ class OpenFilePdf extends HookConsumerWidget {
             onPressed: isSharefile.value
                 ? null
                 : () async {
+                    ref.read(fileDownloadingProvider.notifier).state = true;
                     isSharefile.value = true;
                     final xfile = [XFile(file.path)];
                     await Share.shareXFiles(xfile);
+                    await Future<void>.delayed(
+                      const Duration(milliseconds: 500),
+                    );
+                    isSharefile.value = false;
+                    ref.read(fileDownloadingProvider.notifier).state = false;
                   },
           ),
         ],
