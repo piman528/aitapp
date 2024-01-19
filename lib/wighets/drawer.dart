@@ -95,7 +95,7 @@ class MainDrawer extends ConsumerWidget {
                   launchUrl(
                     mode: LaunchMode.externalApplication,
                     Uri.parse(
-                      'https://cms.aitech.ac.jp/',
+                      'https://cms.aitech.ac.jp/my/index.php',
                     ),
                   );
                 },
