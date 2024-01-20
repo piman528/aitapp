@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:aitapp/const.dart';
 import 'package:aitapp/infrastructure/next_departure.dart';
+import 'package:aitapp/screens/timetable_detail.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:intl/intl.dart';
@@ -31,7 +32,16 @@ class TimeTableCard extends StatelessWidget {
                 ),
               ),
               TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.of(context).push<void>(
+                    MaterialPageRoute(
+                      builder: (ctx) => TimeTableDetailScreen(
+                        vehicle: vehicle,
+                        destination: destination,
+                      ),
+                    ),
+                  );
+                },
                 child: const Text(
                   '時刻表を見る',
                   style: TextStyle(fontSize: 16),
@@ -129,7 +139,7 @@ class TimeCard extends HookWidget {
           remainTime.inSeconds < 60 ? '' : '${remainTime.inMinutes % 60}分';
       final remainSeconds = '${remainTime.inSeconds % 60}秒';
       return Container(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
         decoration: BoxDecoration(
           boxShadow: [
             BoxShadow(

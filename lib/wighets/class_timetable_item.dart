@@ -144,6 +144,8 @@ class ClassGridContainer extends StatelessWidget {
                       color: Theme.of(context).colorScheme.onSecondaryContainer,
                       fontWeight: FontWeight.bold,
                     ),
+                    maxLines: 4,
+                    overflow: TextOverflow.ellipsis,
                   ),
                   Container(
                     padding: const EdgeInsets.all(2),
