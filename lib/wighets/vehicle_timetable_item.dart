@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:intl/intl.dart';
 
-class TimeTableCard extends StatelessWidget {
+class TimeTableCard extends HookWidget {
   const TimeTableCard({
     super.key,
     required this.vehicle,
@@ -18,6 +18,10 @@ class TimeTableCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final now = useRef(DateTime.now());
+    final todayDaiya = useRef<String?>(
+      dayDaiya['${now.value.year}-${now.value.month}-${now.value.day}'],
+    );
     return Expanded(
       child: Column(
         children: [
@@ -52,33 +56,37 @@ class TimeTableCard extends StatelessWidget {
           const SizedBox(
             height: 5,
           ),
-          Expanded(
-            child: ListView(
-              children: [
-                TimeCard(
-                  vehicle: vehicle,
-                  destination: destination,
-                  order: 0,
+          todayDaiya.value != null
+              ? Expanded(
+                  child: ListView(
+                    children: [
+                      TimeCard(
+                        vehicle: vehicle,
+                        destination: destination,
+                        order: 0,
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      TimeCard(
+                        vehicle: vehicle,
+                        destination: destination,
+                        order: 1,
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      TimeCard(
+                        vehicle: vehicle,
+                        destination: destination,
+                        order: 2,
+                      ),
+                    ],
+                  ),
+                )
+              : const Center(
+                  child: Text('運行はありません'),
                 ),
-                const SizedBox(
-                  height: 10,
-                ),
-                TimeCard(
-                  vehicle: vehicle,
-                  destination: destination,
-                  order: 1,
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                TimeCard(
-                  vehicle: vehicle,
-                  destination: destination,
-                  order: 2,
-                ),
-              ],
-            ),
-          ),
         ],
       ),
     );
