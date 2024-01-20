@@ -24,7 +24,7 @@ class ClassTime extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 80,
+      height: 82,
       margin: const EdgeInsets.all(2),
       alignment: Alignment.centerLeft,
       child: Column(
