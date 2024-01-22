@@ -51,6 +51,7 @@ dependencies:
   flutter_hooks: ^0.20.3
   hooks_riverpod: ^2.4.9
   async: ^2.11.0
+  webview_flutter: ^4.4.4
 
 dev_dependencies:
   flutter_launcher_icons:

@@ -6,6 +6,7 @@ import 'package:aitapp/screens/login.dart';
 import 'package:aitapp/screens/open_asset_pdf.dart';
 import 'package:aitapp/screens/settings.dart';
 import 'package:aitapp/screens/syllabus_search.dart';
+import 'package:aitapp/screens/webview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -96,6 +97,17 @@ class MainDrawer extends ConsumerWidget {
                     mode: LaunchMode.externalApplication,
                     Uri.parse(
                       'https://cms.aitech.ac.jp/my/index.php',
+                    ),
+                  );
+                },
+              ),
+              DrawerTile(
+                icon: Icons.link,
+                title: 'webView',
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute<void>(
+                      builder: (ctx) => const WebViewScreen(),
                     ),
                   );
                 },
