@@ -1,7 +1,6 @@
 import 'package:aitapp/infrastructure/access_lcan.dart';
 import 'package:aitapp/provider/id_password_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -13,65 +12,69 @@ class WebViewScreen extends StatefulHookConsumerWidget {
 }
 
 class _WebViewScreenState extends ConsumerState<WebViewScreen> {
+  late final WebViewController controller;
+  late final WebViewCookieManager cookieManager;
+
+  /// 初期状態を設定
   @override
-  Widget build(BuildContext context) {
-    final controller = useState<WebViewController?>(null);
-    final cookieManager = useRef(WebViewCookieManager());
+  void initState() {
+    super.initState();
+    controller = WebViewController();
+    cookieManager = WebViewCookieManager();
+    getLoginCookie();
+  }
 
-    Future<void> getLoginCookie() async {
-      final cookies = await getCookie();
-      final identity = ref.read(idPasswordProvider);
-      final isLogin = await loginLcam(
-        identity[0],
-        identity[1],
-        cookies[0],
-        cookies[1],
-      );
-      print(cookies[0].split('=')[1]);
-      print(cookies[1].split('=')[1]);
-      cookieManager.value.setCookie(
-        WebViewCookie(
-            name: 'JSESSIONID',
-            value: cookies[0].split('=')[1],
-            domain:
-                'https://lcam.aitech.ac.jp/portalv2/smartphone/smartPhoneHome/nextPage/entryRegist/'),
-      );
-      cookieManager.value.setCookie(
-        WebViewCookie(
-            name: 'LiveApps-Cookie',
-            value: cookies[1].split('=')[1],
-            domain:
-                'https://lcam.aitech.ac.jp/portalv2/smartphone/smartPhoneHome/nextPage/entryRegist/'),
-      );
-      cookieManager.value.setCookie(
-        WebViewCookie(
-            name: 'L-CamApp',
-            value: 'Y',
-            domain:
-                'https://lcam.aitech.ac.jp/portalv2/smartphone/smartPhoneHome/nextPage/entryRegist/'),
-      );
-      controller.value = WebViewController()
-        ..loadRequest(
-          Uri.parse(
-              'https://lcam.aitech.ac.jp/portalv2/smartphone/smartPhoneHome/nextPage/entryRegist/'),
-        );
-    }
+  Future<void> getLoginCookie() async {
+    final cookies = await getCookie();
+    final identity = ref.read(idPasswordProvider);
+    await loginLcam(
+      identity[0],
+      identity[1],
+      cookies[0],
+      cookies[1],
+    );
+    print(cookies[0].split('=')[1]);
+    print(cookies[1].split('=')[1]);
 
-    useEffect(
-      () {
-        getLoginCookie();
-        return null;
-      },
-      [],
+    cookieManager.setCookie(
+      WebViewCookie(
+        name: 'JSESSIONID',
+        value: cookies[0].split('=')[1],
+        domain:
+            'https://lcam.aitech.ac.jp/portalv2/smartphone/smartPhoneHome/nextPage/entryRegist/',
+      ),
     );
 
+    cookieManager.setCookie(
+      WebViewCookie(
+        name: 'LiveApps-Cookie',
+        value: cookies[1].split('=')[1],
+        domain:
+            'https://lcam.aitech.ac.jp/portalv2/smartphone/smartPhoneHome/nextPage/entryRegist/',
+      ),
+    );
+    cookieManager.setCookie(
+      WebViewCookie(
+        name: 'L-CamApp',
+        value: 'Y',
+        domain:
+            'https://lcam.aitech.ac.jp/portalv2/smartphone/smartPhoneHome/nextPage/entryRegist/',
+      ),
+    );
+    controller.loadRequest(
+      Uri.parse(
+        'https://lcam.aitech.ac.jp/portalv2/smartphone/smartPhoneHome/nextPage/entryRegist/',
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
-      body: controller.value != null
-          ? WebViewWidget(
-              controller: controller.value!,
-            )
-          : const SizedBox(),
+      body: WebViewWidget(
+        controller: controller,
+      ),
     );
   }
 }
