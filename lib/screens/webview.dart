@@ -35,7 +35,7 @@ class _WebViewScreenState extends ConsumerState<WebViewScreen> {
       );
       print(cookies[0].split('=')[1]);
       print(cookies[1].split('=')[1]);
-      // getEntryRegist(cookies[0], cookies[1]);
+      await cookieManager.deleteAllCookies();
 
       await cookieManager.setCookie(
         url: url,
