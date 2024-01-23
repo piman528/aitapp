@@ -1,12 +1,12 @@
 import 'package:aitapp/provider/filter_provider.dart';
 import 'package:aitapp/provider/id_password_provider.dart';
 import 'package:aitapp/screens/contacts.dart';
+import 'package:aitapp/screens/course_registration.dart';
 import 'package:aitapp/screens/links.dart';
 import 'package:aitapp/screens/login.dart';
 import 'package:aitapp/screens/open_asset_pdf.dart';
 import 'package:aitapp/screens/settings.dart';
 import 'package:aitapp/screens/syllabus_search.dart';
-import 'package:aitapp/screens/webview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -101,17 +101,6 @@ class MainDrawer extends ConsumerWidget {
                   );
                 },
               ),
-              DrawerTile(
-                icon: Icons.link,
-                title: 'webView',
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute<void>(
-                      builder: (ctx) => const WebViewScreen(),
-                    ),
-                  );
-                },
-              ),
               const Divider(),
               DrawerTile(
                 icon: Icons.link,
@@ -131,6 +120,17 @@ class MainDrawer extends ConsumerWidget {
                   Navigator.of(context).push(
                     MaterialPageRoute<void>(
                       builder: (ctx) => const Contacts(),
+                    ),
+                  );
+                },
+              ),
+              DrawerTile(
+                icon: Icons.pending_actions,
+                title: '履修処理',
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute<void>(
+                      builder: (ctx) => const CourseRegistration(),
                     ),
                   );
                 },
