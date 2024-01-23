@@ -32,7 +32,7 @@ class CourseRegistration extends StatelessWidget {
                   builder: (ctx) => const WebViewScreen(
                     title: '履修取消',
                     url:
-                        'https://lcam.aitech.ac.jp/portalv2/smartphone/smartPhoneHome/nextPage/kmgCou04/ ',
+                        'https://lcam.aitech.ac.jp/portalv2/smartphone/smartPhoneHome/nextPage/kmgCou04/',
                   ),
                 ),
               );
