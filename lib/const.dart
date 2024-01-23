@@ -1,4 +1,6 @@
 import 'package:aitapp/models/contact.dart';
+import 'package:aitapp/models/web_access.dart';
+import 'package:flutter/material.dart';
 
 const Map<DayOfWeek, String> dayOfWeekToString = {
   DayOfWeek.monday: '月',
@@ -637,3 +639,54 @@ const Map<String, String> links = {
   'ハラスメントへの取り組み': 'https://www.ait.ac.jp/campuslife/disasters/',
   '緊急災害時の対応': 'https://www.ait.ac.jp/campuslife/disasters/',
 };
+
+const List<WebAccessPage> webAccessPages = [
+  WebAccessPage(
+    title: '履修登録',
+    icon: Icons.event,
+    url:
+        'https://lcam.aitech.ac.jp/portalv2/smartphone/smartPhoneHome/nextPage/entryRegist/',
+  ),
+  WebAccessPage(
+    title: '履修取消',
+    icon: Icons.event,
+    url:
+        'https://lcam.aitech.ac.jp/portalv2/smartphone/smartPhoneHome/nextPage/kmgCou04/',
+  ),
+  WebAccessPage(
+    title: '抽選履修登録',
+    icon: Icons.event,
+    url:
+        'https://lcam.aitech.ac.jp/portalv2/smartphone/smartPhoneHome/nextPage/lotteryFirstArrival/',
+  ),
+  WebAccessPage(
+    title: '抽選履修登録結果',
+    icon: Icons.event,
+    url:
+        'https://lcam.aitech.ac.jp/portalv2/smartphone/smartPhoneHome/nextPage/lotteryRegistResult/',
+  ),
+  WebAccessPage(
+    title: '授業アンケート',
+    icon: Icons.assignment,
+    url:
+        'https://lcam.aitech.ac.jp/portalv2/smartphone/smartPhoneContactNotice/nextPage/classEnquete/',
+  ),
+  WebAccessPage(
+    title: '授業評価アンケート',
+    icon: Icons.assignment,
+    url:
+        'https://lcam.aitech.ac.jp/portalv2/smartphone/smartPhoneContactNotice/nextPage/courseEvaluation/',
+  ),
+  WebAccessPage(
+    title: '学内アンケート',
+    icon: Icons.assignment,
+    url:
+        'https://lcam.aitech.ac.jp/portalv2/smartphone/smartPhoneContactNotice/nextPage/enqueteContact/',
+  ),
+  WebAccessPage(
+    title: '成績照会',
+    icon: Icons.bar_chart,
+    url:
+        'https://lcam.aitech.ac.jp/portalv2/smartphone/smartPhonePerformanceInfor/nextPage/performance/',
+  ),
+];

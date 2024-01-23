@@ -103,6 +103,17 @@ class MainDrawer extends ConsumerWidget {
               ),
               const Divider(),
               DrawerTile(
+                icon: Icons.event,
+                title: '履修/アンケート/成績',
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute<void>(
+                      builder: (ctx) => const CourseRegistration(),
+                    ),
+                  );
+                },
+              ),
+              DrawerTile(
                 icon: Icons.link,
                 title: '各種リンク',
                 onTap: () {
@@ -120,17 +131,6 @@ class MainDrawer extends ConsumerWidget {
                   Navigator.of(context).push(
                     MaterialPageRoute<void>(
                       builder: (ctx) => const Contacts(),
-                    ),
-                  );
-                },
-              ),
-              DrawerTile(
-                icon: Icons.pending_actions,
-                title: '履修処理',
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute<void>(
-                      builder: (ctx) => const CourseRegistration(),
                     ),
                   );
                 },
