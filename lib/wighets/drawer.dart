@@ -1,3 +1,4 @@
+import 'package:aitapp/const.dart';
 import 'package:aitapp/provider/filter_provider.dart';
 import 'package:aitapp/provider/id_password_provider.dart';
 import 'package:aitapp/screens/contacts.dart';
@@ -8,12 +9,50 @@ import 'package:aitapp/screens/open_asset_pdf.dart';
 import 'package:aitapp/screens/settings.dart';
 import 'package:aitapp/screens/syllabus_search.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class MainDrawer extends ConsumerWidget {
   const MainDrawer({super.key});
+
+  Future<void> loginCampus({
+    required WidgetRef ref,
+    required bool isMoodle,
+  }) async {
+    late final InAppWebViewController webviewcontroller;
+    late final HeadlessInAppWebView headlessWebView;
+    final identity = ref.read(idPasswordProvider);
+    final now = DateTime.now();
+    headlessWebView = HeadlessInAppWebView(
+      initialFile: 'assets/html/index.html',
+      onWebViewCreated: (InAppWebViewController webViewController) {
+        webviewcontroller = webViewController;
+        // Javascriptからの処理を登録
+        webViewController.addJavaScriptHandler(
+          handlerName: 'return',
+          callback: (ciphertext) {
+            debugPrint('来たよ $ciphertext');
+            launchUrl(
+              mode: LaunchMode.externalApplication,
+              Uri.parse(
+                'https://lcam.aitech.ac.jp/portalv2/login/preLogin/preSpAppSso?spAppSso=Y&selectLocale=ja&para=$ciphertext',
+              ),
+            );
+            headlessWebView.dispose();
+          },
+        );
+      },
+      onLoadStop: (controller, url) async {
+        await webviewcontroller.evaluateJavascript(
+          source:
+              "getPara('${now.year}${now.month}${now.day}${now.hour}${now.minute}','${identity[0]}','${identity[1]}','${isMoodle == true ? 'Y' : 'N'}','$blowfishKey');",
+        );
+      },
+    );
+    await headlessWebView.run();
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -80,25 +119,15 @@ class MainDrawer extends ConsumerWidget {
               DrawerTile(
                 icon: Icons.link,
                 title: 'L-Cam',
-                onTap: () {
-                  launchUrl(
-                    mode: LaunchMode.externalApplication,
-                    Uri.parse(
-                      'https://lcam.aitech.ac.jp/portalv2/',
-                    ),
-                  );
+                onTap: () async {
+                  await loginCampus(ref: ref, isMoodle: false);
                 },
               ),
               DrawerTile(
                 icon: Icons.link,
                 title: 'Moodle',
-                onTap: () {
-                  launchUrl(
-                    mode: LaunchMode.externalApplication,
-                    Uri.parse(
-                      'https://cms.aitech.ac.jp/my/index.php',
-                    ),
-                  );
+                onTap: () async {
+                  await loginCampus(ref: ref, isMoodle: true);
                 },
               ),
               const Divider(),

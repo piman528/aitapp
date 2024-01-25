@@ -83,6 +83,8 @@ flutter:
     - assets/pdfs/annual-events.pdf
     - assets/pdfs/binran_2023.pdf
     - assets/pdfs/guide-campus-yakusa.pdf
+    - assets/html/index.html
+    # - assets/html/blowfish.js
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 

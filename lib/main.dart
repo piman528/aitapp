@@ -14,7 +14,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // システムのproxy設定を取得する.
   final proxy = await SystemProxy.getProxySettings();
-  print('=== proxy: $proxy');
+  debugPrint('=== proxy: $proxy');
   // HttpOverridesの派生クラスをHttpOverrides.globalに指定する.
   HttpOverrides.global = ProxiedHttpOverrides(
     proxy?['host'],

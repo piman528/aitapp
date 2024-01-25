@@ -1,8 +1,9 @@
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 
 Future<Response> getSyllabusSession() async {
-  print('getSyllabusSession');
+  debugPrint('getSyllabusSession');
   final headers = {
     'Sec-Fetch-Site': 'none',
     'Connection': 'keep-alive',
@@ -36,7 +37,7 @@ Future<String> getSyllabusListBody({
   String? searchWord,
   String? folder,
 }) async {
-  print('getSyllabusListBody');
+  debugPrint('getSyllabusListBody');
   final headers = {
     'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
     'Sec-Fetch-Site': 'same-origin',
@@ -79,7 +80,7 @@ Future<String> getSyllabusListBody({
 }
 
 Future<String> getSyllabus(String detailUrl, String jSessionId) async {
-  print('getSyllabus');
+  debugPrint('getSyllabus');
   final headers = {
     'Sec-Fetch-Site': 'same-origin',
     'Cookie': jSessionId,
