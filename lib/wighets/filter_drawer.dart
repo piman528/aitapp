@@ -52,7 +52,25 @@ class FilterDrawer extends HookConsumerWidget {
           padding: const EdgeInsets.all(8),
           child: Column(
             children: [
-              const Text('絞り込み'),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      selectFaculty.value = null;
+                      selectCampus.value = null;
+                      selectSemester.value = null;
+                      selectWeek.value = null;
+                      selectHour.value = null;
+                    },
+                    child: const Text('クリア'),
+                  ),
+                  Text(
+                    '絞り込み',
+                    style: Theme.of(context).textTheme.bodyLarge,
+                  ),
+                ],
+              ),
               const Divider(),
               ListTile(
                 title: const Text('年度'),

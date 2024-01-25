@@ -68,7 +68,7 @@ class App extends ConsumerWidget {
         GlobalCupertinoLocalizations.delegate,
       ],
 
-      // localeに英語と日本語を登録する
+      // localeに日本語を登録する
       supportedLocales: const [
         Locale('ja'),
       ],
