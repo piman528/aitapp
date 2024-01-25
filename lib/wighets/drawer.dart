@@ -11,6 +11,7 @@ import 'package:aitapp/screens/syllabus_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -24,7 +25,6 @@ class MainDrawer extends ConsumerWidget {
     late final InAppWebViewController webviewcontroller;
     late final HeadlessInAppWebView headlessWebView;
     final identity = ref.read(idPasswordProvider);
-    final now = DateTime.now();
     headlessWebView = HeadlessInAppWebView(
       initialFile: 'assets/html/index.html',
       onWebViewCreated: (InAppWebViewController webViewController) {
@@ -33,11 +33,17 @@ class MainDrawer extends ConsumerWidget {
         webViewController.addJavaScriptHandler(
           handlerName: 'return',
           callback: (ciphertext) {
-            debugPrint('来たよ $ciphertext');
             launchUrl(
               mode: LaunchMode.externalApplication,
-              Uri.parse(
-                'https://lcam.aitech.ac.jp/portalv2/login/preLogin/preSpAppSso?spAppSso=Y&selectLocale=ja&para=$ciphertext',
+              Uri(
+                scheme: 'https',
+                host: 'lcam.aitech.ac.jp',
+                path: 'portalv2/login/preLogin/preSpAppSso',
+                queryParameters: {
+                  'spAppSso': 'Y',
+                  'selectLocale': 'ja',
+                  'para': ciphertext,
+                },
               ),
             );
             headlessWebView.dispose();
@@ -47,7 +53,7 @@ class MainDrawer extends ConsumerWidget {
       onLoadStop: (controller, url) async {
         await webviewcontroller.evaluateJavascript(
           source:
-              "getPara('${now.year}${now.month}${now.day}${now.hour}${now.minute}','${identity[0]}','${identity[1]}','${isMoodle == true ? 'Y' : 'N'}','$blowfishKey');",
+              "getPara('${DateFormat('yyyyMMddHm').format(DateTime.now())}','${identity[0]}','${identity[1]}','${isMoodle == true ? 'Y' : 'N'}','$blowfishKey');",
         );
       },
     );

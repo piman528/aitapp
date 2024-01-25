@@ -434,7 +434,7 @@ a<!DOCTYPE html>
     </script>
     <script>
         function getPara(now,userId,password,moodle,key) {
-            var para = 'date【=】' + now + '【&】userID【=】' + userId + '【&】password【=】' + password + '【&】clientLocationUrl【=】' + 'https://https://lcam.aitech.ac.jp/portalv2/login/login/smartPhoneLogin' + '【&】moodle【=】' + moodle;
+            var para = 'date【=】' + now + '【&】userID【=】' + userId + '【&】password【=】' + password + '【&】clientLocationUrl【=】' + 'https://lcam.aitech.ac.jp/' + '【&】moodle【=】' + moodle;
             var bf = new Blowfish(key);
             var ciphertext = bf.encrypt64(encodeURIComponent(para));
             window.flutter_inappwebview.callHandler('return', ciphertext);
