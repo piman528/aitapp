@@ -20,17 +20,14 @@ class SyllabusSearchScreen extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final controller = useTextEditingController();
     final syllabusList = useState<Widget>(const SizedBox());
-    final searchWord = useRef<String?>(null);
+    final typeWord = useState('');
 
     void onSubmit(
       //検索処理
-      String? word,
+      String word,
     ) {
-      if (word != searchWord.value) {
-        searchWord.value = word;
-      }
       syllabusList.value = SyllabusSearchList(
-        searchtext: searchWord.value,
+        searchtext: typeWord.value,
       );
     }
 
@@ -40,7 +37,7 @@ class SyllabusSearchScreen extends HookConsumerWidget {
       //フィルターが変化
       WidgetsBinding.instance.addPostFrameCallback((_) {
         ref.read(selectFiltersProvider.notifier).state = selectFilters;
-        onSubmit(searchWord.value);
+        onSubmit(typeWord.value);
       });
     }
 
@@ -62,6 +59,9 @@ class SyllabusSearchScreen extends HookConsumerWidget {
 
     useEffect(
       () {
+        controller.addListener(() {
+          typeWord.value = controller.text;
+        });
         if (ref.read(syllabusFiltersProvider) == null) {
           getFilters();
         } else {

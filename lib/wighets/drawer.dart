@@ -72,7 +72,7 @@ class MainDrawer extends ConsumerWidget {
       child: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(8),
-          child: Column(
+          child: ListView(
             children: [
               DrawerTile(
                 icon: Icons.calendar_today,

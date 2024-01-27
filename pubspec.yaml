@@ -43,10 +43,8 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/pdfs/annual-events.pdf
-    - assets/pdfs/binran_2023.pdf
-    - assets/pdfs/guide-campus-yakusa.pdf
-    - assets/html/index.html
+    - assets/pdfs/
+    - assets/html/
 
 flutter_icons:       
   android: true
