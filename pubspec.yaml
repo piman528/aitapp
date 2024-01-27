@@ -24,8 +24,8 @@ dependencies:
   intl: ^0.18.0
   package_info: ^2.0.2
   path_provider: ^2.1.1
-  shared_preferences: ^2.2.2
   share_plus: ^7.2.1
+  shared_preferences: ^2.2.2
   syncfusion_flutter_pdfviewer: ^24.1.41
   system_proxy: ^0.1.0
   universal_html:
