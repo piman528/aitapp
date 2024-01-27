@@ -15,8 +15,6 @@ class WebViewScreen extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final load = useState(false);
     final cookieManager = CookieManager.instance();
-    final expiresDate =
-        DateTime.now().add(const Duration(days: 3)).millisecondsSinceEpoch;
     final webUrl = WebUri(
       url,
     );
@@ -36,21 +34,18 @@ class WebViewScreen extends HookConsumerWidget {
         url: webUrl,
         name: 'JSESSIONID',
         value: cookies[0].split('=')[1],
-        expiresDate: expiresDate,
         isSecure: true,
       );
       await cookieManager.setCookie(
         url: webUrl,
         name: 'LiveApps-Cookie',
         value: cookies[1].split('=')[1],
-        expiresDate: expiresDate,
         isSecure: true,
       );
       await cookieManager.setCookie(
         url: webUrl,
         name: 'L-CamApp',
         value: 'Y',
-        expiresDate: expiresDate,
         isSecure: true,
       );
       load.value = true;

@@ -1,6 +1,8 @@
 import 'package:aitapp/const.dart';
 import 'package:aitapp/provider/filter_provider.dart';
 import 'package:aitapp/provider/id_password_provider.dart';
+import 'package:aitapp/provider/last_login_time_provider.dart';
+import 'package:aitapp/provider/link_tap_provider.dart';
 import 'package:aitapp/screens/contacts.dart';
 import 'package:aitapp/screens/course_registration.dart';
 import 'package:aitapp/screens/links.dart';
@@ -53,7 +55,7 @@ class MainDrawer extends ConsumerWidget {
       onLoadStop: (controller, url) async {
         await webviewcontroller.evaluateJavascript(
           source:
-              "getPara('${DateFormat('yyyyMMddHm').format(DateTime.now())}','${identity[0]}','${identity[1]}','${isMoodle == true ? 'Y' : 'N'}','$blowfishKey');",
+              "getPara('${DateFormat('yyyyMMddHm').format(DateTime.now().toUtc().add(const Duration(hours: 9)))}','${identity[0]}','${identity[1]}','${isMoodle ? 'Y' : 'N'}','$blowfishKey');",
         );
       },
     );
@@ -126,6 +128,7 @@ class MainDrawer extends ConsumerWidget {
                 icon: Icons.link,
                 title: 'L-Cam',
                 onTap: () async {
+                  ref.read(linkTapProvider.notifier).state = true;
                   await loginCampus(ref: ref, isMoodle: false);
                 },
               ),
@@ -133,6 +136,7 @@ class MainDrawer extends ConsumerWidget {
                 icon: Icons.link,
                 title: 'Moodle',
                 onTap: () async {
+                  ref.read(linkTapProvider.notifier).state = true;
                   await loginCampus(ref: ref, isMoodle: true);
                 },
               ),
@@ -141,11 +145,17 @@ class MainDrawer extends ConsumerWidget {
                 icon: Icons.event,
                 title: '履修/アンケート/成績',
                 onTap: () {
-                  Navigator.of(context).push(
+                  Navigator.of(context)
+                      .push(
                     MaterialPageRoute<void>(
                       builder: (ctx) => const CourseRegistration(),
                     ),
-                  );
+                  )
+                      .then((value) {
+                    ref
+                        .read(lastLoginTimeProvider.notifier)
+                        .updateLastLoginTime();
+                  });
                 },
               ),
               DrawerTile(

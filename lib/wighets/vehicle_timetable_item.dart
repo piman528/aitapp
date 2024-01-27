@@ -18,7 +18,7 @@ class TimeTableCard extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final now = useRef(DateTime.now());
+    final now = useRef(DateTime.now().toUtc().add(const Duration(hours: 9)));
     final todayDaiya = useRef<String?>(
       dayDaiya['${now.value.year}-${now.value.month}-${now.value.day}'],
     );
@@ -126,10 +126,10 @@ class TimeCard extends HookWidget {
           destination: destination,
           order: order,
         ).searchNextDeparture();
-        time.value = DateTime.now();
+        time.value = DateTime.now().toUtc().add(const Duration(hours: 9));
         timer.value =
             Timer.periodic(const Duration(milliseconds: 1000), (timer) {
-          time.value = DateTime.now();
+          time.value = DateTime.now().toUtc().add(const Duration(hours: 9));
         });
         return () {
           timer.value!.cancel();

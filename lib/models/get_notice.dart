@@ -3,18 +3,21 @@ import 'package:aitapp/infrastructure/access_lcan.dart';
 import 'package:aitapp/infrastructure/parse_html.dart';
 import 'package:aitapp/models/class_notice.dart';
 import 'package:aitapp/models/univ_notice.dart';
+import 'package:aitapp/provider/last_login_time_provider.dart';
 import 'package:aitapp/screens/open_file_pdf.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
 class GetNotice {
   late List<String>? cookies;
   late String? token;
-  Future<void> create(String id, String password) async {
+  Future<void> create(String id, String password, WidgetRef ref) async {
     token = null;
     cookies = await getCookie();
     await loginLcam(id, password, cookies![0], cookies![1]);
+    ref.read(lastLoginTimeProvider.notifier).updateLastLoginTime();
   }
 
   Future<List<UnivNotice>> getUnivNoticelist(int page) async {

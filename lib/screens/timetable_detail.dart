@@ -12,7 +12,7 @@ class TimeTableDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final now = DateTime.now();
+    final now = DateTime.now().toUtc().add(const Duration(hours: 9));
     final todayDaiya = dayDaiya['${now.year}-${now.month}-${now.day}'];
     int? initialValue;
     switch (todayDaiya) {

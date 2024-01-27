@@ -188,7 +188,7 @@ class TimeTable extends HookConsumerWidget {
             final list = ref.read(idPasswordProvider);
             ref
                 .read(classTimeTableProvider.notifier)
-                .fetchData(list[0], list[1]);
+                .fetchData(list[0], list[1], ref);
           });
         }
         return null;

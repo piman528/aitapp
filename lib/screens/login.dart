@@ -1,5 +1,6 @@
 import 'package:aitapp/infrastructure/access_lcan.dart';
 import 'package:aitapp/provider/id_password_provider.dart';
+import 'package:aitapp/provider/last_login_time_provider.dart';
 import 'package:aitapp/screens/tabs.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -29,6 +30,7 @@ class LoginScreen extends HookConsumerWidget {
           cookies[0],
           cookies[1],
         );
+        ref.read(lastLoginTimeProvider.notifier).updateLastLoginTime();
       } else {
         loginBool = false;
       }

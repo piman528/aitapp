@@ -10,7 +10,7 @@ class NextDeparture {
   final String destination;
   final int order;
   DateTime? searchNextDeparture() {
-    final now = DateTime.now();
+    final now = DateTime.now().toUtc().add(const Duration(hours: 9));
     var counter = 0;
     final todayDaiya = dayDaiya['${now.year}-${now.month}-${now.day}'];
     if (todayDaiya == null) {
@@ -25,7 +25,7 @@ class NextDeparture {
           for (final minute in minutes) {
             if (minute > now.minute || hour > now.hour) {
               if (order == counter) {
-                return DateTime(now.year, now.month, now.day, hour, minute);
+                return DateTime.utc(now.year, now.month, now.day, hour, minute);
               } else {
                 counter++;
               }

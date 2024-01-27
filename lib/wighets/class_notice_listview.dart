@@ -5,7 +5,9 @@ import 'package:aitapp/models/get_notice.dart';
 import 'package:aitapp/provider/class_notices_provider.dart';
 import 'package:aitapp/provider/file_downloading_provider.dart';
 import 'package:aitapp/provider/id_password_provider.dart';
-import 'package:aitapp/provider/life_cycle_provider.dart';
+import 'package:aitapp/provider/last_login_time_provider.dart';
+import 'package:aitapp/provider/last_notice_login_time_provider.dart';
+import 'package:aitapp/provider/notice_token_provider.dart';
 import 'package:aitapp/wighets/class_notice.dart';
 import 'package:aitapp/wighets/search_bar.dart';
 import 'package:async/async.dart';
@@ -39,7 +41,7 @@ class ClassNoticeList extends HookConsumerWidget {
     final page = useRef(10);
     final isManual = useRef(false);
     final error = useState<String?>(null);
-    final isLoading = useState(true);
+    final isLoading = useState(false);
     final classController = useTextEditingController();
     final classFilter = useState('');
     final operation = useRef<CancelableOperation<void>?>(null);
@@ -72,7 +74,10 @@ class ClassNoticeList extends HookConsumerWidget {
       try {
         if (withLogin) {
           final identity = ref.read(idPasswordProvider);
-          await getNotice.create(identity[0], identity[1]);
+          await getNotice.create(identity[0], identity[1], ref);
+          ref.read(classNoticeTokenProvider.notifier).state = getNotice;
+          ref.read(lastClassLoginTimeProvider.notifier).state =
+              ref.read(lastLoginTimeProvider);
           result = await getNotice.getClassNoticelist(page.value);
         } else {
           result = await getNotice.getClassNoticelistNext(page.value);
@@ -95,33 +100,31 @@ class ClassNoticeList extends HookConsumerWidget {
       }
     }
 
-    ref.listen<AppLifecycleState>(appLifecycleProvider, (previous, next) {
-      switch (next) {
-        case AppLifecycleState.resumed:
-          if (!ref.read(fileDownloadingProvider)) {
-            load(withLogin: true);
-          }
-        case AppLifecycleState.inactive:
-          break;
-        case AppLifecycleState.paused:
-          break;
-        case AppLifecycleState.detached:
-          break;
-        case AppLifecycleState.hidden:
-          break;
+    ref.listen(lastLoginTimeProvider, (previous, next) {
+      if (!isLoading.value) {
+        if (!ref.read(fileDownloadingProvider)) {
+          operation.value = CancelableOperation.fromFuture(
+            load(withLogin: true),
+          );
+        }
       }
     });
-
     useEffect(
       () {
-        operation.value = CancelableOperation.fromFuture(
-          load(withLogin: true),
-        );
+        final classNoticeLastLogin = ref.read(lastClassLoginTimeProvider);
+        final lastLogin = ref.read(lastLoginTimeProvider);
+        if (classNoticeLastLogin == null || classNoticeLastLogin != lastLogin) {
+          operation.value = CancelableOperation.fromFuture(
+            load(withLogin: true),
+          );
+        }
         classController.addListener(() {
           classFilter.value = classController.text;
         });
         return () {
-          operation.value!.cancel();
+          if (operation.value != null) {
+            operation.value!.cancel();
+          }
           isDispose.value = true;
         };
       },

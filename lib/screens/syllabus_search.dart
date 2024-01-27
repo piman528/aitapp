@@ -111,6 +111,9 @@ class SyllabusSearchScreen extends HookConsumerWidget {
                 },
                 icon: const Icon(Icons.filter_alt),
               ),
+              const SizedBox(
+                width: 5,
+              ),
             ],
           ),
           syllabusList.value,

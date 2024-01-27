@@ -4,7 +4,9 @@ import 'package:aitapp/models/get_notice.dart';
 import 'package:aitapp/models/univ_notice.dart';
 import 'package:aitapp/provider/file_downloading_provider.dart';
 import 'package:aitapp/provider/id_password_provider.dart';
-import 'package:aitapp/provider/life_cycle_provider.dart';
+import 'package:aitapp/provider/last_login_time_provider.dart';
+import 'package:aitapp/provider/last_notice_login_time_provider.dart';
+import 'package:aitapp/provider/notice_token_provider.dart';
 import 'package:aitapp/provider/univ_notices_provider.dart';
 import 'package:aitapp/wighets/search_bar.dart';
 import 'package:aitapp/wighets/univ_notice.dart';
@@ -36,7 +38,7 @@ class UnivNoticeList extends HookConsumerWidget {
       ),
     );
     final error = useState<String?>(null);
-    final isLoading = useState(true);
+    final isLoading = useState(false);
     final univFilter = useState('');
     final beforeReloadLengh = useRef(0);
     final page = useRef(10);
@@ -69,7 +71,10 @@ class UnivNoticeList extends HookConsumerWidget {
       try {
         if (withLogin) {
           final identity = ref.read(idPasswordProvider);
-          await getNotice.create(identity[0], identity[1]);
+          await getNotice.create(identity[0], identity[1], ref);
+          ref.read(univNoticeTokenProvider.notifier).state = getNotice;
+          ref.read(lastUnivLoginTimeProvider.notifier).state =
+              ref.read(lastLoginTimeProvider);
           result = await getNotice.getUnivNoticelist(page.value);
         } else {
           result = await getNotice.getUnivNoticelistNext(page.value);
@@ -92,33 +97,32 @@ class UnivNoticeList extends HookConsumerWidget {
       }
     }
 
-    ref.listen<AppLifecycleState>(appLifecycleProvider, (previous, next) {
-      switch (next) {
-        case AppLifecycleState.resumed:
-          if (!ref.read(fileDownloadingProvider)) {
-            load(withLogin: true);
-          }
-        case AppLifecycleState.inactive:
-          break;
-        case AppLifecycleState.paused:
-          break;
-        case AppLifecycleState.detached:
-          break;
-        case AppLifecycleState.hidden:
-          break;
+    ref.listen(lastLoginTimeProvider, (previous, next) {
+      if (!isLoading.value) {
+        if (!ref.read(fileDownloadingProvider)) {
+          operation.value = CancelableOperation.fromFuture(
+            load(withLogin: true),
+          );
+        }
       }
     });
 
     useEffect(
       () {
-        operation.value = CancelableOperation.fromFuture(
-          load(withLogin: true),
-        );
+        final univNoticeLastLogin = ref.read(lastUnivLoginTimeProvider);
+        final lastLogin = ref.read(lastLoginTimeProvider);
+        if (univNoticeLastLogin == null || univNoticeLastLogin != lastLogin) {
+          operation.value = CancelableOperation.fromFuture(
+            load(withLogin: true),
+          );
+        }
         univController.addListener(() {
           univFilter.value = univController.text;
         });
         return () {
-          operation.value!.cancel();
+          if (operation.value != null) {
+            operation.value!.cancel();
+          }
           isDispose.value = true;
         };
       },

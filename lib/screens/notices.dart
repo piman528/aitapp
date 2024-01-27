@@ -1,18 +1,18 @@
 import 'package:aitapp/models/get_notice.dart';
+import 'package:aitapp/provider/notice_token_provider.dart';
 import 'package:aitapp/wighets/class_notice_listview.dart';
 import 'package:aitapp/wighets/univ_notice_listview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class NoticeScreen extends HookWidget {
+class NoticeScreen extends HookConsumerWidget with RouteAware {
   const NoticeScreen({super.key});
 
   static const pageLength = 2;
 
   @override
-  Widget build(BuildContext context) {
-    final getUnivNotice = useRef(GetNotice());
-    final getClassNotice = useRef(GetNotice());
+  Widget build(BuildContext context, WidgetRef ref) {
     final currentPage = useRef(0);
     final pageController = usePageController(initialPage: currentPage.value);
     final tabController = useTabController(initialLength: pageLength);
@@ -89,11 +89,11 @@ class NoticeScreen extends HookWidget {
               controller: pageController,
               children: [
                 UnivNoticeList(
-                  getNotice: getUnivNotice.value,
+                  getNotice: ref.read(univNoticeTokenProvider) ?? GetNotice(),
                   loading: loading,
                 ),
                 ClassNoticeList(
-                  getNotice: getClassNotice.value,
+                  getNotice: ref.read(classNoticeTokenProvider) ?? GetNotice(),
                   loading: loading,
                 ),
               ],
