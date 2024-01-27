@@ -1,3 +1,5 @@
+// ignore_for_file: lines_longer_than_80_chars
+
 import 'package:aitapp/const.dart';
 import 'package:aitapp/provider/filter_provider.dart';
 import 'package:aitapp/provider/id_password_provider.dart';
@@ -22,7 +24,7 @@ class MainDrawer extends ConsumerWidget {
 
   Future<void> loginCampus({
     required WidgetRef ref,
-    required bool isMoodle,
+    required String isMoodle,
   }) async {
     late final InAppWebViewController webviewcontroller;
     late final HeadlessInAppWebView headlessWebView;
@@ -53,9 +55,11 @@ class MainDrawer extends ConsumerWidget {
         );
       },
       onLoadStop: (controller, url) async {
+        final date = DateFormat('yyyyMMddHm')
+            .format(DateTime.now().toUtc().add(const Duration(hours: 9)));
         await webviewcontroller.evaluateJavascript(
           source:
-              "getPara('${DateFormat('yyyyMMddHm').format(DateTime.now().toUtc().add(const Duration(hours: 9)))}','${identity[0]}','${identity[1]}','${isMoodle ? 'Y' : 'N'}','$blowfishKey');",
+              "getPara('$date','${identity[0]}','${identity[1]}','$isMoodle','$blowfishKey');",
         );
       },
     );
@@ -129,7 +133,7 @@ class MainDrawer extends ConsumerWidget {
                 title: 'L-Cam',
                 onTap: () async {
                   ref.read(linkTapProvider.notifier).state = true;
-                  await loginCampus(ref: ref, isMoodle: false);
+                  await loginCampus(ref: ref, isMoodle: 'N');
                 },
               ),
               DrawerTile(
@@ -137,7 +141,7 @@ class MainDrawer extends ConsumerWidget {
                 title: 'Moodle',
                 onTap: () async {
                   ref.read(linkTapProvider.notifier).state = true;
-                  await loginCampus(ref: ref, isMoodle: true);
+                  await loginCampus(ref: ref, isMoodle: 'Y');
                 },
               ),
               const Divider(),
