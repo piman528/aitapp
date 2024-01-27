@@ -15,13 +15,13 @@ dependencies:
     sdk: flutter
   flutter_hooks: ^0.20.3
   flutter_inappwebview: ^6.0.0
-  flutter_localizations: 
+  flutter_localizations:
+    sdk: flutter
   flutter_riverpod:
   fluttertoast: ^8.2.4
   hooks_riverpod: ^2.4.9
   http:
   intl: ^0.18.0
-    sdk: flutter
   package_info: ^2.0.2
   path_provider: ^2.1.1
   shared_preferences: ^2.2.2
