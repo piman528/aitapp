@@ -1,4 +1,4 @@
-package com.example.aitapp
+package com.yoheinishi.aitapp
 
 import io.flutter.embedding.android.FlutterActivity
 
