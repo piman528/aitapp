@@ -47,6 +47,18 @@ class UnivNoticeList extends HookConsumerWidget {
     final univController = useTextEditingController();
     final isDispose = useRef(false);
 
+    useEffect(
+      () {
+        final dynamic p = PageStorage.of(context)
+            .readState(context, identifier: const ValueKey('univNoticePage'));
+        if (p != null) {
+          page.value = p as int;
+        }
+        return () {};
+      },
+      [],
+    );
+
     List<UnivNotice> filteredList(List<UnivNotice> list) {
       final result = list
           .where(
@@ -156,6 +168,11 @@ class UnivNoticeList extends HookConsumerWidget {
                       WidgetsBinding.instance.addPostFrameCallback((_) {
                         page.value += 10;
                         beforeReloadLengh.value = filteredResult.length;
+                        PageStorage.of(context).writeState(
+                          context,
+                          page.value,
+                          identifier: const ValueKey('univNoticePage'),
+                        );
                         load(withLogin: false);
                       });
                     }

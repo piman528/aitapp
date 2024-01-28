@@ -47,6 +47,18 @@ class ClassNoticeList extends HookConsumerWidget {
     final operation = useRef<CancelableOperation<void>?>(null);
     final isDispose = useRef(false);
 
+    useEffect(
+      () {
+        final dynamic p = PageStorage.of(context)
+            .readState(context, identifier: const ValueKey('classNoticePage'));
+        if (p != null) {
+          page.value = p as int;
+        }
+        return () {};
+      },
+      [],
+    );
+
     List<ClassNotice> filteredList(List<ClassNotice> list) {
       final result = list
           .where(
@@ -158,6 +170,11 @@ class ClassNoticeList extends HookConsumerWidget {
                       WidgetsBinding.instance.addPostFrameCallback((_) {
                         page.value += 10;
                         beforeReloadLengh.value = filteredResult.length;
+                        PageStorage.of(context).writeState(
+                          context,
+                          page.value,
+                          identifier: const ValueKey('classNoticePage'),
+                        );
                         load(withLogin: false);
                       });
                     }

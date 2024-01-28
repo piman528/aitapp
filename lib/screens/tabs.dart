@@ -12,11 +12,6 @@ class TabScreen extends HookWidget {
     '時間割',
     '時刻表',
   ];
-  static const currentPages = [
-    NoticeScreen(),
-    ClassTimeTableScreen(),
-    TimeTableScreen(),
-  ];
   static const destinations = [
     NavigationDestination(
       icon: Icon(Icons.article),
@@ -33,6 +28,20 @@ class TabScreen extends HookWidget {
   ];
   @override
   Widget build(BuildContext context) {
+    final bucket = useRef<PageStorageBucket>(PageStorageBucket());
+    final currentPages = [
+      PageStorage(
+        bucket: bucket.value,
+        child: NoticeScreen(
+          univKey: const PageStorageKey<String>('univNotice'),
+          classKey: const PageStorageKey<String>('classNotice'),
+          bukket: bucket.value,
+          key: const PageStorageKey<String>('notices'),
+        ),
+      ),
+      const ClassTimeTableScreen(),
+      const TimeTableScreen(),
+    ];
     final currentPageIndex = useState(0);
     return Scaffold(
       appBar: AppBar(
