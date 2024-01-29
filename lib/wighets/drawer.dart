@@ -55,7 +55,7 @@ class MainDrawer extends ConsumerWidget {
         );
       },
       onLoadStop: (controller, url) async {
-        final date = DateFormat('yyyyMMddHHmm')
+        final date = DateFormat('yyyyMMddHm')
             .format(DateTime.now().toUtc().add(const Duration(hours: 9)));
         await webviewcontroller.evaluateJavascript(
           source:
