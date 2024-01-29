@@ -159,50 +159,62 @@ class ClassNoticeList extends HookConsumerWidget {
             }
             return true;
           },
-          child: CustomScrollView(
-            controller: controller,
-            slivers: [
-              SliverAppBar(
-                scrolledUnderElevation: 0,
-                backgroundColor: Theme.of(context).colorScheme.background,
-                automaticallyImplyLeading: false,
-                expandedHeight: 80,
-                snap: true,
-                floating: true,
-                flexibleSpace: SearchBarWidget(
-                  controller: classController,
-                  hintText: '送信元、キーワードで検索',
+          child: RefreshIndicator(
+            onRefresh: () async {
+              isManual.value = true;
+              if (!isLoading.value) {
+                page.value = 5;
+                await load(withLogin: true);
+              }
+              if (!isDispose.value) {
+                isManual.value = false;
+              }
+            },
+            child: CustomScrollView(
+              controller: controller,
+              slivers: [
+                SliverAppBar(
+                  scrolledUnderElevation: 0,
+                  backgroundColor: Theme.of(context).colorScheme.background,
+                  automaticallyImplyLeading: false,
+                  expandedHeight: 80,
+                  snap: true,
+                  floating: true,
+                  flexibleSpace: SearchBarWidget(
+                    controller: classController,
+                    hintText: '送信元、キーワードで検索',
+                  ),
                 ),
-              ),
-              SliverList(
-                delegate: SliverChildBuilderDelegate(
-                  (BuildContext c, int i) {
-                    if (i == filteredResult.length - 3) {
-                      if (!isLoading.value &&
-                          filteredResult.length != beforeReloadLengh.value) {
-                        WidgetsBinding.instance.addPostFrameCallback((_) {
-                          page.value += 10;
-                          beforeReloadLengh.value = filteredResult.length;
-                          PageStorage.of(context).writeState(
-                            context,
-                            page.value,
-                            identifier: const ValueKey('classNoticePage'),
-                          );
-                          load(withLogin: false);
-                        });
+                SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    (BuildContext c, int i) {
+                      if (i == filteredResult.length - 3) {
+                        if (!isLoading.value &&
+                            filteredResult.length != beforeReloadLengh.value) {
+                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                            page.value += 10;
+                            beforeReloadLengh.value = filteredResult.length;
+                            PageStorage.of(context).writeState(
+                              context,
+                              page.value,
+                              identifier: const ValueKey('classNoticePage'),
+                            );
+                            load(withLogin: false);
+                          });
+                        }
                       }
-                    }
-                    return ClassNoticeItem(
-                      notice: filteredResult[i],
-                      index: result.indexOf(filteredResult[i]),
-                      getNotice: getNotice,
-                      tap: !isLoading.value,
-                    );
-                  },
-                  childCount: filteredResult.length,
+                      return ClassNoticeItem(
+                        notice: filteredResult[i],
+                        index: result.indexOf(filteredResult[i]),
+                        getNotice: getNotice,
+                        tap: !isLoading.value,
+                      );
+                    },
+                    childCount: filteredResult.length,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         );
       } else {
@@ -224,19 +236,7 @@ class ClassNoticeList extends HookConsumerWidget {
               : 0,
         ),
         Expanded(
-          child: RefreshIndicator(
-            onRefresh: () async {
-              isManual.value = true;
-              if (!isLoading.value) {
-                page.value = 5;
-                await load(withLogin: true);
-              }
-              if (!isDispose.value) {
-                isManual.value = false;
-              }
-            },
-            child: content.value,
-          ),
+          child: content.value,
         ),
       ],
     );
