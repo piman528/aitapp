@@ -9,22 +9,22 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 class NoticeScreen extends HookConsumerWidget with RouteAware {
   const NoticeScreen({
     super.key,
-    required this.univKey,
-    required this.classKey,
-    required this.bukket,
   });
 
   static const pageLength = 2;
-  final Key univKey;
-  final Key classKey;
-  final PageStorageBucket bukket;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final currentPage = useRef(0);
-    final pageController = usePageController(initialPage: currentPage.value);
+    final currentPage = useState<int>(
+      (PageStorage.of(context).readState(
+            context,
+            identifier: const ValueKey('currentPage'),
+          ) ??
+          0) as int,
+    );
     final tabController = useTabController(
       initialLength: pageLength,
+      initialIndex: currentPage.value,
     );
     final isLoading = useState(false);
 
@@ -36,25 +36,21 @@ class NoticeScreen extends HookConsumerWidget with RouteAware {
       }
     }
 
-    void setPageStorage() {
-      PageStorage.of(context).writeState(
-        context,
-        currentPage.value,
-        identifier: const ValueKey('currentPage'),
-      );
-    }
-
     useEffect(
       () {
-        final dynamic p = PageStorage.of(context)
-            .readState(context, identifier: const ValueKey('currentPage'));
-        if (p != null) {
-          currentPage.value = p as int;
-          tabController.index = p;
-        }
-        return () {};
+        tabController.animateTo(
+          currentPage.value,
+          curve: Curves.easeOut,
+          duration: const Duration(milliseconds: 250),
+        );
+        PageStorage.of(context).writeState(
+          context,
+          currentPage.value,
+          identifier: const ValueKey('currentPage'),
+        );
+        return null;
       },
-      [],
+      [currentPage.value],
     );
 
     return Column(
@@ -70,13 +66,7 @@ class NoticeScreen extends HookConsumerWidget with RouteAware {
             onTap: (index) {
               if (!isLoading.value) {
                 currentPage.value = index;
-                pageController.animateToPage(
-                  currentPage.value,
-                  duration: const Duration(milliseconds: 250),
-                  curve: Curves.easeOut,
-                );
               }
-              setPageStorage();
             },
           ),
         ),
@@ -84,53 +74,29 @@ class NoticeScreen extends HookConsumerWidget with RouteAware {
           child: GestureDetector(
             behavior: HitTestBehavior.translucent,
             onHorizontalDragEnd: (details) {
-              if (details.primaryVelocity! > 0 && !isLoading.value) {
+              if (details.primaryVelocity! > 0 &&
+                  !isLoading.value &&
+                  0 < currentPage.value) {
                 //左ページへ
-                if (0 < currentPage.value) {
-                  currentPage.value -= 1;
-                  tabController.animateTo(
-                    currentPage.value,
-                    curve: Curves.easeOut,
-                    duration: const Duration(milliseconds: 250),
-                  );
-                  pageController.animateToPage(
-                    currentPage.value,
-                    duration: const Duration(milliseconds: 250),
-                    curve: Curves.easeOut,
-                  );
-                  setPageStorage();
-                }
-              } else if (details.primaryVelocity! < 0 && !isLoading.value) {
+                currentPage.value -= 1;
+              } else if (details.primaryVelocity! < 0 &&
+                  !isLoading.value &&
+                  pageLength - 1 > currentPage.value) {
                 //右ページへ
-                if (pageLength - 1 > currentPage.value) {
-                  currentPage.value += 1;
-                  tabController.animateTo(
-                    currentPage.value,
-                    curve: Curves.easeOut,
-                    duration: const Duration(milliseconds: 250),
-                  );
-                  pageController.animateToPage(
-                    currentPage.value,
-                    duration: const Duration(milliseconds: 250),
-                    curve: Curves.easeOut,
-                  );
-                  setPageStorage();
-                }
+                currentPage.value += 1;
               }
             },
-            child: PageView(
+            child: TabBarView(
               physics: const NeverScrollableScrollPhysics(),
-              controller: pageController,
+              controller: tabController,
               children: [
                 UnivNoticeList(
                   getNotice: ref.read(univNoticeTokenProvider) ?? GetNotice(),
                   loading: loading,
-                  key: univKey,
                 ),
                 ClassNoticeList(
                   getNotice: ref.read(classNoticeTokenProvider) ?? GetNotice(),
                   loading: loading,
-                  key: classKey,
                 ),
               ],
             ),

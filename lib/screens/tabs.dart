@@ -7,6 +7,11 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 
 class TabScreen extends HookWidget {
   const TabScreen({super.key});
+  static const currentPages = [
+    NoticeScreen(),
+    ClassTimeTableScreen(),
+    TimeTableScreen(),
+  ];
   static const appBarTitle = [
     'お知らせ',
     '時間割',
@@ -28,20 +33,6 @@ class TabScreen extends HookWidget {
   ];
   @override
   Widget build(BuildContext context) {
-    final bucket = useRef<PageStorageBucket>(PageStorageBucket());
-    final currentPages = [
-      PageStorage(
-        bucket: bucket.value,
-        child: NoticeScreen(
-          univKey: const PageStorageKey<String>('univNotice'),
-          classKey: const PageStorageKey<String>('classNotice'),
-          bukket: bucket.value,
-          key: const PageStorageKey<String>('notices'),
-        ),
-      ),
-      const ClassTimeTableScreen(),
-      const TimeTableScreen(),
-    ];
     final currentPageIndex = useState(0);
     return Scaffold(
       appBar: AppBar(

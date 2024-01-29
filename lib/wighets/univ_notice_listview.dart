@@ -41,22 +41,23 @@ class UnivNoticeList extends HookConsumerWidget {
     final isLoading = useState(false);
     final univFilter = useState('');
     final beforeReloadLengh = useRef(0);
-    final page = useRef(10);
+    final page = useRef(
+      (PageStorage.of(context).readState(
+            context,
+            identifier: const ValueKey('univNoticePage'),
+          ) ??
+          10) as int,
+    );
     final isManual = useRef(false);
     final operation = useRef<CancelableOperation<void>?>(null);
     final univController = useTextEditingController();
     final isDispose = useRef(false);
-
-    useEffect(
-      () {
-        final dynamic p = PageStorage.of(context)
-            .readState(context, identifier: const ValueKey('univNoticePage'));
-        if (p != null) {
-          page.value = p as int;
-        }
-        return () {};
-      },
-      [],
+    final controller = useScrollController(
+      initialScrollOffset: (PageStorage.of(context).readState(
+            context,
+            identifier: const ValueKey('univScrollOffset'),
+          ) ??
+          0.0) as double,
     );
 
     List<UnivNotice> filteredList(List<UnivNotice> list) {
@@ -145,49 +146,62 @@ class UnivNoticeList extends HookConsumerWidget {
       if (error.value == null) {
         final result = ref.read(univNoticesProvider)!;
         final filteredResult = filteredList(result);
-        content.value = CustomScrollView(
-          slivers: [
-            SliverAppBar(
-              scrolledUnderElevation: 0,
-              backgroundColor: Theme.of(context).colorScheme.background,
-              automaticallyImplyLeading: false,
-              expandedHeight: 80,
-              snap: true,
-              floating: true,
-              flexibleSpace: SearchBarWidget(
-                controller: univController,
-                hintText: '送信元、キーワードで検索',
+        content.value = NotificationListener<ScrollNotification>(
+          onNotification: (scrollNotification) {
+            if (scrollNotification is ScrollEndNotification) {
+              PageStorage.of(context).writeState(
+                context,
+                controller.offset,
+                identifier: const ValueKey('univScrollOffset'),
+              );
+            }
+            return true;
+          },
+          child: CustomScrollView(
+            controller: controller,
+            slivers: [
+              SliverAppBar(
+                scrolledUnderElevation: 0,
+                backgroundColor: Theme.of(context).colorScheme.background,
+                automaticallyImplyLeading: false,
+                expandedHeight: 80,
+                snap: true,
+                floating: true,
+                flexibleSpace: SearchBarWidget(
+                  controller: univController,
+                  hintText: '送信元、キーワードで検索',
+                ),
               ),
-            ),
-            SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (BuildContext c, int i) {
-                  if (i == filteredResult.length - 3) {
-                    if (!isLoading.value &&
-                        filteredResult.length != beforeReloadLengh.value) {
-                      WidgetsBinding.instance.addPostFrameCallback((_) {
-                        page.value += 10;
-                        beforeReloadLengh.value = filteredResult.length;
-                        PageStorage.of(context).writeState(
-                          context,
-                          page.value,
-                          identifier: const ValueKey('univNoticePage'),
-                        );
-                        load(withLogin: false);
-                      });
+              SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (BuildContext c, int i) {
+                    if (i == filteredResult.length - 3) {
+                      if (!isLoading.value &&
+                          filteredResult.length != beforeReloadLengh.value) {
+                        WidgetsBinding.instance.addPostFrameCallback((_) {
+                          page.value += 10;
+                          beforeReloadLengh.value = filteredResult.length;
+                          PageStorage.of(context).writeState(
+                            context,
+                            page.value,
+                            identifier: const ValueKey('univNoticePage'),
+                          );
+                          load(withLogin: false);
+                        });
+                      }
                     }
-                  }
-                  return UnivNoticeItem(
-                    notice: filteredResult[i],
-                    index: result.indexOf(filteredResult[i]),
-                    getNotice: getNotice,
-                    tap: !isLoading.value,
-                  );
-                },
-                childCount: filteredResult.length,
+                    return UnivNoticeItem(
+                      notice: filteredResult[i],
+                      index: result.indexOf(filteredResult[i]),
+                      getNotice: getNotice,
+                      tap: !isLoading.value,
+                    );
+                  },
+                  childCount: filteredResult.length,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         );
       } else {
         Fluttertoast.showToast(msg: error.toString());
