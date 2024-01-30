@@ -93,10 +93,12 @@ class NoticeScreen extends HookConsumerWidget with RouteAware {
                 UnivNoticeList(
                   getNotice: ref.read(univNoticeTokenProvider) ?? GetNotice(),
                   loading: loading,
+                  pages: currentPage,
                 ),
                 ClassNoticeList(
                   getNotice: ref.read(classNoticeTokenProvider) ?? GetNotice(),
                   loading: loading,
+                  pages: currentPage,
                 ),
               ],
             ),
