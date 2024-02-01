@@ -22,8 +22,8 @@ class UnivNoticeDetailScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final regExp = useRef(
-      RegExp(
+    final regExp = useMemoized(
+      () => RegExp(
         r"(http(s)?:\/\/[a-zA-Z0-9-.!'()*;/?:@&=+$,%_#]+)",
         caseSensitive: false,
       ),
@@ -112,9 +112,9 @@ class UnivNoticeDetailScreen extends HookConsumerWidget {
                     ),
                     for (final text in univNotice.value!.content) ...{
                       if (text != '') ...{
-                        if (regExp.value.stringMatch(text) != null) ...{
+                        if (regExp.stringMatch(text) != null) ...{
                           Link(
-                            uri: Uri.parse(regExp.value.stringMatch(text)!),
+                            uri: Uri.parse(regExp.stringMatch(text)!),
                             target: LinkTarget.blank,
                             builder: (context, followLink) => TextButton(
                               onPressed: followLink,
@@ -142,7 +142,7 @@ class UnivNoticeDetailScreen extends HookConsumerWidget {
                       ),
                       for (final url in univNotice.value!.url) ...{
                         Link(
-                          uri: Uri.parse(regExp.value.stringMatch(url)!),
+                          uri: Uri.parse(regExp.stringMatch(url)!),
                           target: LinkTarget.blank,
                           builder: (context, followLink) => TextButton(
                             onPressed: followLink,

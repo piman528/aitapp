@@ -27,9 +27,10 @@ class NoticeScreen extends HookConsumerWidget with RouteAware {
       initialIndex: currentPage.value,
     );
     final isLoading = useState(false);
+    final isDispose = useRef(false);
 
     void loading({required bool state}) {
-      if (state != isLoading.value) {
+      if (state != isLoading.value && !isDispose.value) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           isLoading.value = state;
         });
@@ -48,7 +49,9 @@ class NoticeScreen extends HookConsumerWidget with RouteAware {
           currentPage.value,
           identifier: const ValueKey('currentPage'),
         );
-        return null;
+        return () {
+          isDispose.value = true;
+        };
       },
       [currentPage.value],
     );
@@ -93,12 +96,12 @@ class NoticeScreen extends HookConsumerWidget with RouteAware {
                 UnivNoticeList(
                   getNotice: ref.read(univNoticeTokenProvider) ?? GetNotice(),
                   loading: loading,
-                  pages: currentPage,
+                  tabs: currentPage,
                 ),
                 ClassNoticeList(
                   getNotice: ref.read(classNoticeTokenProvider) ?? GetNotice(),
                   loading: loading,
-                  pages: currentPage,
+                  tabs: currentPage,
                 ),
               ],
             ),

@@ -16,7 +16,7 @@ class SyllabusSearchList extends HookConsumerWidget {
   final String? searchtext;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final getSyllabus = useRef(GetSyllabus());
+    final getSyllabus = useMemoized(GetSyllabus.new);
     final operation = useRef<CancelableOperation<void>?>(null);
     final content = useState<Widget>(const SizedBox());
 
@@ -32,8 +32,8 @@ class SyllabusSearchList extends HookConsumerWidget {
         ),
       );
       try {
-        await getSyllabus.value.create();
-        final list = await getSyllabus.value.getSyllabusList(
+        await getSyllabus.create();
+        final list = await getSyllabus.getSyllabusList(
           altWeek: selectFilter!.week,
           searchWord: searchtext,
           altPeriod: selectFilter.hour,
@@ -47,7 +47,7 @@ class SyllabusSearchList extends HookConsumerWidget {
             itemCount: list.length,
             itemBuilder: (c, i) => SyllabusItem(
               syllabus: list[i],
-              getSyllabus: getSyllabus.value,
+              getSyllabus: getSyllabus,
             ),
           ),
         );

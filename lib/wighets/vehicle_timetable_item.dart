@@ -18,9 +18,10 @@ class TimeTableCard extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final now = useRef(DateTime.now().toUtc().add(const Duration(hours: 9)));
-    final todayDaiya = useRef<String?>(
-      dayDaiya['${now.value.year}-${now.value.month}-${now.value.day}'],
+    final now =
+        useMemoized(() => DateTime.now().toUtc().add(const Duration(hours: 9)));
+    final todayDaiya = useMemoized(
+      () => dayDaiya[DateFormat('yyyy-M-d').format(now)],
     );
     return Expanded(
       child: Column(
@@ -56,7 +57,7 @@ class TimeTableCard extends HookWidget {
           const SizedBox(
             height: 5,
           ),
-          todayDaiya.value != null
+          todayDaiya != null
               ? Expanded(
                   child: ListView(
                     children: [
@@ -106,7 +107,7 @@ class TimeCard extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final f = useRef(DateFormat('HH:mm'));
+    final f = useMemoized(() => DateFormat('HH:mm'));
     final nextDepartureTime = useState<DateTime?>(null);
     final time = useState<DateTime?>(null);
     final timer = useRef<Timer?>(null);
@@ -175,7 +176,7 @@ class TimeCard extends HookWidget {
               ],
             ),
             Text(
-              f.value.format(nextDepartureTime.value!),
+              f.format(nextDepartureTime.value!),
               style: const TextStyle(
                 // color: Colors.black,
                 fontSize: 48,

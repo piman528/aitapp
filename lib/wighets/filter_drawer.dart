@@ -1,5 +1,4 @@
 import 'package:aitapp/models/select_filter.dart';
-import 'package:aitapp/models/syllabus_filter.dart';
 import 'package:aitapp/provider/filter_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -16,16 +15,15 @@ class FilterDrawer extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final selectfilters =
-        useRef<SelectFilters?>(ref.read(selectFiltersProvider));
-    final filters = useRef<SyllabusFilters?>(ref.read(syllabusFiltersProvider));
+    final selectfilters = useMemoized(() => ref.read(selectFiltersProvider));
+    final filters = useMemoized(() => ref.read(syllabusFiltersProvider));
 
-    final selectYear = useState<String>(selectfilters.value!.year);
-    final selectCampus = useState<String?>(selectfilters.value?.campus);
-    final selectFaculty = useState<String?>(selectfilters.value?.folder);
-    final selectSemester = useState<String?>(selectfilters.value?.semester);
-    final selectWeek = useState<String?>(selectfilters.value?.week);
-    final selectHour = useState<String?>(selectfilters.value?.hour);
+    final selectYear = useState<String>(selectfilters!.year);
+    final selectCampus = useState<String?>(selectfilters.campus);
+    final selectFaculty = useState<String?>(selectfilters.folder);
+    final selectSemester = useState<String?>(selectfilters.semester);
+    final selectWeek = useState<String?>(selectfilters.week);
+    final selectHour = useState<String?>(selectfilters.hour);
 
     useEffect(
       () {
@@ -38,7 +36,7 @@ class FilterDrawer extends HookConsumerWidget {
             week: selectWeek.value,
             hour: selectHour.value,
           );
-          if (submitfilter != selectfilters.value) {
+          if (submitfilter != selectfilters) {
             setFilters(selectFilters: submitfilter);
           }
         };
@@ -77,7 +75,7 @@ class FilterDrawer extends HookConsumerWidget {
                 trailing: DropdownButton(
                   value: selectYear.value,
                   items: [
-                    for (final entry in filters.value!.year.entries) ...{
+                    for (final entry in filters!.year.entries) ...{
                       DropdownMenuItem(
                         value: entry.value,
                         child: Text(entry.key),
@@ -94,7 +92,7 @@ class FilterDrawer extends HookConsumerWidget {
                 trailing: DropdownButton(
                   value: selectFaculty.value,
                   items: [
-                    for (final entry in filters.value!.folder.entries) ...{
+                    for (final entry in filters.folder.entries) ...{
                       DropdownMenuItem(
                         value: entry.value,
                         child: Text(entry.key),
@@ -111,7 +109,7 @@ class FilterDrawer extends HookConsumerWidget {
                 trailing: DropdownButton(
                   value: selectCampus.value,
                   items: [
-                    for (final entry in filters.value!.campus.entries) ...{
+                    for (final entry in filters.campus.entries) ...{
                       DropdownMenuItem(
                         value: entry.value,
                         child: Text(entry.key),
@@ -128,7 +126,7 @@ class FilterDrawer extends HookConsumerWidget {
                 trailing: DropdownButton(
                   value: selectSemester.value,
                   items: [
-                    for (final entry in filters.value!.semester.entries) ...{
+                    for (final entry in filters.semester.entries) ...{
                       DropdownMenuItem(
                         value: entry.value,
                         child: Text(entry.key),
@@ -145,7 +143,7 @@ class FilterDrawer extends HookConsumerWidget {
                 trailing: DropdownButton(
                   value: selectWeek.value,
                   items: [
-                    for (final entry in filters.value!.week.entries) ...{
+                    for (final entry in filters.week.entries) ...{
                       DropdownMenuItem(
                         value: entry.value,
                         child: Text(entry.key),
@@ -162,7 +160,7 @@ class FilterDrawer extends HookConsumerWidget {
                 trailing: DropdownButton(
                   value: selectHour.value,
                   items: [
-                    for (final entry in filters.value!.hour.entries) ...{
+                    for (final entry in filters.hour.entries) ...{
                       DropdownMenuItem(
                         value: entry.value,
                         child: Text(entry.key),

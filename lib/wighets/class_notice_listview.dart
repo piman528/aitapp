@@ -21,12 +21,12 @@ class ClassNoticeList extends HookConsumerWidget {
     super.key,
     required this.getNotice,
     required this.loading,
-    required this.pages,
+    required this.tabs,
   });
 
   final GetNotice getNotice;
   final void Function({required bool state}) loading;
-  final ValueNotifier<int> pages;
+  final ValueNotifier<int> tabs;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -118,7 +118,7 @@ class ClassNoticeList extends HookConsumerWidget {
     ref.listen(lastLoginTimeProvider, (previous, next) {
       if (!isLoading.value &&
           !ref.read(fileDownloadingProvider) &&
-          pages.value == 1) {
+          tabs.value == 1) {
         operation.value = CancelableOperation.fromFuture(
           load(withLogin: true),
         );

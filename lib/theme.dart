@@ -23,6 +23,7 @@ ColorScheme kDarkColorScheme = ColorScheme.fromSeed(
 
 ThemeData buildThemeLight() {
   return ThemeData.light().copyWith(
+    splashColor: Colors.transparent,
     colorScheme: kColorScheme,
     scaffoldBackgroundColor: kColorScheme.background,
     dividerColor: const Color.fromARGB(255, 201, 201, 201),
@@ -34,6 +35,7 @@ ThemeData buildThemeLight() {
 
 ThemeData buildThemeDark() {
   return ThemeData.dark().copyWith(
+    splashColor: Colors.transparent,
     colorScheme: kDarkColorScheme,
     scaffoldBackgroundColor: kDarkColorScheme.background,
     dividerColor: const Color.fromARGB(255, 59, 59, 59),

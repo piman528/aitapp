@@ -22,8 +22,8 @@ class ClassNoticeDetailScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final regExp = useRef(
-      RegExp(
+    final RegExp regExp = useMemoized(
+      () => RegExp(
         r"(http(s)?:\/\/[a-zA-Z0-9-.!'()*;/?:@&=+$,%_#]+)",
         caseSensitive: false,
       ),
@@ -109,9 +109,9 @@ class ClassNoticeDetailScreen extends HookConsumerWidget {
                     ),
                     for (final text in classNotice.value!.content) ...{
                       if (text != '') ...{
-                        if (regExp.value.stringMatch(text) != null) ...{
+                        if (regExp.stringMatch(text) != null) ...{
                           Link(
-                            uri: Uri.parse(regExp.value.stringMatch(text)!),
+                            uri: Uri.parse(regExp.stringMatch(text)!),
                             target: LinkTarget.blank,
                             builder: (context, followLink) => TextButton(
                               onPressed: followLink,
@@ -139,7 +139,7 @@ class ClassNoticeDetailScreen extends HookConsumerWidget {
                       ),
                       for (final url in classNotice.value!.url) ...{
                         Link(
-                          uri: Uri.parse(regExp.value.stringMatch(url)!),
+                          uri: Uri.parse(regExp.stringMatch(url)!),
                           target: LinkTarget.blank,
                           builder: (context, followLink) => TextButton(
                             onPressed: followLink,

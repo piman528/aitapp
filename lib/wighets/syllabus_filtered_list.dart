@@ -23,7 +23,7 @@ class SyllabusList extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final getSyllabus = useRef(GetSyllabus());
+    final getSyllabus = useMemoized(GetSyllabus.new);
     final operation = useRef<CancelableOperation<void>?>(null);
     final syllabusList = useState<List<ClassSyllabus>?>(null);
     final content = useState<Widget>(
@@ -41,8 +41,8 @@ class SyllabusList extends HookWidget {
     Future<void> load() async {
       try {
         final thisMonth = DateTime.now().month;
-        final syllabusFilters = await getSyllabus.value.create();
-        final list = await getSyllabus.value.getSyllabusList(
+        final syllabusFilters = await getSyllabus.create();
+        final list = await getSyllabus.getSyllabusList(
           dayOfWeek: dayOfWeek,
           classPeriod: classPeriod,
           searchWord: searchText,
@@ -92,7 +92,7 @@ class SyllabusList extends HookWidget {
           itemCount: result.length,
           itemBuilder: (c, i) => SyllabusItem(
             syllabus: result[i],
-            getSyllabus: getSyllabus.value,
+            getSyllabus: getSyllabus,
           ),
         ),
       );

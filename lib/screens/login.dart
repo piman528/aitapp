@@ -17,12 +17,12 @@ class LoginScreen extends HookConsumerWidget {
     final isObscure = useState(true);
     final isLoading = useState(false);
     final isError = useState(false);
-    final formKey = useRef(GlobalKey<FormState>());
+    final formKey = useMemoized(GlobalKey<FormState>.new);
 
     Future<bool> validate() async {
       late final bool loginBool;
-      if (formKey.value.currentState!.validate()) {
-        formKey.value.currentState!.save();
+      if (formKey.currentState!.validate()) {
+        formKey.currentState!.save();
         final cookies = await getCookie();
         loginBool = await loginLcam(
           id.value,
@@ -73,7 +73,7 @@ class LoginScreen extends HookConsumerWidget {
                   padding: const EdgeInsets.all(20),
                   child: AutofillGroup(
                     child: Form(
-                      key: formKey.value,
+                      key: formKey,
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
