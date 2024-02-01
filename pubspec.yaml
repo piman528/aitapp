@@ -17,27 +17,26 @@ dependencies:
   flutter_inappwebview: ^6.0.0
   flutter_localizations:
     sdk: flutter
-  flutter_riverpod:
+  flutter_riverpod: ^2.4.9
   fluttertoast: ^8.2.4
   hooks_riverpod: ^2.4.9
-  http:
-  intl: ^0.18.0
-  package_info: ^2.0.2
+  http: ^1.2.0
+  intl: ^0.18.1
   package_info_plus: ^5.0.1
   path_provider: ^2.1.1
   share_plus: ^7.2.1
   shared_preferences: ^2.2.2
   syncfusion_flutter_pdfviewer: ^24.1.41
   system_proxy: ^0.1.0
-  universal_html:
+  universal_html: ^2.2.4
   url_launcher: ^6.2.2
 
 dev_dependencies:
-  flutter_launcher_icons:
+  flutter_launcher_icons: ^0.13.1
   flutter_lints: ^3.0.1
   flutter_test:
     sdk: flutter
-  pedantic_mono: any
+  pedantic_mono: ^1.25.0
 
 flutter:
   uses-material-design: true
