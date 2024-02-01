@@ -15,9 +15,11 @@ class GetNotice {
   late String? token;
   Future<void> create(String id, String password, WidgetRef ref) async {
     token = null;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(lastLoginTimeProvider.notifier).updateLastLoginTime();
+    });
     cookies = await getCookie();
     await loginLcam(id, password, cookies![0], cookies![1]);
-    ref.read(lastLoginTimeProvider.notifier).updateLastLoginTime();
   }
 
   Future<List<UnivNotice>> getUnivNoticelist(int page) async {

@@ -39,6 +39,15 @@ class NoticeScreen extends HookConsumerWidget with RouteAware {
 
     useEffect(
       () {
+        return () {
+          isDispose.value = true;
+        };
+      },
+      [],
+    );
+
+    useEffect(
+      () {
         tabController.animateTo(
           currentPage.value,
           curve: Curves.easeOut,
@@ -49,9 +58,7 @@ class NoticeScreen extends HookConsumerWidget with RouteAware {
           currentPage.value,
           identifier: const ValueKey('currentPage'),
         );
-        return () {
-          isDispose.value = true;
-        };
+        return null;
       },
       [currentPage.value],
     );
