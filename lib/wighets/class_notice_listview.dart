@@ -8,6 +8,7 @@ import 'package:aitapp/provider/id_password_provider.dart';
 import 'package:aitapp/provider/last_login_time_provider.dart';
 import 'package:aitapp/provider/last_notice_login_time_provider.dart';
 import 'package:aitapp/provider/notice_token_provider.dart';
+import 'package:aitapp/provider/tab_button_provider.dart';
 import 'package:aitapp/wighets/class_notice.dart';
 import 'package:aitapp/wighets/search_bar.dart';
 import 'package:async/async.dart';
@@ -115,15 +116,24 @@ class ClassNoticeList extends HookConsumerWidget {
       }
     }
 
-    ref.listen(lastLoginTimeProvider, (previous, next) {
-      if (!isLoading.value &&
-          !ref.read(fileDownloadingProvider) &&
-          tabs.value == 1) {
-        operation.value = CancelableOperation.fromFuture(
-          load(withLogin: true),
+    ref
+      ..listen(lastLoginTimeProvider, (previous, next) {
+        if (!isLoading.value &&
+            !ref.read(fileDownloadingProvider) &&
+            tabs.value == 1) {
+          operation.value = CancelableOperation.fromFuture(
+            load(withLogin: true),
+          );
+        }
+      })
+      ..listen(tabButtonProvider, (previous, next) {
+        controller.animateTo(
+          0,
+          curve: Curves.easeOut,
+          duration: const Duration(seconds: 1),
         );
-      }
-    });
+      });
+
     useEffect(
       () {
         final classNoticeLastLogin = ref.read(lastClassLoginTimeProvider);

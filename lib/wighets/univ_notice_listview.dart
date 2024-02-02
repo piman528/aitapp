@@ -7,6 +7,7 @@ import 'package:aitapp/provider/id_password_provider.dart';
 import 'package:aitapp/provider/last_login_time_provider.dart';
 import 'package:aitapp/provider/last_notice_login_time_provider.dart';
 import 'package:aitapp/provider/notice_token_provider.dart';
+import 'package:aitapp/provider/tab_button_provider.dart';
 import 'package:aitapp/provider/univ_notices_provider.dart';
 import 'package:aitapp/wighets/search_bar.dart';
 import 'package:aitapp/wighets/univ_notice.dart';
@@ -112,15 +113,23 @@ class UnivNoticeList extends HookConsumerWidget {
       }
     }
 
-    ref.listen(lastLoginTimeProvider, (previous, next) {
-      if (!isLoading.value &&
-          !ref.read(fileDownloadingProvider) &&
-          tabs.value == 0) {
-        operation.value = CancelableOperation.fromFuture(
-          load(withLogin: true),
+    ref
+      ..listen(lastLoginTimeProvider, (previous, next) {
+        if (!isLoading.value &&
+            !ref.read(fileDownloadingProvider) &&
+            tabs.value == 0) {
+          operation.value = CancelableOperation.fromFuture(
+            load(withLogin: true),
+          );
+        }
+      })
+      ..listen(tabButtonProvider, (previous, next) {
+        controller.animateTo(
+          0,
+          curve: Curves.easeOut,
+          duration: const Duration(seconds: 1),
         );
-      }
-    });
+      });
 
     useEffect(
       () {

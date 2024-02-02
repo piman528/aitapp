@@ -1,11 +1,13 @@
+import 'package:aitapp/provider/tab_button_provider.dart';
 import 'package:aitapp/screens/class_timetable.dart';
 import 'package:aitapp/screens/notices.dart';
 import 'package:aitapp/screens/vehicle_timetable.dart';
 import 'package:aitapp/wighets/drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class TabScreen extends HookWidget {
+class TabScreen extends HookConsumerWidget {
   const TabScreen({super.key});
   static const currentPages = [
     NoticeScreen(),
@@ -32,7 +34,7 @@ class TabScreen extends HookWidget {
     ),
   ];
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final currentPageIndex = useState(0);
     return Scaffold(
       appBar: AppBar(
@@ -46,7 +48,12 @@ class TabScreen extends HookWidget {
         selectedIndex: currentPageIndex.value,
         destinations: destinations,
         onDestinationSelected: (index) {
-          currentPageIndex.value = index;
+          if (currentPageIndex.value == index) {
+            ref.read(tabButtonProvider.notifier).state =
+                !ref.read(tabButtonProvider);
+          } else {
+            currentPageIndex.value = index;
+          }
         },
       ),
     );

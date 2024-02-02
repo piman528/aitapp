@@ -38,7 +38,7 @@ class App extends ConsumerWidget {
       final prefs = await SharedPreferences.getInstance();
       final id = prefs.getString('id') ?? '';
       final password = prefs.getString('password') ?? '';
-      ref.watch(idPasswordProvider.notifier).setIdPassword(id, password);
+      ref.read(idPasswordProvider.notifier).setIdPassword(id, password);
       return [id, password];
     }
 
