@@ -30,149 +30,47 @@ class SyllabusDetail extends StatelessWidget {
           AsyncSnapshot<ClassSyllabusDetail> snapshot,
         ) {
           if (snapshot.hasData) {
-            final syllabus = snapshot.data;
-            return SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 15),
-                child: Column(
+            final classSyllabusDetail = snapshot.data!;
+            return ListView(
+              padding: const EdgeInsets.all(15),
+              children: [
+                const SizedBox(
+                  height: 10,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const SizedBox(
-                      height: 40,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(syllabus!.classRoom),
-                        Text(
-                          '${classificationToString[syllabus.classification]} ${syllabus.unitsNumber}単位    ${syllabus.semester} ${syllabus.classPeriod}',
-                        ),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    for (var i = 0; i <= syllabus.teacher.length; i += 3) ...{
-                      Row(
-                        children: [
-                          Text(
-                            '${syllabus.teacher[i]} ${syllabus.teacher[i + 1]}',
-                          ),
-                          const Spacer(),
-                        ],
-                      ),
-                    },
-                    const SizedBox(
-                      height: 30,
-                    ),
-                    const Text(
-                      '概要',
-                      style: TextStyle(
-                        fontSize: 17,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 30,
-                    ),
-                    for (final text in syllabus.content) ...{
-                      SelectableText(
-                        text,
-                        selectionHeightStyle: BoxHeightStyle.max,
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                    },
-                    const Text(
-                      '計画',
-                      style: TextStyle(
-                        fontSize: 17,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 30,
-                    ),
-                    SelectableText(
-                      syllabus.plan.join('\n'),
-                      selectionHeightStyle: BoxHeightStyle.max,
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    const Text(
-                      '学習到達目標',
-                      style: TextStyle(
-                        fontSize: 17,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 30,
-                    ),
-                    SelectableText(
-                      syllabus.learningGoal,
-                      selectionHeightStyle: BoxHeightStyle.max,
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    const Text(
-                      '方法と特徴',
-                      style: TextStyle(
-                        fontSize: 17,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 30,
-                    ),
-                    SelectableText(
-                      syllabus.features,
-                      selectionHeightStyle: BoxHeightStyle.max,
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    const Text(
-                      '成績評価',
-                      style: TextStyle(
-                        fontSize: 17,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 30,
-                    ),
-                    SelectableText(
-                      syllabus.records,
-                      selectionHeightStyle: BoxHeightStyle.max,
-                    ),
-                    if (syllabus.teachersMessage != '') ...{
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      const Text(
-                        '教員メッセージ',
-                        style: TextStyle(
-                          fontSize: 17,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 30,
-                      ),
-                      SelectableText(
-                        syllabus.teachersMessage,
-                        selectionHeightStyle: BoxHeightStyle.max,
-                      ),
-                    },
-                    const SizedBox(
-                      height: 30,
+                    Text(classSyllabusDetail.classRoom),
+                    Text(
+                      '${classificationToString[classSyllabusDetail.classification]} ${classSyllabusDetail.unitsNumber}単位    ${classSyllabusDetail.semester} ${classSyllabusDetail.classPeriod}',
                     ),
                   ],
                 ),
-              ),
+                const SizedBox(
+                  height: 10,
+                ),
+                for (var i = 0;
+                    i < classSyllabusDetail.teacher.length;
+                    i++) ...{
+                  Text(
+                    '${classSyllabusDetail.teacher[i]} ${classSyllabusDetail.teacherRuby[i]}',
+                  ),
+                },
+                _buildSection('概要', classSyllabusDetail.content),
+                _buildSection('計画', [classSyllabusDetail.plan.join('\n')]),
+                _buildSection('学習到達目標', [classSyllabusDetail.learningGoal]),
+                _buildSection('方法と特徴', [classSyllabusDetail.features]),
+                _buildSection('成績評価', [classSyllabusDetail.records]),
+                if (classSyllabusDetail.teachersMessage.isNotEmpty) ...{
+                  _buildSection(
+                    '教員メッセージ',
+                    [classSyllabusDetail.teachersMessage],
+                  ),
+                },
+                const SizedBox(
+                  height: 10,
+                ),
+              ],
             );
           } else if (snapshot.hasError) {
             if (snapshot.error is SocketException) {
@@ -198,6 +96,23 @@ class SyllabusDetail extends StatelessWidget {
           }
         },
       ),
+    );
+  }
+
+  Widget _buildSection(String title, List<String> content) {
+    return Column(
+      children: [
+        const SizedBox(height: 30),
+        Text(
+          title,
+          style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(
+          height: 30,
+        ),
+        for (final text in content)
+          SelectableText(text, selectionHeightStyle: BoxHeightStyle.max),
+      ],
     );
   }
 }

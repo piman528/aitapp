@@ -6,9 +6,10 @@ import 'package:aitapp/provider/file_downloading_provider.dart';
 import 'package:async/async.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:url_launcher/link.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class UnivNoticeDetailScreen extends HookConsumerWidget {
   const UnivNoticeDetailScreen({
@@ -22,12 +23,6 @@ class UnivNoticeDetailScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final regExp = useMemoized(
-      () => RegExp(
-        r"(http(s)?:\/\/[a-zA-Z0-9-.!'()*;/?:@&=+$,%_#]+)",
-        caseSensitive: false,
-      ),
-    );
     final error = useState<String?>(null);
     final univNotice = useState<UnivNotice?>(null);
     final operation = useRef<CancelableOperation<void>?>(null);
@@ -79,107 +74,78 @@ class UnivNoticeDetailScreen extends HookConsumerWidget {
     );
 
     if (univNotice.value != null) {
-      content.value = SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15),
-          child: Column(
+      content.value = ListView(
+        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 30),
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const SizedBox(
-                height: 40,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(univNotice.value!.sendAt),
-                  Text(univNotice.value!.sender),
-                ],
-              ),
-              const SizedBox(
-                height: 30,
-              ),
-              SelectionArea(
-                child: Column(
-                  children: [
-                    Text(
-                      univNotice.value!.title,
-                      style: const TextStyle(
-                        fontSize: 17,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 60,
-                    ),
-                    for (final text in univNotice.value!.content) ...{
-                      if (text != '') ...{
-                        if (regExp.stringMatch(text) != null) ...{
-                          Link(
-                            uri: Uri.parse(regExp.stringMatch(text)!),
-                            target: LinkTarget.blank,
-                            builder: (context, followLink) => TextButton(
-                              onPressed: followLink,
-                              child: Text(text),
-                            ),
-                          ),
-                        } else ...{
-                          Text(text),
-                        },
-                        const SizedBox(
-                          height: 20,
-                        ),
-                      },
-                    },
-                    if (univNotice.value!.url.isNotEmpty) ...{
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      const Text(
-                        '参考URL',
-                        style: TextStyle(
-                          fontSize: 17,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      for (final url in univNotice.value!.url) ...{
-                        Link(
-                          uri: Uri.parse(regExp.stringMatch(url)!),
-                          target: LinkTarget.blank,
-                          builder: (context, followLink) => TextButton(
-                            onPressed: followLink,
-                            child: Text(url),
-                          ),
-                        ),
-                      },
-                    },
-                    if (univNotice.value!.files!.isNotEmpty) ...{
-                      const Text(
-                        '添付ファイル',
-                        style: TextStyle(
-                          fontSize: 17,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      for (final entries
-                          in univNotice.value!.files!.entries) ...{
-                        TextButton(
-                          onPressed: ref.watch(fileDownloadingProvider)
-                              ? null
-                              : () {
-                                  fileShare(entries);
-                                },
-                          child: Text(entries.key),
-                        ),
-                      },
-                    },
-                    const SizedBox(
-                      height: 40,
-                    ),
-                  ],
-                ),
-              ),
+              Text(univNotice.value!.sendAt),
+              Text(univNotice.value!.sender),
             ],
           ),
-        ),
+          const SizedBox(
+            height: 30,
+          ),
+          SelectionArea(
+            child: Column(
+              children: [
+                Text(
+                  univNotice.value!.title,
+                  style: const TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(
+                  height: 60,
+                ),
+                Html(
+                  data: univNotice.value!.content.first,
+                ),
+                if (univNotice.value!.url.isNotEmpty) ...{
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  const Text(
+                    '参考URL',
+                    style: TextStyle(
+                      fontSize: 17,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  for (final url in univNotice.value!.url) ...{
+                    TextButton(
+                      child: Text(url),
+                      onPressed: () {
+                        launchUrl(Uri.parse(url));
+                      },
+                    ),
+                  },
+                },
+                if (univNotice.value!.files!.isNotEmpty) ...{
+                  const Text(
+                    '添付ファイル',
+                    style: TextStyle(
+                      fontSize: 17,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  for (final entries in univNotice.value!.files!.entries) ...{
+                    TextButton(
+                      onPressed: ref.watch(fileDownloadingProvider)
+                          ? null
+                          : () {
+                              fileShare(entries);
+                            },
+                      child: Text(entries.key),
+                    ),
+                  },
+                },
+              ],
+            ),
+          ),
+        ],
       );
     }
     if (error.value != null) {

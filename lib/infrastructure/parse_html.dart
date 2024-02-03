@@ -7,7 +7,6 @@ import 'package:aitapp/models/class_syllabus.dart';
 import 'package:aitapp/models/syllabus_filter.dart';
 import 'package:aitapp/models/univ_notice.dart';
 import 'package:http/http.dart';
-import 'package:universal_html/html.dart' as html;
 import 'package:universal_html/parsing.dart';
 
 final _regexSplitSetCookies = RegExp(',(?=[^ ])');
@@ -89,17 +88,16 @@ ClassNotice parseClassNoticeDetail(String body) {
         }
       }
     } else if (mainContent == 1) {
-      final maincontents = tr.querySelector('td > div')!.nodes;
-      for (final mainContent in maincontents) {
-        if (mainContent.nodeType == html.Node.ELEMENT_NODE) {
-          for (final childNode in mainContent.childNodes) {
-            final text = childNode.text!.trim();
-            if (text != '') {
-              texts.add(text);
-            }
-          }
-        }
-      }
+      final html = tr.querySelector('td > div')!.outerHtml!;
+      final filteredHtml = html
+          .replaceAll(RegExp('style="background-color: #[a-f0-9]{6};"'), '')
+          .replaceAll(RegExp('style="color: #[a-f0-9]{6};"'), '')
+          .replaceAll(RegExp('background-color: #[a-f0-9]{6};'), '')
+          .replaceAll(RegExp('color: #[a-f0-9]{6};'), '');
+
+      texts.add(
+        '<html><body>$filteredHtml</body></html>',
+      );
       mainContent = 0;
     }
     if (mainContent == 2) {
@@ -210,18 +208,16 @@ UnivNotice parseUnivNoticeDetail(String body) {
         }
       }
     } else if (mainContent == 1) {
-      final maincontents = tr.querySelector('td > div')!.nodes;
-      for (final mainContent in maincontents) {
-        if (mainContent.nodeType == html.Node.ELEMENT_NODE) {
-          for (final childNode in mainContent.childNodes) {
-            final text = childNode.text!.trim();
-            if (text != '') {
-              texts.add(text);
-              // print(text);
-            }
-          }
-        }
-      }
+      final html = tr.querySelector('td > div')!.outerHtml!;
+      final filteredHtml = html
+          .replaceAll(RegExp('style="background-color: #[a-f0-9]{6};"'), '')
+          .replaceAll(RegExp('style="color: #[a-f0-9]{6};"'), '')
+          .replaceAll(RegExp('background-color: #[a-f0-9]{6};'), '')
+          .replaceAll(RegExp('color: #[a-f0-9]{6};'), '');
+
+      texts.add(
+        '<html><body>$filteredHtml</body></html>',
+      );
       mainContent = 0;
     }
     if (mainContent == 2) {
@@ -537,10 +533,12 @@ ClassSyllabusDetail parseSyllabusDetail(String body) {
           ? Classification.required
           : Classification.requiredElective;
   final teacher = <String>[];
+  final teacherRuby = <String>[];
   for (var i = texts.indexOf('担当教員') + 1;
       i < texts.indexOf('研究室・オフィスアワー');
-      i++) {
+      i = i + 2) {
     teacher.add(texts[i]);
+    teacherRuby.add(texts[i + 1]);
   }
   final subject = texts[texts.indexOf('科目名') + 3];
   final classPeriod = texts[texts.indexOf('曜日・時限') + 1];
@@ -564,6 +562,7 @@ ClassSyllabusDetail parseSyllabusDetail(String body) {
     int.parse(unitsNumber),
     classification,
     teacher,
+    teacherRuby,
     semester,
     [content],
     subject,

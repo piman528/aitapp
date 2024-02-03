@@ -34,6 +34,7 @@ class ClassSyllabusDetail {
     this.unitsNumber,
     this.classification,
     this.teacher,
+    this.teacherRuby,
     this.semester,
     this.content,
     this.subject,
@@ -50,6 +51,7 @@ class ClassSyllabusDetail {
   final Classification classification;
   // 教員名
   final List<String> teacher;
+  final List<String> teacherRuby;
   //開講時期
   final String semester;
   // 内容
