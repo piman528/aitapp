@@ -1,22 +1,11 @@
-class UnivNotice {
-  UnivNotice(
-    this.sender,
-    this.title,
-    this.content,
-    this.sendAt,
-    this.url,
-    this.files,
-  );
-  // 発信者
-  final String sender;
-  // タイトル
-  final String title;
-  // 内容
-  final List<String> content;
+import 'package:aitapp/models/notice.dart';
+
+class UnivNotice extends Notice {
+  UnivNotice({
+    required super.sender,
+    required super.title,
+    required this.sendAt,
+  });
   // 送信日時
   final String sendAt;
-
-  final List<String> url;
-
-  final Map<String, String>? files;
 }

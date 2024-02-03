@@ -1,4 +1,5 @@
 import 'package:aitapp/models/univ_notice.dart';
+import 'package:aitapp/models/univ_notice_detail.dart';
 import 'package:universal_html/parsing.dart';
 
 List<UnivNotice> parseUnivNotice(String body) {
@@ -23,7 +24,6 @@ List<UnivNotice> parseUnivNotice(String body) {
     var c = 0;
     var sender = '';
     var title = '';
-    const content = <String>[];
     var sendAt = '';
     // var subject = '';
     // var makeupClassAt = '';
@@ -41,13 +41,18 @@ List<UnivNotice> parseUnivNotice(String body) {
       }
       c++;
     }
-    univNoticeList
-        .add(UnivNotice(sender, title, content, sendAt, [], {'': ''}));
+    univNoticeList.add(
+      UnivNotice(
+        sender: sender,
+        title: title,
+        sendAt: sendAt,
+      ),
+    );
   }
   return univNoticeList;
 }
 
-UnivNotice parseUnivNoticeDetail(String body) {
+UnivNoticeDetail parseUnivNoticeDetail(String body) {
   final topStorytitle = parseHtmlDocument(body).querySelectorAll(
     'body > form > table > tbody > tr',
   );
@@ -117,5 +122,12 @@ UnivNotice parseUnivNoticeDetail(String body) {
   for (var i = texts.indexOf('参考URL') + 1; i < texts.indexOf('連絡日時'); i++) {
     url.add(texts[i]);
   }
-  return UnivNotice(sender, title, content, sendAt, url, fileMap);
+  return UnivNoticeDetail(
+    sender: sender,
+    title: title,
+    content: content,
+    sendAt: sendAt,
+    url: url,
+    files: fileMap,
+  );
 }

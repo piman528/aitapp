@@ -1,4 +1,5 @@
 import 'package:aitapp/models/class_notice.dart';
+import 'package:aitapp/models/class_notice_detail.dart';
 import 'package:universal_html/parsing.dart';
 
 List<ClassNotice> parseClassNotice(String body) {
@@ -23,8 +24,6 @@ List<ClassNotice> parseClassNotice(String body) {
     var c = 0;
     var sender = '';
     var title = '';
-    const content = <String>[];
-    const sendAt = '';
     var subject = '';
     var makeupClassAt = '';
     for (final text in texts) {
@@ -45,21 +44,17 @@ List<ClassNotice> parseClassNotice(String body) {
     }
     classNoticeList.add(
       ClassNotice(
-        sender,
-        title,
-        content,
-        sendAt,
-        subject,
-        makeupClassAt,
-        [],
-        {'': ''},
+        sender: sender,
+        title: title,
+        subject: subject,
+        makeupClassAt: makeupClassAt,
       ),
     );
   }
   return classNoticeList;
 }
 
-ClassNotice parseClassNoticeDetail(String body) {
+ClassNoticeDetail parseClassNoticeDetail(String body) {
   final topStorytitle = parseHtmlDocument(body).querySelectorAll(
     'body > form > table > tbody > tr',
   );
@@ -129,5 +124,13 @@ ClassNotice parseClassNoticeDetail(String body) {
   for (var i = texts.indexOf('参考URL') + 1; i < texts.indexOf('連絡日時'); i++) {
     url.add(texts[i]);
   }
-  return ClassNotice(sender, title, content, sendAt, subject, '', url, fileMap);
+  return ClassNoticeDetail(
+    sender: sender,
+    title: title,
+    sendAt: sendAt,
+    content: content,
+    subject: subject,
+    url: url,
+    files: fileMap,
+  );
 }

@@ -4,7 +4,9 @@ import 'package:aitapp/infrastructure/parse_class_notice.dart';
 import 'package:aitapp/infrastructure/parse_lcam.dart';
 import 'package:aitapp/infrastructure/parse_univ_notice.dart';
 import 'package:aitapp/models/class_notice.dart';
+import 'package:aitapp/models/class_notice_detail.dart';
 import 'package:aitapp/models/univ_notice.dart';
+import 'package:aitapp/models/univ_notice_detail.dart';
 import 'package:aitapp/provider/last_login_time_provider.dart';
 import 'package:aitapp/screens/open_file_pdf.dart';
 import 'package:flutter/material.dart';
@@ -80,7 +82,7 @@ class GetNotice {
     return parseClassNotice(body);
   }
 
-  Future<UnivNotice> getUnivNoticeDetail(int pageNumber) async {
+  Future<UnivNoticeDetail> getUnivNoticeDetail(int pageNumber) async {
     if (cookies!.isEmpty) {
       throw Exception('ログインできません');
     }
@@ -93,7 +95,7 @@ class GetNotice {
     return parseUnivNoticeDetail(body);
   }
 
-  Future<ClassNotice> getClassNoticeDetail(int pageNumber) async {
+  Future<ClassNoticeDetail> getClassNoticeDetail(int pageNumber) async {
     if (cookies!.isEmpty) {
       throw Exception('ログインできません');
     }

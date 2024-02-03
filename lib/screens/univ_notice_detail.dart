@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:aitapp/models/get_notice.dart';
-import 'package:aitapp/models/univ_notice.dart';
+import 'package:aitapp/models/univ_notice_detail.dart';
 import 'package:aitapp/provider/file_downloading_provider.dart';
 import 'package:async/async.dart';
 import 'package:flutter/material.dart';
@@ -24,7 +24,7 @@ class UnivNoticeDetailScreen extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final error = useState<String?>(null);
-    final univNotice = useState<UnivNotice?>(null);
+    final univNotice = useState<UnivNoticeDetail?>(null);
     final operation = useRef<CancelableOperation<void>?>(null);
     final content = useState<Widget>(
       const Center(
@@ -98,7 +98,7 @@ class UnivNoticeDetailScreen extends HookConsumerWidget {
                   ),
                 ),
                 const SizedBox(
-                  height: 60,
+                  height: 50,
                 ),
                 Html(
                   data: univNotice.value!.content.first,
@@ -123,7 +123,7 @@ class UnivNoticeDetailScreen extends HookConsumerWidget {
                     ),
                   },
                 },
-                if (univNotice.value!.files!.isNotEmpty) ...{
+                if (univNotice.value!.files.isNotEmpty) ...{
                   const Text(
                     '添付ファイル',
                     style: TextStyle(
@@ -131,7 +131,7 @@ class UnivNoticeDetailScreen extends HookConsumerWidget {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  for (final entries in univNotice.value!.files!.entries) ...{
+                  for (final entries in univNotice.value!.files.entries) ...{
                     TextButton(
                       onPressed: ref.watch(fileDownloadingProvider)
                           ? null
