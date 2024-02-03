@@ -113,10 +113,7 @@ UnivNoticeDetail parseUnivNoticeDetail(String body) {
   final titleindex = texts.indexOf('タイトル') + 1;
   final title =
       texts[titleindex] != '重要' ? texts[titleindex] : texts[titleindex + 1];
-  final content = <String>[];
-  for (var i = texts.indexOf('連絡内容') + 1; i < texts.indexOf('連絡元'); i++) {
-    content.add(texts[i]);
-  }
+  final content = texts[texts.indexOf('連絡内容') + 1];
   final sendAt = texts[texts.indexOf('連絡日時') + 1];
   final url = <String>[];
   for (var i = texts.indexOf('参考URL') + 1; i < texts.indexOf('連絡日時'); i++) {

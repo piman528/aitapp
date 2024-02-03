@@ -104,7 +104,7 @@ class NoticeDetailScreen extends HookConsumerWidget {
                   height: 50,
                 ),
                 Html(
-                  data: notice.value!.content.first,
+                  data: notice.value!.content,
                 ),
                 if (notice.value!.url.isNotEmpty) ...{
                   const SizedBox(

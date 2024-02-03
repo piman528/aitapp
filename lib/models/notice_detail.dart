@@ -12,7 +12,7 @@ class NoticeDetail {
   // タイトル
   final String title;
   // 内容
-  final List<String> content;
+  final String content;
   // url
   final List<String> url;
   // ファイルurl
