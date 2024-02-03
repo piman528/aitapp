@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'package:aitapp/infrastructure/access_lcan.dart';
-import 'package:aitapp/infrastructure/parse_html.dart';
+import 'package:aitapp/infrastructure/parse_class_notice.dart';
+import 'package:aitapp/infrastructure/parse_lcam.dart';
+import 'package:aitapp/infrastructure/parse_univ_notice.dart';
 import 'package:aitapp/models/class_notice.dart';
 import 'package:aitapp/models/univ_notice.dart';
 import 'package:aitapp/provider/last_login_time_provider.dart';

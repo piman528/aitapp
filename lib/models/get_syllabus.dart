@@ -1,5 +1,5 @@
 import 'package:aitapp/const.dart';
-import 'package:aitapp/infrastructure/parse_html.dart';
+import 'package:aitapp/infrastructure/parse_syllabus.dart';
 import 'package:aitapp/infrastructure/syllabus_search.dart';
 import 'package:aitapp/models/class_syllabus.dart';
 import 'package:aitapp/models/syllabus_filter.dart';

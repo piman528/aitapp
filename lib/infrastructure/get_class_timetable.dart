@@ -1,6 +1,6 @@
 import 'package:aitapp/const.dart';
 import 'package:aitapp/infrastructure/access_lcan.dart';
-import 'package:aitapp/infrastructure/parse_html.dart';
+import 'package:aitapp/infrastructure/parse_lcam.dart';
 import 'package:aitapp/models/class.dart';
 import 'package:aitapp/provider/last_login_time_provider.dart';
 import 'package:flutter/material.dart';
