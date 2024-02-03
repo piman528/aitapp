@@ -39,7 +39,6 @@ class SyllabusFilterScreen extends HookWidget {
         centerTitle: true,
         title: Text(
           '${dayOfWeekToString[dayOfWeek]} $classPeriod限から検索',
-          // style: TextStyle(color: Colors.black),
         ),
       ),
       body: Column(

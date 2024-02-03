@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:aitapp/models/get_notice.dart';
-import 'package:aitapp/models/univ_notice_detail.dart';
+import 'package:aitapp/models/notice_detail.dart';
 import 'package:aitapp/provider/file_downloading_provider.dart';
 import 'package:async/async.dart';
 import 'package:flutter/material.dart';
@@ -11,20 +11,22 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class UnivNoticeDetailScreen extends HookConsumerWidget {
-  const UnivNoticeDetailScreen({
+class NoticeDetailScreen extends HookConsumerWidget {
+  const NoticeDetailScreen({
     super.key,
     required this.index,
     required this.getNotice,
+    required this.isCommon,
   });
 
   final int index;
   final GetNotice getNotice;
+  final bool isCommon;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final error = useState<String?>(null);
-    final univNotice = useState<UnivNoticeDetail?>(null);
+    final notice = useState<NoticeDetail?>(null);
     final operation = useRef<CancelableOperation<void>?>(null);
     final content = useState<Widget>(
       const Center(
@@ -38,7 +40,9 @@ class UnivNoticeDetailScreen extends HookConsumerWidget {
 
     Future<void> loadData() async {
       try {
-        univNotice.value = await getNotice.getUnivNoticeDetail(index);
+        notice.value = isCommon
+            ? await getNotice.getUnivNoticeDetail(index)
+            : await getNotice.getClassNoticeDetail(index);
       } on SocketException {
         error.value = 'インターネットに接続できません';
       } on Exception catch (err) {
@@ -72,16 +76,15 @@ class UnivNoticeDetailScreen extends HookConsumerWidget {
       },
       [],
     );
-
-    if (univNotice.value != null) {
+    if (notice.value != null) {
       content.value = ListView(
         padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 30),
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(univNotice.value!.sendAt),
-              Text(univNotice.value!.sender),
+              Text(notice.value!.sendAt),
+              Text(notice.value!.sender),
             ],
           ),
           const SizedBox(
@@ -91,7 +94,7 @@ class UnivNoticeDetailScreen extends HookConsumerWidget {
             child: Column(
               children: [
                 Text(
-                  univNotice.value!.title,
+                  notice.value!.title,
                   style: const TextStyle(
                     fontSize: 17,
                     fontWeight: FontWeight.bold,
@@ -101,9 +104,9 @@ class UnivNoticeDetailScreen extends HookConsumerWidget {
                   height: 50,
                 ),
                 Html(
-                  data: univNotice.value!.content.first,
+                  data: notice.value!.content.first,
                 ),
-                if (univNotice.value!.url.isNotEmpty) ...{
+                if (notice.value!.url.isNotEmpty) ...{
                   const SizedBox(
                     height: 10,
                   ),
@@ -114,7 +117,7 @@ class UnivNoticeDetailScreen extends HookConsumerWidget {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  for (final url in univNotice.value!.url) ...{
+                  for (final url in notice.value!.url) ...{
                     TextButton(
                       child: Text(url),
                       onPressed: () {
@@ -123,7 +126,7 @@ class UnivNoticeDetailScreen extends HookConsumerWidget {
                     ),
                   },
                 },
-                if (univNotice.value!.files.isNotEmpty) ...{
+                if (notice.value!.files.isNotEmpty) ...{
                   const Text(
                     '添付ファイル',
                     style: TextStyle(
@@ -131,7 +134,7 @@ class UnivNoticeDetailScreen extends HookConsumerWidget {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  for (final entries in univNotice.value!.files.entries) ...{
+                  for (final entries in notice.value!.files.entries) ...{
                     TextButton(
                       onPressed: ref.watch(fileDownloadingProvider)
                           ? null

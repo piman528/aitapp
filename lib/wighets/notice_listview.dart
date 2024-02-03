@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:aitapp/models/class_notice.dart';
 import 'package:aitapp/models/get_notice.dart';
+import 'package:aitapp/models/notice.dart';
+import 'package:aitapp/models/univ_notice.dart';
 import 'package:aitapp/provider/class_notices_provider.dart';
 import 'package:aitapp/provider/file_downloading_provider.dart';
 import 'package:aitapp/provider/id_password_provider.dart';
@@ -9,7 +11,8 @@ import 'package:aitapp/provider/last_login_time_provider.dart';
 import 'package:aitapp/provider/last_notice_login_time_provider.dart';
 import 'package:aitapp/provider/notice_token_provider.dart';
 import 'package:aitapp/provider/tab_button_provider.dart';
-import 'package:aitapp/wighets/class_notice.dart';
+import 'package:aitapp/provider/univ_notices_provider.dart';
+import 'package:aitapp/wighets/notice_item.dart';
 import 'package:aitapp/wighets/search_bar.dart';
 import 'package:async/async.dart';
 import 'package:flutter/material.dart';
@@ -17,17 +20,19 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class ClassNoticeList extends HookConsumerWidget {
-  const ClassNoticeList({
+class NoticeList extends HookConsumerWidget {
+  const NoticeList({
     super.key,
     required this.getNotice,
     required this.loading,
     required this.tabs,
+    required this.isCommon,
   });
 
   final GetNotice getNotice;
   final void Function({required bool state}) loading;
   final ValueNotifier<int> tabs;
+  final bool isCommon;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -40,66 +45,109 @@ class ClassNoticeList extends HookConsumerWidget {
         ),
       ),
     );
+    final pageKey = useMemoized(
+      () => ValueKey(
+        isCommon ? 'univNoticePage' : 'classNoticePage',
+      ),
+    );
+    final scrollKey = useMemoized(
+      () => ValueKey(
+        isCommon ? 'univScrollOffset' : 'classScrollOffset',
+      ),
+    );
+    final error = useState<String?>(null);
+    final isLoading = useState(false);
+    final filter = useState('');
     final beforeReloadLengh = useRef(0);
     final page = useRef(
       (PageStorage.of(context).readState(
             context,
-            identifier: const ValueKey('classNoticePage'),
+            identifier: pageKey,
           ) ??
           10) as int,
     );
     final isManual = useRef(false);
-    final error = useState<String?>(null);
-    final isLoading = useState(false);
-    final classController = useTextEditingController();
-    final classFilter = useState('');
     final operation = useRef<CancelableOperation<void>?>(null);
+    final textEditingController = useTextEditingController();
     final isDispose = useRef(false);
     final controller = useScrollController(
-      initialScrollOffset: (PageStorage.of(context).readState(
-            context,
-            identifier: const ValueKey('classScrollOffset'),
-          ) ??
-          0.0) as double,
+      initialScrollOffset:
+          (PageStorage.of(context).readState(context, identifier: scrollKey) ??
+              0.0) as double,
     );
 
-    List<ClassNotice> filteredList(List<ClassNotice> list) {
-      final result = list
-          .where(
-            (classNotice) =>
-                classNotice.subject.toLowerCase().contains(
-                      classFilter.value.toLowerCase(),
-                    ) ||
-                classNotice.title.toLowerCase().contains(
-                      classFilter.value.toLowerCase(),
-                    ) ||
-                classNotice.sender.toLowerCase().contains(
-                      classFilter.value.toLowerCase(),
-                    ),
-          )
-          .toList();
+    List<Notice> filteredList(List<Notice> list) {
+      late final List<Notice> result;
+      if (isCommon) {
+        result = list
+            .where(
+              (notice) =>
+                  notice.title.toLowerCase().contains(
+                        filter.value.toLowerCase(),
+                      ) ||
+                  notice.sender.toLowerCase().contains(
+                        filter.value.toLowerCase(),
+                      ),
+            )
+            .toList();
+      } else {
+        result = list
+            .where(
+              (notice) =>
+                  (notice as ClassNotice).subject.toLowerCase().contains(
+                        filter.value.toLowerCase(),
+                      ) ||
+                  notice.title.toLowerCase().contains(
+                        filter.value.toLowerCase(),
+                      ) ||
+                  notice.sender.toLowerCase().contains(
+                        filter.value.toLowerCase(),
+                      ),
+            )
+            .toList();
+      }
+
       return result;
     }
 
     Future<void> load({
       required bool withLogin,
     }) async {
-      late final List<ClassNotice> result;
+      late final List<Notice> result;
       loading(state: true);
       isLoading.value = true;
       try {
         if (withLogin) {
           final identity = ref.read(idPasswordProvider);
           await getNotice.create(identity[0], identity[1], ref);
-          ref.read(classNoticeTokenProvider.notifier).state = getNotice;
-          ref.read(lastClassLoginTimeProvider.notifier).state =
-              ref.read(lastLoginTimeProvider);
-          result = await getNotice.getClassNoticelist(page.value);
+          if (isCommon) {
+            ref.read(univNoticeTokenProvider.notifier).state = getNotice;
+            ref.read(lastUnivLoginTimeProvider.notifier).state =
+                ref.read(lastLoginTimeProvider);
+            result = await getNotice.getUnivNoticelist(page.value);
+          } else {
+            ref.read(classNoticeTokenProvider.notifier).state = getNotice;
+            ref.read(lastClassLoginTimeProvider.notifier).state =
+                ref.read(lastLoginTimeProvider);
+            result = await getNotice.getClassNoticelist(page.value);
+          }
         } else {
-          result = await getNotice.getClassNoticelistNext(page.value);
+          if (isCommon) {
+            result = await getNotice.getUnivNoticelistNext(page.value);
+          } else {
+            result = await getNotice.getClassNoticelistNext(page.value);
+          }
         }
         if (!isDispose.value) {
-          ref.read(classNoticesProvider.notifier).reloadNotices(result);
+          if (isCommon) {
+            ref
+                .read(univNoticesProvider.notifier)
+                .reloadNotices(result as List<UnivNotice>);
+          } else {
+            ref
+                .read(classNoticesProvider.notifier)
+                .reloadNotices(result as List<ClassNotice>);
+          }
         }
       } on SocketException {
         if (!isDispose.value) {
@@ -111,8 +159,8 @@ class ClassNoticeList extends HookConsumerWidget {
         }
       }
       if (!isDispose.value) {
-        isLoading.value = false;
         loading(state: false);
+        isLoading.value = false;
       }
     }
 
@@ -120,7 +168,7 @@ class ClassNoticeList extends HookConsumerWidget {
       ..listen(lastLoginTimeProvider, (previous, next) {
         if (!isLoading.value &&
             !ref.read(fileDownloadingProvider) &&
-            tabs.value == 1) {
+            tabs.value == (isCommon ? 0 : 1)) {
           operation.value = CancelableOperation.fromFuture(
             load(withLogin: true),
           );
@@ -136,15 +184,20 @@ class ClassNoticeList extends HookConsumerWidget {
 
     useEffect(
       () {
-        final classNoticeLastLogin = ref.read(lastClassLoginTimeProvider);
+        late final DateTime? thisNoticeLastLogin;
+        if (isCommon) {
+          thisNoticeLastLogin = ref.read(lastUnivLoginTimeProvider);
+        } else {
+          thisNoticeLastLogin = ref.read(lastClassLoginTimeProvider);
+        }
         final lastLogin = ref.read(lastLoginTimeProvider);
-        if (classNoticeLastLogin == null || classNoticeLastLogin != lastLogin) {
+        if (thisNoticeLastLogin == null || thisNoticeLastLogin != lastLogin) {
           operation.value = CancelableOperation.fromFuture(
             load(withLogin: true),
           );
         }
-        classController.addListener(() {
-          classFilter.value = classController.text;
+        textEditingController.addListener(() {
+          filter.value = textEditingController.text;
         });
         return () {
           if (operation.value != null) {
@@ -156,9 +209,12 @@ class ClassNoticeList extends HookConsumerWidget {
       [],
     );
 
-    if (ref.read(classNoticesProvider) != null) {
+    if ((isCommon && ref.read(univNoticesProvider) != null) ||
+        (!isCommon && ref.read(classNoticesProvider) != null)) {
       if (error.value == null) {
-        final result = ref.read(classNoticesProvider)!;
+        final result = isCommon
+            ? ref.read(univNoticesProvider)!
+            : ref.read(classNoticesProvider)!;
         final filteredResult = filteredList(result);
         content.value = NotificationListener<ScrollNotification>(
           onNotification: (scrollNotification) {
@@ -166,7 +222,7 @@ class ClassNoticeList extends HookConsumerWidget {
               PageStorage.of(context).writeState(
                 context,
                 controller.offset,
-                identifier: const ValueKey('classScrollOffset'),
+                identifier: scrollKey,
               );
             }
             return true;
@@ -193,7 +249,7 @@ class ClassNoticeList extends HookConsumerWidget {
                   snap: true,
                   floating: true,
                   flexibleSpace: SearchBarWidget(
-                    controller: classController,
+                    controller: textEditingController,
                     hintText: '送信元、キーワードで検索',
                   ),
                 ),
@@ -209,17 +265,18 @@ class ClassNoticeList extends HookConsumerWidget {
                             PageStorage.of(context).writeState(
                               context,
                               page.value,
-                              identifier: const ValueKey('classNoticePage'),
+                              identifier: pageKey,
                             );
                             load(withLogin: false);
                           });
                         }
                       }
-                      return ClassNoticeItem(
+                      return NoticeItem(
                         notice: filteredResult[i],
                         index: result.indexOf(filteredResult[i]),
                         getNotice: getNotice,
                         tap: !isLoading.value,
+                        isCommon: isCommon,
                       );
                     },
                     childCount: filteredResult.length,
@@ -242,7 +299,8 @@ class ClassNoticeList extends HookConsumerWidget {
         LinearProgressIndicator(
           minHeight: 2,
           value: isLoading.value &&
-                  ref.read(classNoticesProvider) != null &&
+                  ((isCommon && ref.read(univNoticesProvider) != null) ||
+                      (!isCommon && ref.read(classNoticesProvider) != null)) &&
                   !isManual.value
               ? null
               : 0,

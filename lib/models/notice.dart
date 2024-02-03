@@ -1,4 +1,4 @@
-class Notice {
+abstract class Notice {
   Notice({
     required this.sender,
     required this.title,

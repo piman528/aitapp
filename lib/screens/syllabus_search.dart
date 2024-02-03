@@ -88,7 +88,6 @@ class SyllabusSearchScreen extends HookConsumerWidget {
         centerTitle: true,
         title: const Text(
           'シラバス検索',
-          // style: TextStyle(color: Colors.black),
         ),
         actions: const [SizedBox()],
       ),

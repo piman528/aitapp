@@ -1,7 +1,6 @@
 import 'package:aitapp/models/get_notice.dart';
 import 'package:aitapp/provider/notice_token_provider.dart';
-import 'package:aitapp/wighets/class_notice_listview.dart';
-import 'package:aitapp/wighets/univ_notice_listview.dart';
+import 'package:aitapp/wighets/notice_listview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -100,15 +99,17 @@ class NoticeScreen extends HookConsumerWidget with RouteAware {
               physics: const NeverScrollableScrollPhysics(),
               controller: tabController,
               children: [
-                UnivNoticeList(
+                NoticeList(
                   getNotice: ref.read(univNoticeTokenProvider) ?? GetNotice(),
                   loading: loading,
                   tabs: currentPage,
+                  isCommon: true,
                 ),
-                ClassNoticeList(
+                NoticeList(
                   getNotice: ref.read(classNoticeTokenProvider) ?? GetNotice(),
                   loading: loading,
                   tabs: currentPage,
+                  isCommon: false,
                 ),
               ],
             ),
