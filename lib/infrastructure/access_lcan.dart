@@ -1,10 +1,12 @@
 // ignore_for_file: lines_longer_than_80_chars
+
+import 'package:aitapp/models/cookies.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:universal_html/parsing.dart';
 
-Future<List<String>> getCookie() async {
+Future<Cookies> getCookie() async {
   debugPrint('getcookie');
   final headers = {
     'Accept': '*/*',
@@ -21,23 +23,16 @@ Future<List<String>> getCookie() async {
     throw Exception('http.get error: statusCode= $status');
   }
 
-  final cookies = <String>[];
-
   final setCookie = _getSetCookie(res.headers);
-  if (setCookie.isNotEmpty) {
-    for (final cookie in setCookie.split(RegExp(',(?=[^ ])'))) {
-      cookies.add(cookie.split(';')[0]);
-    }
-  }
-  return cookies;
+  final cookies = setCookie.split(RegExp(',(?=[^ ])'));
+  return Cookies(jSessionId: cookies[0], liveAppsCookie: cookies[1]);
 }
 
-Future<bool> loginLcam(
-  String id,
-  String password,
-  String jSessionId,
-  String liveAppsCookie,
-) async {
+Future<bool> loginLcam({
+  required String id,
+  required String password,
+  required Cookies cookies,
+}) async {
   debugPrint('loginlcam');
   final headers = {
     'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
@@ -49,7 +44,7 @@ Future<bool> loginLcam(
     'Referer': 'https://lcam.aitech.ac.jp/portalv2/sp',
     'Connection': 'keep-alive',
     'Sec-Fetch-Dest': 'document',
-    'Cookie': '$jSessionId; $liveAppsCookie',
+    'Cookie': '${cookies.jSessionId}; ${cookies.liveAppsCookie}',
     'Accept-Encoding': 'gzip',
   };
 
@@ -85,8 +80,7 @@ Future<bool> loginLcam(
 }
 
 Future<String> getStrutsToken({
-  required String jSessionId,
-  required String liveAppsCookie,
+  required Cookies cookies,
   required bool isCommon,
 }) async {
   debugPrint('gettoken');
@@ -98,7 +92,7 @@ Future<String> getStrutsToken({
   }
   final headers = {
     'Sec-Fetch-Site': 'same-origin',
-    'Cookie': '$jSessionId; $liveAppsCookie',
+    'Cookie': '${cookies.jSessionId}; ${cookies.liveAppsCookie}',
     'Connection': 'keep-alive',
     'Sec-Fetch-Mode': 'navigate',
     'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
@@ -121,11 +115,10 @@ Future<String> getStrutsToken({
   return res.body;
 }
 
-Future<String> getClassNoticeBody(
-  String jSessionId,
-  String liveAppsCookie,
-  String token,
-) async {
+Future<String> getClassNoticeBody({
+  required Cookies cookies,
+  required String token,
+}) async {
   debugPrint('getClassNoticeBody');
   final headers = {
     'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
@@ -138,7 +131,7 @@ Future<String> getClassNoticeBody(
         'https://lcam.aitech.ac.jp/portalv2/smartphone/smartPhoneContactNotice/nextPage/classContact',
     'Connection': 'keep-alive',
     'Sec-Fetch-Dest': 'document',
-    'Cookie': '$liveAppsCookie; $jSessionId',
+    'Cookie': '${cookies.jSessionId}; ${cookies.liveAppsCookie}',
     'Accept-Encoding': 'gzip',
   };
 
@@ -166,12 +159,11 @@ Future<String> getClassNoticeBody(
   return res.body;
 }
 
-Future<String> getClassNoticeBodyNext(
-  String jSessionId,
-  String liveAppsCookie,
-  String token,
-  int pageNumber,
-) async {
+Future<String> getClassNoticeBodyNext({
+  required Cookies cookies,
+  required String token,
+  required int pageNumber,
+}) async {
   debugPrint('getClassNoticeBodyNext');
   final headers = {
     'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
@@ -183,8 +175,7 @@ Future<String> getClassNoticeBodyNext(
     'Referer':
         'https://lcam.aitech.ac.jp/portalv2/smartphone/smartPhoneClassContact/selectClassContactList',
     'Connection': 'keep-alive',
-    'Cookie':
-        '$jSessionId; $liveAppsCookie; $jSessionId; L-CamApp=Y; $liveAppsCookie',
+    'Cookie': '${cookies.jSessionId}; ${cookies.liveAppsCookie}',
     'Sec-Fetch-Dest': 'document',
     'Accept-Encoding': 'gzip',
   };
@@ -213,11 +204,10 @@ Future<String> getClassNoticeBodyNext(
   return res.body;
 }
 
-Future<String> getUnivNoticeBody(
-  String jSessionId,
-  String liveAppsCookie,
-  String token,
-) async {
+Future<String> getUnivNoticeBody({
+  required Cookies cookies,
+  required String token,
+}) async {
   debugPrint('getUnivNoticeBody');
   final headers = {
     'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
@@ -229,8 +219,7 @@ Future<String> getUnivNoticeBody(
     'Referer':
         'https://lcam.aitech.ac.jp/portalv2/smartphone/smartPhoneContactNotice/nextPage/commonContact/',
     'Connection': 'keep-alive',
-    'Cookie':
-        '$jSessionId; $liveAppsCookie; $jSessionId; L-CamApp=Y; $liveAppsCookie',
+    'Cookie': '${cookies.jSessionId}; ${cookies.liveAppsCookie}',
     'Sec-Fetch-Dest': 'document',
     'Accept-Encoding': 'gzip',
   };
@@ -258,12 +247,11 @@ Future<String> getUnivNoticeBody(
   return res.body;
 }
 
-Future<String> getUnivNoticeBodyNext(
-  String jSessionId,
-  String liveAppsCookie,
-  String token,
-  int pageNumber,
-) async {
+Future<String> getUnivNoticeBodyNext({
+  required Cookies cookies,
+  required String token,
+  required int pageNumber,
+}) async {
   debugPrint('getUnivNoticeBodyNext');
   final headers = {
     'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
@@ -275,8 +263,7 @@ Future<String> getUnivNoticeBodyNext(
     'Referer':
         'https://lcam.aitech.ac.jp/portalv2/smartphone/smartPhoneCommonContact/selectCommonContactList',
     'Connection': 'keep-alive',
-    'Cookie':
-        '$jSessionId; $liveAppsCookie; $jSessionId; L-CamApp=Y; $liveAppsCookie',
+    'Cookie': '${cookies.jSessionId}; ${cookies.liveAppsCookie}',
     'Sec-Fetch-Dest': 'document',
     'Accept-Encoding': 'gzip',
   };
@@ -305,15 +292,11 @@ Future<String> getUnivNoticeBodyNext(
   return res.body;
 }
 
-Future<String> getClassTimeTableBody(
-  String jSessionId,
-  String liveAppsCookie,
-) async {
+Future<String> getClassTimeTableBody({required Cookies cookies}) async {
   debugPrint('getClassTimeTableBody');
   final headers = {
     'Sec-Fetch-Site': 'none',
-    'Cookie':
-        '$jSessionId; $liveAppsCookie; $jSessionId; L-CamApp=Y; LiveApps-Cookie=$liveAppsCookie',
+    'Cookie': '${cookies.jSessionId}; ${cookies.liveAppsCookie}',
     'Connection': 'keep-alive',
     'Sec-Fetch-Mode': 'navigate',
     'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
@@ -335,12 +318,11 @@ Future<String> getClassTimeTableBody(
   return res.body;
 }
 
-Future<String> getClassNoticeDetailBody(
-  int index,
-  String jSessionId,
-  String liveAppsCookie,
-  String token,
-) async {
+Future<String> getClassNoticeDetailBody({
+  required int index,
+  required Cookies cookies,
+  required String token,
+}) async {
   debugPrint('getClassNoticeDetailBody');
   final headers = {
     'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
@@ -352,8 +334,7 @@ Future<String> getClassNoticeDetailBody(
     'Referer':
         'https://lcam.aitech.ac.jp/portalv2/smartphone/smartPhoneContactNotice/nextPage/classContact/',
     'Connection': 'keep-alive',
-    'Cookie':
-        '$jSessionId; $liveAppsCookie; $jSessionId; L-CamApp=Y; $liveAppsCookie',
+    'Cookie': '${cookies.jSessionId}; ${cookies.liveAppsCookie}',
     'Sec-Fetch-Dest': 'document',
     'Accept-Encoding': 'gzip',
   };
@@ -376,12 +357,11 @@ Future<String> getClassNoticeDetailBody(
   return res.body;
 }
 
-Future<String> getUnivNoticeDetailBody(
-  int index,
-  String jSessionId,
-  String liveAppsCookie,
-  String token,
-) async {
+Future<String> getUnivNoticeDetailBody({
+  required int index,
+  required Cookies cookies,
+  required String token,
+}) async {
   debugPrint('getUnivNoticeDetailBody');
   final headers = {
     'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
@@ -393,8 +373,7 @@ Future<String> getUnivNoticeDetailBody(
     'Referer':
         'https://lcam.aitech.ac.jp/portalv2/smartphone/smartPhoneCommonContact/nextSelectCommonContactList',
     'Connection': 'keep-alive',
-    'Cookie':
-        '$jSessionId; $liveAppsCookie; $jSessionId; L-CamApp=Y; $liveAppsCookie',
+    'Cookie': '${cookies.jSessionId}; ${cookies.liveAppsCookie}',
     'Sec-Fetch-Dest': 'document',
     'Accept-Encoding': 'gzip',
   };
@@ -423,17 +402,14 @@ Future<String> getUnivNoticeDetailBody(
   return res.body;
 }
 
-Future<Response> getFile(
-  String jSessionId,
-  String liveAppsCookie,
-  String fileUrl,
-) async {
+Future<Response> getFile({
+  required Cookies cookies,
+  required String fileUrl,
+}) async {
   debugPrint('getfile');
   final headers = {
     'Accept': '*/*',
-    'Cookie':
-        '$jSessionId; $liveAppsCookie; $jSessionId; L-CamApp=Y; $liveAppsCookie',
-    'User-Agent': 'L-Cam/1.12.03 CFNetwork/1490.0.4 Darwin/23.2.0',
+    'Cookie': '${cookies.jSessionId}; ${cookies.liveAppsCookie}',
     'Accept-Language': 'ja',
     'Connection': 'keep-alive',
     'Accept-Encoding': 'gzip',

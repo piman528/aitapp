@@ -22,10 +22,9 @@ class WebViewScreen extends HookConsumerWidget {
       final cookies = await getCookie();
       final identity = ref.read(idPasswordProvider);
       await loginLcam(
-        identity[0],
-        identity[1],
-        cookies[0],
-        cookies[1],
+        id: identity[0],
+        password: identity[1],
+        cookies: cookies,
       );
 
       await cookieManager.deleteAllCookies();
@@ -33,13 +32,13 @@ class WebViewScreen extends HookConsumerWidget {
       await cookieManager.setCookie(
         url: webUrl,
         name: 'JSESSIONID',
-        value: cookies[0].split('=')[1],
+        value: cookies.jSessionId.split('=')[1],
         isSecure: true,
       );
       await cookieManager.setCookie(
         url: webUrl,
         name: 'LiveApps-Cookie',
-        value: cookies[1].split('=')[1],
+        value: cookies.liveAppsCookie.split('=')[1],
         isSecure: true,
       );
       await cookieManager.setCookie(

@@ -15,8 +15,8 @@ Future<Map<DayOfWeek, Map<int, Class>>> getClassTimeTable(
     ref.read(lastLoginTimeProvider.notifier).updateLastLoginTime();
   });
   final cookies = await getCookie();
-  await loginLcam(id, password, cookies[0], cookies[1]);
-  final body = await getClassTimeTableBody(cookies[0], cookies[1]);
+  await loginLcam(id: id, password: password, cookies: cookies);
+  final body = await getClassTimeTableBody(cookies: cookies);
   return parseClassTimeTable(body);
 }
 

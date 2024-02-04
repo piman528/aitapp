@@ -25,10 +25,9 @@ class LoginScreen extends HookConsumerWidget {
         formKey.currentState!.save();
         final cookies = await getCookie();
         loginBool = await loginLcam(
-          id.value,
-          password.value,
-          cookies[0],
-          cookies[1],
+          id: id.value,
+          password: password.value,
+          cookies: cookies,
         );
         ref.read(lastLoginTimeProvider.notifier).updateLastLoginTime();
       } else {
