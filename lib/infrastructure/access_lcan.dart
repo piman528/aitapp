@@ -1,10 +1,11 @@
 // ignore_for_file: lines_longer_than_80_chars
 
+import 'dart:convert';
+
 import 'package:aitapp/models/cookies.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
-import 'package:universal_html/parsing.dart';
 
 Future<Cookies> getCookie() async {
   debugPrint('getcookie');
@@ -28,7 +29,43 @@ Future<Cookies> getCookie() async {
   return Cookies(jSessionId: cookies[0], liveAppsCookie: cookies[1]);
 }
 
-Future<bool> loginLcam({
+Future<bool> canLoginLcam({
+  required String id,
+  required String password,
+}) async {
+  debugPrint('canLoginLcam');
+  final headers = {
+    'Accept': 'application/json, text/plain, */*',
+    'Sec-Fetch-Site': 'cross-site',
+    'Accept-Language': 'ja',
+    'Sec-Fetch-Mode': 'cors',
+    'Content-Type': 'application/x-www-form-urlencoded',
+    'Connection': 'keep-alive',
+    'Sec-Fetch-Dest': 'empty',
+    'Accept-Encoding': 'gzip',
+  };
+
+  final data = {
+    'userId': id,
+    'password': password,
+  };
+
+  final url =
+      Uri.parse('https://lcam.aitech.ac.jp/portalv2/login/login/spAppLogin/');
+
+  final res = await http.post(url, headers: headers, body: data);
+  final status = res.statusCode;
+  if (status != 200) {
+    throw Exception('http.post error: statusCode= $status');
+  }
+  final json = jsonDecode(res.body) as Map;
+  if (json['status'] == 'success') {
+    return true;
+  }
+  return false;
+}
+
+Future<void> loginLcam({
   required String id,
   required String password,
   required Cookies cookies,
@@ -69,14 +106,6 @@ Future<bool> loginLcam({
   if (status != 200) {
     throw Exception('http.post error: statusCode= $status');
   }
-
-  final isLogin = parseHtmlDocument(res.body)
-      .querySelectorAll('#_errorInformation > ul > li:nth-child(1)')
-      .isEmpty;
-  if (isLogin) {
-    return true;
-  }
-  return false;
 }
 
 Future<String> getStrutsToken({

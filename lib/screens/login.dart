@@ -23,11 +23,9 @@ class LoginScreen extends HookConsumerWidget {
       late final bool loginBool;
       if (formKey.currentState!.validate()) {
         formKey.currentState!.save();
-        final cookies = await getCookie();
-        loginBool = await loginLcam(
+        loginBool = await canLoginLcam(
           id: id.value,
           password: password.value,
-          cookies: cookies,
         );
         ref.read(lastLoginTimeProvider.notifier).updateLastLoginTime();
       } else {
