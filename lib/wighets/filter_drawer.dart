@@ -1,3 +1,4 @@
+import 'package:aitapp/models/get_syllabus.dart';
 import 'package:aitapp/models/select_filter.dart';
 import 'package:aitapp/provider/filter_provider.dart';
 import 'package:flutter/material.dart';
@@ -8,22 +9,24 @@ class FilterDrawer extends HookConsumerWidget {
   const FilterDrawer({
     super.key,
     required this.setFilters,
+    required this.getSyllabus,
   });
   final void Function({
     required SelectFilters selectFilters,
   }) setFilters;
+  final GetSyllabus getSyllabus;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final selectfilters = useMemoized(() => ref.read(selectFiltersProvider));
-    final filters = useMemoized(() => ref.read(syllabusFiltersProvider));
+    final filters = ref.watch(syllabusFiltersProvider);
 
     final selectYear = useState<String>(selectfilters!.year);
-    final selectCampus = useState<String?>(selectfilters.campus);
-    final selectFaculty = useState<String?>(selectfilters.folder);
-    final selectSemester = useState<String?>(selectfilters.semester);
-    final selectWeek = useState<String?>(selectfilters.week);
-    final selectHour = useState<String?>(selectfilters.hour);
+    final selectCampus = useState<String?>(null);
+    final selectFaculty = useState<String?>(null);
+    final selectSemester = useState<String?>(null);
+    final selectWeek = useState<String?>(null);
+    final selectHour = useState<String?>(null);
 
     useEffect(
       () {
@@ -43,6 +46,15 @@ class FilterDrawer extends HookConsumerWidget {
       },
       [],
     );
+    Future<void> changeYear(String year) async {
+      selectCampus.value = null;
+      selectFaculty.value = null;
+      selectSemester.value = null;
+      selectWeek.value = null;
+      selectHour.value = null;
+      ref.read(syllabusFiltersProvider.notifier).state =
+          await getSyllabus.getRefreshFilters(year: year);
+    }
 
     return Drawer(
       child: SafeArea(
@@ -84,6 +96,7 @@ class FilterDrawer extends HookConsumerWidget {
                   ],
                   onChanged: (item) {
                     selectYear.value = item!;
+                    changeYear(selectYear.value);
                   },
                 ),
               ),

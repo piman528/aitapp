@@ -106,3 +106,48 @@ Future<String> getSyllabus(String detailUrl, String jSessionId) async {
 
   return res.body;
 }
+
+Future<String> refreshFiltersSession({
+  required String year,
+  required String jSessionId,
+}) async {
+  final tempjSession = jSessionId.split('=');
+  final headers = {
+    'Sec-Fetch-Site': 'none',
+    'Connection': 'keep-alive',
+    'Sec-Fetch-Mode': 'navigate',
+    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+    'Accept-Language': 'ja',
+    'Sec-Fetch-Dest': 'document',
+    'Accept-Encoding': 'gzip',
+    'Cookie': jSessionId,
+  };
+
+  final data = {
+    'syllabusTitleID': year,
+    'indexID': '',
+    'subFolderFlag': 'on',
+    'syllabusCampus': '',
+    'syllabusSemester': '',
+    'syllabusWeek': '',
+    'syllabusHour': '',
+    'kamokuName': '',
+    'editorName': '',
+    'freeWord': '',
+    'actionStatus': 'titleID',
+    'subFolderFlag2': 'on',
+    'bottonType': 'titleID',
+  };
+
+  final url = Uri.parse(
+    'https://syllabus.aitech.ac.jp/ext_syllabus/syllabusSearch.do;jsessionid=${tempjSession[1]}',
+  );
+
+  final res = await http.post(url, headers: headers, body: data);
+  final status = res.statusCode;
+  if (status != 200) {
+    throw Exception('http.post error: statusCode= $status');
+  }
+
+  return res.body;
+}

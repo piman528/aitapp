@@ -3,7 +3,6 @@ class SyllabusFilters {
     required this.year,
     required this.folder,
     required this.campus,
-    required this.cookies,
     required this.hour,
     required this.week,
     required this.semester,
@@ -14,5 +13,4 @@ class SyllabusFilters {
   final Map<String, String> week;
   final Map<String, String> hour;
   final Map<String, String> semester;
-  final List<String> cookies;
 }

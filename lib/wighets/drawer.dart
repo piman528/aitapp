@@ -1,7 +1,6 @@
 // ignore_for_file: lines_longer_than_80_chars
 
 import 'package:aitapp/const.dart';
-import 'package:aitapp/provider/filter_provider.dart';
 import 'package:aitapp/provider/id_password_provider.dart';
 import 'package:aitapp/provider/last_login_time_provider.dart';
 import 'package:aitapp/provider/link_tap_provider.dart';
@@ -125,7 +124,6 @@ class MainDrawer extends ConsumerWidget {
                       builder: (ctx) => SyllabusSearchScreen(),
                     ),
                   );
-                  ref.read(selectFiltersProvider.notifier).state = null;
                 },
               ),
               DrawerTile(

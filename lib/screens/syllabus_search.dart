@@ -21,6 +21,7 @@ class SyllabusSearchScreen extends HookConsumerWidget {
     final controller = useTextEditingController();
     final syllabusList = useState<Widget>(const SizedBox());
     final typeWord = useState('');
+    final getSyllabus = useMemoized(GetSyllabus.new);
 
     void onSubmit(
       //検索処理
@@ -44,12 +45,14 @@ class SyllabusSearchScreen extends HookConsumerWidget {
     Future<void> getFilters() async {
       //フィルター取得
       try {
-        final getsyllabus = GetSyllabus();
-        final syllabusFilters = await getsyllabus.create();
-        ref.read(syllabusFiltersProvider.notifier).state = syllabusFilters;
-        ref.read(selectFiltersProvider.notifier).state = SelectFilters(
-          year: syllabusFilters.year.values.first,
-        );
+        await getSyllabus.create();
+        if (ref.read(syllabusFiltersProvider) == null) {
+          ref.read(syllabusFiltersProvider.notifier).state =
+              getSyllabus.filters;
+          ref.read(selectFiltersProvider.notifier).state = SelectFilters(
+            year: getSyllabus.filters.year.values.first,
+          );
+        }
       } on SocketException {
         await Fluttertoast.showToast(msg: 'インターネットに接続できません');
       } on Exception catch (err) {
@@ -62,16 +65,7 @@ class SyllabusSearchScreen extends HookConsumerWidget {
         controller.addListener(() {
           typeWord.value = controller.text;
         });
-        if (ref.read(syllabusFiltersProvider) == null) {
-          getFilters();
-        } else {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            ref.read(selectFiltersProvider.notifier).state = SelectFilters(
-              year: ref.read(syllabusFiltersProvider)!.year.values.first,
-            );
-          });
-        }
-
+        getFilters();
         return null;
       },
       [],
@@ -81,6 +75,7 @@ class SyllabusSearchScreen extends HookConsumerWidget {
       key: _scaffoldKey,
       endDrawer: FilterDrawer(
         setFilters: setFilters,
+        getSyllabus: getSyllabus,
       ),
       appBar: AppBar(
         scrolledUnderElevation: 0,

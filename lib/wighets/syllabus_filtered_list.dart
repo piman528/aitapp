@@ -41,12 +41,12 @@ class SyllabusList extends HookWidget {
     Future<void> load() async {
       try {
         final thisMonth = DateTime.now().month;
-        final syllabusFilters = await getSyllabus.create();
+        await getSyllabus.create();
         final list = await getSyllabus.getSyllabusList(
           dayOfWeek: dayOfWeek,
           classPeriod: classPeriod,
           searchWord: searchText,
-          year: syllabusFilters.year.values.first,
+          year: getSyllabus.filters.year.values.first,
           semester: thisMonth >= 4 && thisMonth <= 8 ? '1' : '2',
         );
         syllabusList.value = list;

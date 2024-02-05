@@ -6,10 +6,17 @@ import 'package:aitapp/models/syllabus_filter.dart';
 
 class GetSyllabus {
   late String jSessionId;
-  Future<SyllabusFilters> create() async {
+  late SyllabusFilters filters;
+  Future<void> create() async {
     final res = await getSyllabusSession();
-    final filters = parseSyllabusFilters(res);
-    jSessionId = filters.cookies[0];
+    jSessionId = parseSyllabusCookie(res.headers);
+    filters = parseSyllabusFilters(res.body);
+  }
+
+  Future<SyllabusFilters> getRefreshFilters({required String year}) async {
+    final body =
+        await refreshFiltersSession(year: year, jSessionId: jSessionId);
+    final filters = parseSyllabusFilters(body);
     return filters;
   }
 

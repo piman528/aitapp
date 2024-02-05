@@ -1,10 +1,19 @@
 import 'package:aitapp/models/class_syllabus.dart';
 import 'package:aitapp/models/syllabus_filter.dart';
-import 'package:http/http.dart';
 import 'package:universal_html/parsing.dart';
 
-SyllabusFilters parseSyllabusFilters(Response res) {
-  final topStorytitle = parseHtmlDocument(res.body).querySelectorAll(
+String parseSyllabusCookie(Map<String, String> headers) {
+  final setCookie = _getSetCookie(headers);
+  if (setCookie.isNotEmpty) {
+    for (final cookie in setCookie.split(RegExp(',(?=[^ ])'))) {
+      return cookie.split(';')[0];
+    }
+  }
+  return '';
+}
+
+SyllabusFilters parseSyllabusFilters(String body) {
+  final topStorytitle = parseHtmlDocument(body).querySelectorAll(
     'body > form > table:nth-child(1) > tbody > tr > td > table > tbody > tr',
   );
   if (topStorytitle.isEmpty) {
@@ -87,19 +96,10 @@ SyllabusFilters parseSyllabusFilters(Response res) {
         }
     }
   }
-  final cookies = <String>[];
-  final setCookie = _getSetCookie(res.headers);
-  if (setCookie.isNotEmpty) {
-    for (final cookie in setCookie.split(RegExp(',(?=[^ ])'))) {
-      cookies.add(cookie.split(';')[0]);
-    }
-  }
-
   return SyllabusFilters(
     year: year,
     folder: faculty,
     campus: campus,
-    cookies: cookies,
     hour: hour,
     week: week,
     semester: semester,
