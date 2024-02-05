@@ -40,9 +40,10 @@ class NoticeDetailScreen extends HookConsumerWidget {
 
     Future<void> loadData() async {
       try {
-        notice.value = isCommon
-            ? await getNotice.getUnivNoticeDetail(index)
-            : await getNotice.getClassNoticeDetail(index);
+        notice.value = await getNotice.getNoticeDetail(
+          pageNumber: index,
+          isCommon: isCommon,
+        );
       } on SocketException {
         error.value = 'インターネットに接続できません';
       } on Exception catch (err) {

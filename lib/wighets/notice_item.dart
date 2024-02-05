@@ -78,7 +78,7 @@ class NoticeItem extends StatelessWidget {
                   ),
                 } else ...{
                   const SizedBox(
-                    height: 20,
+                    height: 16,
                   ),
                   Text(
                     (notice as ClassNotice).subject,
@@ -87,7 +87,7 @@ class NoticeItem extends StatelessWidget {
                         ),
                   ),
                   const SizedBox(
-                    height: 10,
+                    height: 5,
                   ),
                   Text(
                     notice.sender,

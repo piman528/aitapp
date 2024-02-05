@@ -62,14 +62,9 @@ String parseStrutsToken({
   required String body,
   required bool isCommon,
 }) {
-  String selector;
-  if (isCommon) {
-    selector =
-        '#smartPhoneCommonContactList > form:nth-child(3) > div:nth-child(1) > input';
-  } else {
-    selector =
-        '#smartPhoneClassContactList > form:nth-child(3) > div:nth-child(1) > input';
-  }
+  final selector = isCommon
+      ? '#smartPhoneCommonContactList > form:nth-child(3) > div:nth-child(1) > input'
+      : '#smartPhoneClassContactList > form:nth-child(3) > div:nth-child(1) > input';
   final topStorytitle = parseHtmlDocument(body).querySelectorAll(
     selector,
   );

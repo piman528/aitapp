@@ -120,24 +120,20 @@ class NoticeList extends HookConsumerWidget {
         if (withLogin) {
           final identity = ref.read(idPasswordProvider);
           await getNotice.create(identity[0], identity[1], ref);
-          if (isCommon) {
-            ref.read(univNoticeTokenProvider.notifier).state = getNotice;
-            ref.read(lastUnivLoginTimeProvider.notifier).state =
-                ref.read(lastLoginTimeProvider);
-            result = await getNotice.getUnivNoticelist(page.value);
-          } else {
-            ref.read(classNoticeTokenProvider.notifier).state = getNotice;
-            ref.read(lastClassLoginTimeProvider.notifier).state =
-                ref.read(lastLoginTimeProvider);
-            result = await getNotice.getClassNoticelist(page.value);
-          }
-        } else {
-          if (isCommon) {
-            result = await getNotice.getUnivNoticelistNext(page.value);
-          } else {
-            result = await getNotice.getClassNoticelistNext(page.value);
-          }
+          final noticeTokenNotifier = isCommon
+              ? ref.read(univNoticeTokenProvider.notifier)
+              : ref.read(classNoticeTokenProvider.notifier);
+          final lastNoticeLoginTimeNotifier = isCommon
+              ? ref.read(lastUnivLoginTimeProvider.notifier)
+              : ref.read(lastClassLoginTimeProvider.notifier);
+          noticeTokenNotifier.state = getNotice;
+          lastNoticeLoginTimeNotifier.state = ref.read(lastLoginTimeProvider);
         }
+        result = await getNotice.getNoticelist(
+          page: page.value,
+          isCommon: isCommon,
+          withLogin: withLogin,
+        );
         if (!isDispose.value) {
           if (isCommon) {
             ref
@@ -184,14 +180,12 @@ class NoticeList extends HookConsumerWidget {
 
     useEffect(
       () {
-        late final DateTime? thisNoticeLastLogin;
-        if (isCommon) {
-          thisNoticeLastLogin = ref.read(lastUnivLoginTimeProvider);
-        } else {
-          thisNoticeLastLogin = ref.read(lastClassLoginTimeProvider);
-        }
+        final lastNoticeLoginTimeProvider = isCommon
+            ? ref.read(lastUnivLoginTimeProvider)
+            : ref.read(lastClassLoginTimeProvider);
         final lastLogin = ref.read(lastLoginTimeProvider);
-        if (thisNoticeLastLogin == null || thisNoticeLastLogin != lastLogin) {
+        if (lastNoticeLoginTimeProvider == null ||
+            lastNoticeLoginTimeProvider != lastLogin) {
           operation.value = CancelableOperation.fromFuture(
             load(withLogin: true),
           );
@@ -231,7 +225,8 @@ class NoticeList extends HookConsumerWidget {
             onRefresh: () async {
               isManual.value = true;
               if (!isLoading.value) {
-                page.value = 5;
+                page.value = 10;
+                beforeReloadLengh.value = 0;
                 await load(withLogin: true);
               }
               if (!isDispose.value) {

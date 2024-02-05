@@ -3,11 +3,9 @@ import 'package:aitapp/infrastructure/access_lcan.dart';
 import 'package:aitapp/infrastructure/parse_class_notice.dart';
 import 'package:aitapp/infrastructure/parse_lcam.dart';
 import 'package:aitapp/infrastructure/parse_univ_notice.dart';
-import 'package:aitapp/models/class_notice.dart';
-import 'package:aitapp/models/class_notice_detail.dart';
 import 'package:aitapp/models/cookies.dart';
-import 'package:aitapp/models/univ_notice.dart';
-import 'package:aitapp/models/univ_notice_detail.dart';
+import 'package:aitapp/models/notice.dart';
+import 'package:aitapp/models/notice_detail.dart';
 import 'package:aitapp/provider/last_login_time_provider.dart';
 import 'package:aitapp/screens/open_file_pdf.dart';
 import 'package:flutter/material.dart';
@@ -27,94 +25,62 @@ class GetNotice {
     await loginLcam(id: id, password: password, cookies: cookies);
   }
 
-  Future<List<UnivNotice>> getUnivNoticelist(int page) async {
-    const isCommon = true;
-    final token1 = parseStrutsToken(
-      body: await getStrutsToken(
-        cookies: cookies,
+  Future<List<Notice>> getNoticelist({
+    required int page,
+    required bool isCommon,
+    required bool withLogin,
+  }) async {
+    if (withLogin) {
+      final tempToken = parseStrutsToken(
+        body: await getStrutsToken(
+          cookies: cookies,
+          isCommon: isCommon,
+        ),
         isCommon: isCommon,
-      ),
-      isCommon: isCommon,
-    );
-    final token2 = parseStrutsToken(
-      body: await getUnivNoticeBody(cookies: cookies, token: token1),
-      isCommon: isCommon,
-    );
-    final body = await getUnivNoticeBodyNext(
-      cookies: cookies,
-      token: token2,
-      pageNumber: page,
-    );
-    token = parseStrutsToken(body: body, isCommon: isCommon);
-    return parseUnivNotice(body);
-  }
+      );
+      token = parseStrutsToken(
+        body: await getNoticeBody(
+          cookies: cookies,
+          token: tempToken,
+          isCommon: isCommon,
+        ),
+        isCommon: isCommon,
+      );
+    }
 
-  Future<List<UnivNotice>> getUnivNoticelistNext(int page) async {
-    const isCommon = true;
-    final body = await getUnivNoticeBodyNext(
+    final body = await getNoticeBodyNext(
       cookies: cookies,
       token: token!,
       pageNumber: page,
-    );
-    token = parseStrutsToken(body: body, isCommon: isCommon);
-    return parseUnivNotice(body);
-  }
-
-  Future<List<ClassNotice>> getClassNoticelist(int page) async {
-    const isCommon = false;
-    final token1 = parseStrutsToken(
-      body: await getStrutsToken(
-        cookies: cookies,
-        isCommon: isCommon,
-      ),
       isCommon: isCommon,
     );
-    final token2 = parseStrutsToken(
-      body: await getClassNoticeBody(cookies: cookies, token: token1),
-      isCommon: isCommon,
-    );
-    final body = await getClassNoticeBodyNext(
-      cookies: cookies,
-      token: token2,
-      pageNumber: page,
-    );
     token = parseStrutsToken(body: body, isCommon: isCommon);
-    return parseClassNotice(body);
+
+    if (isCommon) {
+      return parseUnivNotice(body);
+    } else {
+      return parseClassNotice(body);
+    }
   }
 
-  Future<List<ClassNotice>> getClassNoticelistNext(int page) async {
-    const isCommon = false;
-    final body = await getClassNoticeBodyNext(
-      cookies: cookies,
-      token: token!,
-      pageNumber: page,
-    );
-    token = parseStrutsToken(body: body, isCommon: isCommon);
-    return parseClassNotice(body);
-  }
-
-  Future<UnivNoticeDetail> getUnivNoticeDetail(int pageNumber) async {
+  Future<NoticeDetail> getNoticeDetail({
+    required int pageNumber,
+    required bool isCommon,
+  }) async {
     if (cookies.jSessionId.isEmpty) {
       throw Exception('ログインできません');
     }
-    final body = await getUnivNoticeDetailBody(
+    final body = await getNoticeDetailBody(
       index: pageNumber,
       cookies: cookies,
       token: token!,
+      isCommon: isCommon,
     );
-    return parseUnivNoticeDetail(body);
-  }
-
-  Future<ClassNoticeDetail> getClassNoticeDetail(int pageNumber) async {
-    if (cookies.jSessionId.isEmpty) {
-      throw Exception('ログインできません');
+    if (isCommon) {
+      return parseUnivNoticeDetail(body);
+    } else {
+      return parseClassNoticeDetail(body);
     }
-    final body = await getClassNoticeDetailBody(
-      index: pageNumber,
-      cookies: cookies,
-      token: token!,
-    );
-    return parseClassNoticeDetail(body);
   }
 
   Future<void> shareFile(
