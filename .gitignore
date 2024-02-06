@@ -44,4 +44,5 @@ app.*.map.json
 /android/app/release
 
 # Auth
-lib/const.dart
+.env
+env.g.dart

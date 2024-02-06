@@ -41,12 +41,6 @@ class WebViewScreen extends HookConsumerWidget {
         value: cookies.liveAppsCookie.split('=')[1],
         isSecure: true,
       );
-      await cookieManager.setCookie(
-        url: webUrl,
-        name: 'L-CamApp',
-        value: 'Y',
-        isSecure: true,
-      );
       load.value = true;
     }
 

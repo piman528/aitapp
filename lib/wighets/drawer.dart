@@ -1,6 +1,6 @@
 // ignore_for_file: lines_longer_than_80_chars
 
-import 'package:aitapp/const.dart';
+import 'package:aitapp/env.dart';
 import 'package:aitapp/provider/id_password_provider.dart';
 import 'package:aitapp/provider/last_login_time_provider.dart';
 import 'package:aitapp/provider/link_tap_provider.dart';
@@ -58,7 +58,7 @@ class MainDrawer extends ConsumerWidget {
             .format(DateTime.now().toUtc().add(const Duration(hours: 9)));
         await webviewcontroller.evaluateJavascript(
           source:
-              "getPara('$date','${identity[0]}','${identity[1]}','$isMoodle','$blowfishKey');",
+              "getPara('$date','${identity[0]}','${identity[1]}','$isMoodle','${Env.blowfishKey}');",
         );
       },
     );
