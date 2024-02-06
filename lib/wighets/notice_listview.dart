@@ -174,7 +174,7 @@ class NoticeList extends HookConsumerWidget {
         controller.animateTo(
           0,
           curve: Curves.easeOut,
-          duration: const Duration(seconds: 1),
+          duration: const Duration(milliseconds: 500),
         );
       });
 
