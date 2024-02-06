@@ -20,5 +20,5 @@ jobs:
         with:
           channel: 'stable'
       - run: flutter pub get
-      - run: dart run build_runner build --delete-conflicting-outputs
+      - run: flutter pub run build_runner build --delete-conflicting-outputs
       - run: flutter build ios --release --no-codesign
