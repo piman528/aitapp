@@ -26,5 +26,20 @@ jobs:
         run: flutter pub get
       - name: build_runner build
         run: flutter pub run build_runner build --delete-conflicting-outputs
-      - name: Build ipa
+      - name: Build app
         run: flutter build ios --release --no-codesign
+      - name: Move Runner.app
+        shell: bash
+        run: |
+          mkdir aitapp
+          mv build/ios/iphoneos/Runner.app aitapp
+      - name: Archive Release
+        uses: thedoctor0/zip-release@main
+        with:
+          type: 'zip'
+          filename: 'release.ipa'
+          exclusions: 'aitapp'
+          
+
+
+
