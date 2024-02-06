@@ -8,22 +8,43 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 
+const constHeader = {
+  'Accept-Language': 'ja',
+  'Connection': 'keep-alive',
+  'Accept-Encoding': 'gzip',
+  'Accept': '*/*',
+};
+const secFetchHeader = {
+  'Sec-Fetch-Site': 'same-origin',
+  'Sec-Fetch-Mode': 'navigate',
+  'Sec-Fetch-Dest': 'document',
+};
+const contentTypeHeader = {
+  'Content-Type': 'application/x-www-form-urlencoded',
+};
+
+Future<Response> httpAccess(
+  Uri uri, {
+  required Map<String, String> headers,
+  Map<String, String>? body,
+}) async {
+  late final Response res;
+  if (body != null) {
+    res = await http.post(uri, headers: headers, body: body);
+  } else {
+    res = await http.get(uri, headers: headers);
+  }
+  if (res.statusCode != 200) {
+    throw Exception('http.get error: statusCode= ${res.statusCode}');
+  }
+  return res;
+}
+
 Future<Cookies> getCookie() async {
   debugPrint('getcookie');
-  final headers = {
-    'Accept': '*/*',
-    'Accept-Language': 'ja-JP;q=1, en-JP;q=0.9',
-    'Connection': 'keep-alive',
-    'Accept-Encoding': 'gzip',
-  };
-
   final url = Uri.parse('$origin/portalv2/sp');
 
-  final res = await http.get(url, headers: headers);
-  final status = res.statusCode;
-  if (status != 200) {
-    throw Exception('http.get error: statusCode= $status');
-  }
+  final res = await httpAccess(url, headers: constHeader);
 
   final setCookie = _getSetCookie(res.headers);
   final cookies = setCookie.split(RegExp(',(?=[^ ])'));
@@ -35,16 +56,10 @@ Future<bool> canLoginLcam({
   required String password,
 }) async {
   debugPrint('canLoginLcam');
-  final headers = {
-    'Accept': 'application/json, text/plain, */*',
-    'Sec-Fetch-Site': 'cross-site',
-    'Accept-Language': 'ja',
-    'Sec-Fetch-Mode': 'cors',
-    'Content-Type': 'application/x-www-form-urlencoded',
-    'Connection': 'keep-alive',
-    'Sec-Fetch-Dest': 'empty',
-    'Accept-Encoding': 'gzip',
-  };
+  final headers = <String, String>{}
+    ..addAll(constHeader)
+    ..addAll(secFetchHeader)
+    ..addAll(contentTypeHeader);
 
   final data = {
     'userId': id,
@@ -53,11 +68,7 @@ Future<bool> canLoginLcam({
 
   final url = Uri.parse('$origin/portalv2/login/login/spAppLogin/');
 
-  final res = await http.post(url, headers: headers, body: data);
-  final status = res.statusCode;
-  if (status != 200) {
-    throw Exception('http.post error: statusCode= $status');
-  }
+  final res = await httpAccess(url, headers: headers, body: data);
   final json = jsonDecode(res.body) as Map;
   if (json['status'] == 'success') {
     return true;
@@ -72,18 +83,13 @@ Future<void> loginLcam({
 }) async {
   debugPrint('loginlcam');
   final headers = {
-    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-    'Sec-Fetch-Site': 'same-origin',
-    'Accept-Language': 'ja',
-    'Sec-Fetch-Mode': 'navigate',
-    'Content-Type': 'application/x-www-form-urlencoded',
     'Origin': origin,
     'Referer': '$origin/portalv2/sp',
-    'Connection': 'keep-alive',
-    'Sec-Fetch-Dest': 'document',
-    'Cookie': '${cookies.jSessionId}; ${cookies.liveAppsCookie}',
-    'Accept-Encoding': 'gzip',
-  };
+    'Cookie': cookies.toHeaderString,
+  }
+    ..addAll(constHeader)
+    ..addAll(secFetchHeader)
+    ..addAll(contentTypeHeader);
 
   final data = {
     'userID': id,
@@ -101,11 +107,7 @@ Future<void> loginLcam({
     '$origin/portalv2/login/login/smartPhoneLogin',
   );
 
-  final res = await http.post(url, headers: headers, body: data);
-  final status = res.statusCode;
-  if (status != 200) {
-    throw Exception('http.post error: statusCode= $status');
-  }
+  await httpAccess(url, headers: headers, body: data);
 }
 
 Future<String> getStrutsToken({
@@ -120,27 +122,18 @@ Future<String> getStrutsToken({
     contactType = 'classContact';
   }
   final headers = {
-    'Sec-Fetch-Site': 'same-origin',
-    'Cookie': '${cookies.jSessionId}; ${cookies.liveAppsCookie}',
-    'Connection': 'keep-alive',
-    'Sec-Fetch-Mode': 'navigate',
-    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+    'Cookie': cookies.toHeaderString,
     'Referer':
         '$origin/portalv2/smartphone/smartPhoneHome/nextPage/contactNotice',
-    'Sec-Fetch-Dest': 'document',
-    'Accept-Language': 'ja',
-    'Accept-Encoding': 'gzip',
-  };
+  }
+    ..addAll(constHeader)
+    ..addAll(secFetchHeader);
 
   final url = Uri.parse(
     '$origin/portalv2/smartphone/smartPhoneContactNotice/nextPage/$contactType',
   );
 
-  final res = await http.get(url, headers: headers);
-  final status = res.statusCode;
-  if (status != 200) {
-    throw Exception('http.get error: statusCode= $status');
-  }
+  final res = await httpAccess(url, headers: headers);
   return res.body;
 }
 
@@ -152,19 +145,14 @@ Future<String> getNoticeBody({
   final noticeType = isCommon ? 'Common' : 'Class';
   debugPrint('get${noticeType}NoticeBody');
   final headers = {
-    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-    'Sec-Fetch-Site': 'same-origin',
-    'Accept-Language': 'ja',
-    'Sec-Fetch-Mode': 'navigate',
-    'Content-Type': 'application/x-www-form-urlencoded',
     'Origin': origin,
     'Referer':
         '$origin/portalv2/smartphone/smartPhoneContactNotice/nextPage/${noticeType.toLowerCase()}Contact',
-    'Connection': 'keep-alive',
-    'Sec-Fetch-Dest': 'document',
-    'Cookie': '${cookies.jSessionId}; ${cookies.liveAppsCookie}',
-    'Accept-Encoding': 'gzip',
-  };
+    'Cookie': cookies.toHeaderString,
+  }
+    ..addAll(constHeader)
+    ..addAll(secFetchHeader)
+    ..addAll(contentTypeHeader);
 
   final data = {
     'org.apache.struts.taglib.html.TOKEN': token,
@@ -178,11 +166,7 @@ Future<String> getNoticeBody({
     '$origin/portalv2/smartphone/smartPhone${noticeType}Contact/select${noticeType}ContactList',
   );
 
-  final res = await http.post(url, headers: headers, body: data);
-  final status = res.statusCode;
-  if (status != 200) {
-    throw Exception('http.post error: statusCode= $status');
-  }
+  final res = await httpAccess(url, headers: headers, body: data);
 
   return res.body;
 }
@@ -196,19 +180,14 @@ Future<String> getNoticeBodyNext({
   final noticeType = isCommon ? 'Common' : 'Class';
   debugPrint('get${noticeType}NoticeBodyNext');
   final headers = {
-    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-    'Sec-Fetch-Site': 'same-origin',
-    'Accept-Language': 'ja',
-    'Sec-Fetch-Mode': 'navigate',
-    'Content-Type': 'application/x-www-form-urlencoded',
     'Origin': origin,
     'Referer':
         '$origin/portalv2/smartphone/smartPhone${noticeType}Contact/select${noticeType}ContactList',
-    'Connection': 'keep-alive',
-    'Cookie': '${cookies.jSessionId}; ${cookies.liveAppsCookie}',
-    'Sec-Fetch-Dest': 'document',
-    'Accept-Encoding': 'gzip',
-  };
+    'Cookie': cookies.toHeaderString,
+  }
+    ..addAll(constHeader)
+    ..addAll(secFetchHeader)
+    ..addAll(contentTypeHeader);
 
   final data = {
     'org.apache.struts.taglib.html.TOKEN': token,
@@ -222,11 +201,7 @@ Future<String> getNoticeBodyNext({
     '$origin/portalv2/smartphone/smartPhone${noticeType}Contact/nextSelect${noticeType}ContactList',
   );
 
-  final res = await http.post(url, headers: headers, body: data);
-  final status = res.statusCode;
-  if (status != 200) {
-    throw Exception('http.post error: statusCode= $status');
-  }
+  final res = await httpAccess(url, headers: headers, body: data);
 
   return res.body;
 }
@@ -234,25 +209,16 @@ Future<String> getNoticeBodyNext({
 Future<String> getClassTimeTableBody({required Cookies cookies}) async {
   debugPrint('getClassTimeTableBody');
   final headers = {
-    'Sec-Fetch-Site': 'none',
-    'Cookie': '${cookies.jSessionId}; ${cookies.liveAppsCookie}',
-    'Connection': 'keep-alive',
-    'Sec-Fetch-Mode': 'navigate',
-    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-    'Accept-Language': 'ja',
-    'Sec-Fetch-Dest': 'document',
-    'Accept-Encoding': 'gzip',
-  };
+    'Cookie': cookies.toHeaderString,
+  }
+    ..addAll(constHeader)
+    ..addAll(secFetchHeader);
 
   final url = Uri.parse(
     '$origin/portalv2/smartphone/smartPhoneHome/nextPage/timeTable',
   );
 
-  final res = await http.get(url, headers: headers);
-  final status = res.statusCode;
-  if (status != 200) {
-    throw Exception('http.get error: statusCode= $status');
-  }
+  final res = await httpAccess(url, headers: headers);
 
   return res.body;
 }
@@ -266,19 +232,14 @@ Future<String> getNoticeDetailBody({
   final noticeType = isCommon ? 'Common' : 'Class';
   debugPrint('get${noticeType}NoticeDetailBody');
   final headers = {
-    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-    'Sec-Fetch-Site': 'same-origin',
-    'Accept-Language': 'ja',
-    'Sec-Fetch-Mode': 'navigate',
-    'Content-Type': 'application/x-www-form-urlencoded',
     'Origin': origin,
     'Referer':
         '$origin/portalv2/smartphone/smartPhone${noticeType}Contact/nextSelect${noticeType}ContactList',
-    'Connection': 'keep-alive',
-    'Cookie': '${cookies.jSessionId}; ${cookies.liveAppsCookie}',
-    'Sec-Fetch-Dest': 'document',
-    'Accept-Encoding': 'gzip',
-  };
+    'Cookie': cookies.toHeaderString,
+  }
+    ..addAll(constHeader)
+    ..addAll(secFetchHeader)
+    ..addAll(contentTypeHeader);
 
   final data = {
     'org.apache.struts.taglib.html.TOKEN': token,
@@ -290,11 +251,7 @@ Future<String> getNoticeDetailBody({
     '$origin/portalv2/smartphone/smartPhone${noticeType}Contact/goDetail/$index',
   );
 
-  final res = await http.post(url, headers: headers, body: data);
-  final status = res.statusCode;
-  if (status != 200) {
-    throw Exception('http.post error: statusCode= $status');
-  }
+  final res = await httpAccess(url, headers: headers, body: data);
   return res.body;
 }
 
@@ -304,19 +261,11 @@ Future<Response> getFile({
 }) async {
   debugPrint('getfile');
   final headers = {
-    'Accept': '*/*',
-    'Cookie': '${cookies.jSessionId}; ${cookies.liveAppsCookie}',
-    'Accept-Language': 'ja',
-    'Connection': 'keep-alive',
-    'Accept-Encoding': 'gzip',
-  };
+    'Cookie': cookies.toHeaderString,
+  }..addAll(constHeader);
   final url = Uri.parse('$origin$fileUrl');
 
-  final res = await http.get(url, headers: headers);
-  final status = res.statusCode;
-  if (status != 200) {
-    throw Exception('http.get error: statusCode= $status');
-  }
+  final res = await httpAccess(url, headers: headers);
 
   return res;
 }
