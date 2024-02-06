@@ -22,11 +22,11 @@ class FilterDrawer extends HookConsumerWidget {
     final filters = ref.watch(syllabusFiltersProvider);
 
     final selectYear = useState<String>(selectfilters!.year);
-    final selectCampus = useState<String?>(null);
-    final selectFaculty = useState<String?>(null);
-    final selectSemester = useState<String?>(null);
-    final selectWeek = useState<String?>(null);
-    final selectHour = useState<String?>(null);
+    final selectCampus = useState<String?>(selectfilters.campus);
+    final selectFaculty = useState<String?>(selectfilters.folder);
+    final selectSemester = useState<String?>(selectfilters.semester);
+    final selectWeek = useState<String?>(selectfilters.week);
+    final selectHour = useState<String?>(selectfilters.hour);
 
     useEffect(
       () {
