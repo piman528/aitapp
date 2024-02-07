@@ -114,6 +114,7 @@ class NoticeList extends HookConsumerWidget {
       required bool withLogin,
     }) async {
       late final List<Notice> result;
+      error.value = null;
       loading(state: true);
       isLoading.value = true;
       try {
