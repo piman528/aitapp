@@ -112,6 +112,7 @@ class NoticeList extends HookConsumerWidget {
 
     Future<void> load({
       required bool withLogin,
+      bool isRetry = false,
     }) async {
       late final List<Notice> result;
       error.value = null;
@@ -120,15 +121,15 @@ class NoticeList extends HookConsumerWidget {
       try {
         if (withLogin) {
           final identity = ref.read(idPasswordProvider);
-          await getNotice.create(identity[0], identity[1], ref);
-          final noticeTokenNotifier = isCommon
-              ? ref.read(univNoticeTokenProvider.notifier)
-              : ref.read(classNoticeTokenProvider.notifier);
-          final lastNoticeLoginTimeNotifier = isCommon
-              ? ref.read(lastUnivLoginTimeProvider.notifier)
-              : ref.read(lastClassLoginTimeProvider.notifier);
-          noticeTokenNotifier.state = getNotice;
-          lastNoticeLoginTimeNotifier.state = ref.read(lastLoginTimeProvider);
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            ref.read(lastLoginTimeProvider.notifier).updateLastLoginTime();
+          });
+          await getNotice.create(identity[0], identity[1]);
+
+          (isCommon
+                  ? ref.read(lastUnivLoginTimeProvider.notifier)
+                  : ref.read(lastClassLoginTimeProvider.notifier))
+              .state = ref.read(lastLoginTimeProvider);
         }
         result = await getNotice.getNoticelist(
           page: page.value,
@@ -151,7 +152,9 @@ class NoticeList extends HookConsumerWidget {
           error.value = 'インターネットに接続できません';
         }
       } on Exception catch (err) {
-        if (!isDispose.value) {
+        if (!isRetry) {
+          await load(withLogin: true, isRetry: true);
+        } else if (!isDispose.value) {
           error.value = err.toString();
         }
       }
@@ -193,6 +196,12 @@ class NoticeList extends HookConsumerWidget {
         }
         textEditingController.addListener(() {
           filter.value = textEditingController.text;
+        });
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          (isCommon
+                  ? ref.read(univNoticeTokenProvider.notifier)
+                  : ref.read(classNoticeTokenProvider.notifier))
+              .state = getNotice;
         });
         return () {
           if (operation.value != null) {
@@ -273,6 +282,7 @@ class NoticeList extends HookConsumerWidget {
                         getNotice: getNotice,
                         tap: !isLoading.value,
                         isCommon: isCommon,
+                        page: page.value,
                       );
                     },
                     childCount: filteredResult.length,
