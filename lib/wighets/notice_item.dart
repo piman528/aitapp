@@ -13,6 +13,7 @@ class NoticeItem extends StatelessWidget {
     required this.getNotice,
     required this.tap,
     required this.isCommon,
+    required this.page,
   });
 
   final Notice notice;
@@ -20,6 +21,7 @@ class NoticeItem extends StatelessWidget {
   final GetNotice getNotice;
   final bool tap;
   final bool isCommon;
+  final int page;
 
   @override
   Widget build(BuildContext context) {
@@ -35,6 +37,8 @@ class NoticeItem extends StatelessWidget {
                       index: index,
                       getNotice: getNotice,
                       isCommon: isCommon,
+                      title: notice.title,
+                      page: page,
                     );
                   },
                 ),

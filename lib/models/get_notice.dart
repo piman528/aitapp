@@ -6,21 +6,16 @@ import 'package:aitapp/infrastructure/parse_univ_notice.dart';
 import 'package:aitapp/models/cookies.dart';
 import 'package:aitapp/models/notice.dart';
 import 'package:aitapp/models/notice_detail.dart';
-import 'package:aitapp/provider/last_login_time_provider.dart';
 import 'package:aitapp/screens/open_file_pdf.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
 class GetNotice {
   late Cookies cookies;
   late String? token;
-  Future<void> create(String id, String password, WidgetRef ref) async {
+  Future<void> create(String id, String password) async {
     token = null;
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(lastLoginTimeProvider.notifier).updateLastLoginTime();
-    });
     cookies = await getCookie();
     await loginLcam(id: id, password: password, cookies: cookies);
   }
