@@ -78,9 +78,16 @@ UnivNoticeDetail parseUnivNoticeDetail(String body) {
           .replaceAll(RegExp('style="color: #[a-f0-9]{6};"'), '')
           .replaceAll(RegExp('background-color: #[a-f0-9]{6};'), '')
           .replaceAll(RegExp('color: #[a-f0-9]{6};'), '');
-
+      final fixHtml = filteredHtml.replaceAllMapped(
+          RegExp(
+            r"(http(s)?:\/\/[a-zA-Z0-9-.!'*;/?:@&=+$,%_#]+)",
+            caseSensitive: false,
+          ), (match) {
+        final url = match.group(0)!;
+        return '<a href="$url">$url</a>';
+      });
       texts.add(
-        '<html><body>$filteredHtml</body></html>',
+        '<html><body>$fixHtml</body></html>',
       );
       mainContent = 0;
     }
