@@ -106,6 +106,9 @@ class NoticeDetailScreen extends HookConsumerWidget {
                 ),
                 Html(
                   data: notice.value!.content,
+                  onLinkTap: (url, attributes, element) {
+                    launchUrl(Uri.parse(url!));
+                  },
                 ),
                 if (notice.value!.url.isNotEmpty) ...{
                   const SizedBox(
