@@ -25,6 +25,9 @@ class SettingIntNotifier extends StateNotifier<Map<String, int>> {
         'classTimeTableRow': int.parse(
           pref.getString('classTimeTableRow') ?? '6',
         ),
+        'colorTheme': int.parse(
+          pref.getString('colorTheme') ?? '0',
+        ),
       },
     };
   }

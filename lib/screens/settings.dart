@@ -47,6 +47,27 @@ class Settings extends ConsumerWidget {
               },
             ),
           ),
+          ListTile(
+            title: const Text('テーマ'),
+            trailing: DropdownButton(
+              value: ref.watch(settingIntProvider)!['colorTheme'],
+              items: [
+                'システムのデフォルト',
+                'ライト',
+                'ダーク',
+              ].asMap().entries.map((entry) {
+                return DropdownMenuItem<int>(
+                  value: entry.key,
+                  child: Text(entry.value),
+                );
+              }).toList(),
+              onChanged: (number) {
+                ref
+                    .read(settingIntProvider.notifier)
+                    .changeNum('colorTheme', number!);
+              },
+            ),
+          ),
         ],
       ),
     );
