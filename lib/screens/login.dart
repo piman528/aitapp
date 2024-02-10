@@ -1,11 +1,11 @@
 import 'package:aitapp/infrastructure/access_lcan.dart';
 import 'package:aitapp/provider/id_password_provider.dart';
 import 'package:aitapp/provider/last_login_time_provider.dart';
+import 'package:aitapp/provider/shared_preference_provider.dart';
 import 'package:aitapp/screens/tabs.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends HookConsumerWidget {
   const LoginScreen({super.key});
@@ -37,9 +37,9 @@ class LoginScreen extends HookConsumerWidget {
 
     Future<void> setIdentity() async {
       isError.value = false;
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setString('id', id.value);
-      await prefs
+      final pref = ref.read(sharedPreferencesProvider);
+      await pref.setString('id', id.value);
+      await pref
           .setString(
         'password',
         password.value,

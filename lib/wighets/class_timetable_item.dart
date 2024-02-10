@@ -4,6 +4,7 @@ import 'package:aitapp/const.dart';
 import 'package:aitapp/models/class.dart';
 import 'package:aitapp/provider/class_timetable_provider.dart';
 import 'package:aitapp/provider/id_password_provider.dart';
+import 'package:aitapp/provider/setting_int_provider.dart';
 import 'package:aitapp/screens/syllabus_filter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -181,6 +182,7 @@ class TimeTable extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final asyncValue = ref.watch(classTimeTableProvider);
+    final settingRow = ref.watch(settingIntProvider)!['classTimeTableRow']!;
     useEffect(
       () {
         if (asyncValue.isLoading || asyncValue.hasError) {
@@ -227,7 +229,7 @@ class TimeTable extends HookConsumerWidget {
                       margin: const EdgeInsets.all(2),
                       height: 35,
                     ),
-                    for (int i = 0; i < classPeriods.length; i++) ...{
+                    for (int i = 0; i < settingRow; i++) ...{
                       ClassTime(
                         start: classPeriods[i][0],
                         end: classPeriods[i][1],
@@ -249,9 +251,7 @@ class TimeTable extends HookConsumerWidget {
                               WeekGridContainer(
                                 dayofweek: dayOfWeekToString[week]!,
                               ),
-                              for (int i = 1;
-                                  i <= classPeriods.length;
-                                  i++) ...{
+                              for (int i = 1; i <= settingRow; i++) ...{
                                 ClassGridContainer(
                                   dayOfWeek: week,
                                   classPeriod: i,
