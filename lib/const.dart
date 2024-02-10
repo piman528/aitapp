@@ -45,6 +45,7 @@ const List<List<String>> classPeriods = [
   ['14:40', '16:10'],
   ['16:20', '17:50'],
   ['18:00', '19:30'],
+  ['19:40', '21:10'],
 ];
 
 const Map<String, Map<String, Map<String, Map<int, List<int>>>>> daiya = {

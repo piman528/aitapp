@@ -4,6 +4,7 @@ import 'package:aitapp/env.dart';
 import 'package:aitapp/provider/id_password_provider.dart';
 import 'package:aitapp/provider/last_login_time_provider.dart';
 import 'package:aitapp/provider/link_tap_provider.dart';
+import 'package:aitapp/provider/shared_preference_provider.dart';
 import 'package:aitapp/screens/contacts.dart';
 import 'package:aitapp/screens/course_registration.dart';
 import 'package:aitapp/screens/links.dart';
@@ -15,7 +16,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class MainDrawer extends ConsumerWidget {
@@ -198,9 +198,9 @@ class MainDrawer extends ConsumerWidget {
                 icon: Icons.logout,
                 title: 'ログアウト',
                 onTap: () async {
-                  final prefs = await SharedPreferences.getInstance();
-                  await prefs.remove('id');
-                  await prefs.remove('password').then(
+                  final pref = ref.read(sharedPreferencesProvider);
+                  await pref.remove('id');
+                  await pref.remove('password').then(
                     (value) {
                       ref
                           .read(idPasswordProvider.notifier)

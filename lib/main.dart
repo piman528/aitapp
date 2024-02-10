@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:aitapp/provider/id_password_provider.dart';
+import 'package:aitapp/provider/shared_preference_provider.dart';
 import 'package:aitapp/screens/login.dart';
 import 'package:aitapp/screens/tabs.dart';
 import 'package:aitapp/theme.dart';
@@ -21,8 +22,14 @@ Future<void> main() async {
     proxy?['port'],
   );
   runApp(
-    const ProviderScope(
-      child: App(),
+    ProviderScope(
+      overrides: [
+        sharedPreferencesProvider.overrideWithValue(
+          // ここでインスタンス化し、Providerの値を上書きします
+          await SharedPreferences.getInstance(),
+        ),
+      ],
+      child: const App(),
     ),
   );
 }
@@ -35,9 +42,9 @@ class App extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     Future<List<String>> loadIdPass() async {
-      final prefs = await SharedPreferences.getInstance();
-      final id = prefs.getString('id') ?? '';
-      final password = prefs.getString('password') ?? '';
+      final pref = ref.read(sharedPreferencesProvider);
+      final id = pref.getString('id') ?? '';
+      final password = pref.getString('password') ?? '';
       ref.read(idPasswordProvider.notifier).setIdPassword(id, password);
       return [id, password];
     }
