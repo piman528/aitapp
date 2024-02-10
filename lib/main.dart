@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:aitapp/provider/id_password_provider.dart';
+import 'package:aitapp/provider/setting_int_provider.dart';
 import 'package:aitapp/provider/shared_preference_provider.dart';
 import 'package:aitapp/screens/login.dart';
 import 'package:aitapp/screens/tabs.dart';
@@ -41,10 +42,11 @@ class App extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final themeMode = ref.watch(settingIntProvider)!['colorTheme']!;
     Future<List<String>> loadIdPass() async {
-      final pref = ref.read(sharedPreferencesProvider);
-      final id = pref.getString('id') ?? '';
-      final password = pref.getString('password') ?? '';
+      final prefs = await SharedPreferences.getInstance();
+      final id = prefs.getString('id') ?? '';
+      final password = prefs.getString('password') ?? '';
       ref.read(idPasswordProvider.notifier).setIdPassword(id, password);
       return [id, password];
     }
@@ -52,7 +54,12 @@ class App extends ConsumerWidget {
     return MaterialApp(
       theme: buildThemeLight(),
       darkTheme: buildThemeDark(),
-      // themeMode: mode,
+      themeMode: switch (themeMode) {
+        0 => ThemeMode.system,
+        1 => ThemeMode.light,
+        2 => ThemeMode.dark,
+        _ => ThemeMode.system,
+      },
       home: FutureBuilder(
         future: loadIdPass(),
         builder: (context, snapshot) {
