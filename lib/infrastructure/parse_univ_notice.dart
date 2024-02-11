@@ -27,10 +27,12 @@ List<UnivNotice> parseUnivNotice(String body) {
     var sendAt = '';
     // var subject = '';
     // var makeupClassAt = '';
+    var isImportant = false;
     for (final text in texts) {
       switch (c) {
         case 0: // タイトル
           if (text == '重要') {
+            isImportant = true;
             continue;
           }
           title = text;
@@ -46,6 +48,7 @@ List<UnivNotice> parseUnivNotice(String body) {
         sender: sender,
         title: title,
         sendAt: sendAt,
+        isInportant: isImportant,
       ),
     );
   }
