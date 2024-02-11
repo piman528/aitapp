@@ -57,25 +57,32 @@ class NoticeItem extends StatelessWidget {
                   children: [
                     notice.isInportant
                         ? Container(
+                            margin: const EdgeInsets.symmetric(
+                              vertical: 2,
+                            ),
                             padding: const EdgeInsets.symmetric(
                               vertical: 1,
                               horizontal: 2,
                             ),
                             decoration: BoxDecoration(
                               borderRadius:
-                                  const BorderRadius.all(Radius.circular(6)),
-                              color: Theme.of(context).colorScheme.primary,
+                                  const BorderRadius.all(Radius.circular(4)),
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .tertiaryContainer,
                             ),
                             child: Text(
                               '重要',
                               style: Theme.of(context)
                                   .textTheme
-                                  .bodyMedium!
+                                  .bodySmall!
                                   .copyWith(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .background,
-                                    fontWeight: FontWeight.bold,
+                                    color: const Color.fromARGB(
+                                      255,
+                                      240,
+                                      247,
+                                      255,
+                                    ),
                                   ),
                             ),
                           )
