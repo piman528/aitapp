@@ -26,12 +26,14 @@ List<ClassNotice> parseClassNotice(String body) {
     var title = '';
     var subject = '';
     var makeupClassAt = '';
+    var isImportant = false;
     for (final text in texts) {
       switch (c) {
         case 2: // 授業科目
           subject = text;
         case 6: // タイトル
           if (text == '重要') {
+            isImportant = true;
             continue;
           }
           title = text;
@@ -48,6 +50,7 @@ List<ClassNotice> parseClassNotice(String body) {
         title: title,
         subject: subject,
         makeupClassAt: makeupClassAt,
+        isInportant: isImportant,
       ),
     );
   }

@@ -52,11 +52,46 @@ class NoticeItem extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(
-                  notice.title,
-                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                        color: Theme.of(context).colorScheme.onBackground,
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    notice.isInportant
+                        ? Container(
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 1,
+                              horizontal: 2,
+                            ),
+                            decoration: BoxDecoration(
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(6)),
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
+                            child: Text(
+                              '重要',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium!
+                                  .copyWith(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .background,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                            ),
+                          )
+                        : const SizedBox(),
+                    const SizedBox(
+                      width: 5,
+                    ),
+                    Expanded(
+                      child: Text(
+                        notice.title,
+                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                              color: Theme.of(context).colorScheme.onBackground,
+                            ),
                       ),
+                    ),
+                  ],
                 ),
                 if (isCommon) ...{
                   const SizedBox(
