@@ -1,3 +1,5 @@
+name: build android
+
 on:
   workflow_dispatch:
   push:
