@@ -4,7 +4,7 @@ ColorScheme kColorScheme = ColorScheme.fromSeed(
   seedColor: const Color.fromARGB(255, 35, 132, 223),
   background: const Color.fromARGB(255, 240, 247, 255),
   secondary: const Color.fromARGB(255, 52, 76, 102),
-  primaryContainer: const Color.fromARGB(255, 232, 237, 240),
+  primaryContainer: const Color.fromARGB(255, 221, 231, 236),
   secondaryContainer: const Color.fromARGB(255, 188, 218, 247),
   tertiaryContainer: const Color.fromARGB(255, 63, 157, 240),
   onTertiaryContainer: const Color.fromARGB(255, 217, 232, 247),
