@@ -81,10 +81,6 @@ UnivNoticeDetail parseUnivNoticeDetail(String body) {
           .replaceAll(RegExp('style="color: #[a-f0-9]{6};"'), '')
           .replaceAll(RegExp('background-color: #[a-f0-9]{6};'), '')
           .replaceAll(RegExp('color: #[a-f0-9]{6};'), '')
-          .replaceAll(
-            '<div>${String.fromCharCode(0x00A0)}</div>',
-            '<div><span></span></div>',
-          )
           .replaceAllMapped(
               RegExp(
                 r"(http(s)?:\/\/[a-zA-Z0-9-.!'*;/?:@&=+$,%_#]+)",
@@ -94,7 +90,7 @@ UnivNoticeDetail parseUnivNoticeDetail(String body) {
         return '<a href="$url">$url</a>';
       });
       texts.add(
-        '<html><body>$filteredHtml</body></html>',
+        filteredHtml,
       );
       mainContent = 0;
     }

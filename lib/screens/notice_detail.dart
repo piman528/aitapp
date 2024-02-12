@@ -7,7 +7,7 @@ import 'package:aitapp/provider/id_password_provider.dart';
 import 'package:async/async.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:flutter_html/flutter_html.dart';
+import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -126,18 +126,16 @@ class NoticeDetailScreen extends HookConsumerWidget {
                 const SizedBox(
                   height: 50,
                 ),
-                Html(
-                  data: notice.value!.content,
-                  onLinkTap: (url, attributes, element) {
-                    launchUrl(Uri.parse(url!));
-                  },
-                  style: {
-                    'a': Style(
-                      color: Theme.of(context).colorScheme.primary,
-                      textDecoration: TextDecoration.none,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  },
+                HtmlWidget(
+                  notice.value!.content,
+                  customStylesBuilder: (element) => element.localName == 'a'
+                      ? {
+                          'color':
+                              Theme.of(context).colorScheme.primary.toString(),
+                          'text-decoration': 'none',
+                          'font-weight': '500',
+                        }
+                      : null,
                 ),
                 if (notice.value!.url.isNotEmpty) ...{
                   const SizedBox(
