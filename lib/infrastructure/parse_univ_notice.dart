@@ -88,7 +88,10 @@ UnivNoticeDetail parseUnivNoticeDetail(String body) {
           ), (match) {
         final url = match.group(0)!;
         return '<a href="$url">$url</a>';
-      });
+      }).replaceAll(
+        '<div>${String.fromCharCode(0x00A0)}</div>',
+        '<div><span></span></div>',
+      );
       texts.add(
         '<html><body>$fixHtml</body></html>',
       );
