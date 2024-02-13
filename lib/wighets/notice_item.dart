@@ -58,7 +58,7 @@ class NoticeItem extends StatelessWidget {
                     notice.isInportant
                         ? Container(
                             margin: const EdgeInsets.symmetric(
-                              vertical: 2,
+                              vertical: 1,
                             ),
                             padding: const EdgeInsets.symmetric(
                               vertical: 1,

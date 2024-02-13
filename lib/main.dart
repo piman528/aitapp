@@ -1,5 +1,7 @@
+import 'dart:async';
 import 'dart:io';
 
+import 'package:aitapp/infrastructure/rest_access.dart';
 import 'package:aitapp/provider/id_password_provider.dart';
 import 'package:aitapp/provider/setting_int_provider.dart';
 import 'package:aitapp/provider/shared_preference_provider.dart';
@@ -7,10 +9,14 @@ import 'package:aitapp/screens/login.dart';
 import 'package:aitapp/screens/tabs.dart';
 import 'package:aitapp/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:system_proxy/system_proxy.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -43,13 +49,6 @@ class App extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final themeMode = ref.watch(settingIntProvider)!['colorTheme']!;
-    Future<List<String>> loadIdPass() async {
-      final prefs = await SharedPreferences.getInstance();
-      final id = prefs.getString('id') ?? '';
-      final password = prefs.getString('password') ?? '';
-      ref.read(idPasswordProvider.notifier).setIdPassword(id, password);
-      return [id, password];
-    }
 
     return MaterialApp(
       theme: buildThemeLight(),
@@ -60,22 +59,7 @@ class App extends ConsumerWidget {
         2 => ThemeMode.dark,
         _ => ThemeMode.system,
       },
-      home: FutureBuilder(
-        future: loadIdPass(),
-        builder: (context, snapshot) {
-          if (snapshot.hasData &&
-              snapshot.data?[0] != '' &&
-              snapshot.data?[1] != '') {
-            return const TabScreen();
-          } else if (snapshot.hasData &&
-              snapshot.data?[0] == '' &&
-              snapshot.data?[1] == '') {
-            return const LoginScreen();
-          } else {
-            return const SizedBox();
-          }
-        },
-      ),
+      home: const InitHome(),
       localizationsDelegates: const [
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
@@ -106,5 +90,90 @@ class ProxiedHttpOverrides extends HttpOverrides {
       ..findProxy = (uri) {
         return _port != null ? 'PROXY $_host:$_port;' : 'DIRECT';
       };
+  }
+}
+
+class InitHome extends HookConsumerWidget {
+  const InitHome({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    Future<List<String>> loadIdPass() async {
+      final prefs = await SharedPreferences.getInstance();
+      final id = prefs.getString('id') ?? '';
+      final password = prefs.getString('password') ?? '';
+      ref.read(idPasswordProvider.notifier).setIdPassword(id, password);
+      return [id, password];
+    }
+
+    Future<bool> checkVersion() async {
+      final currentVersion = (await PackageInfo.fromPlatform()).version;
+      try {
+        final latestVersion = await getLatestVersion();
+        return latestVersion != 'v$currentVersion';
+      } on SocketException {
+        await Fluttertoast.showToast(msg: 'インターネットに接続できません');
+      } on Exception {
+        await Fluttertoast.showToast(msg: 'バージョンの確認に失敗しました');
+      }
+      return false;
+    }
+
+    useEffect(() {
+      checkVersion().then(
+        (value) => value
+            ? showDialog<Widget>(
+                context: context,
+                builder: (BuildContext ctx) {
+                  return AlertDialog(
+                    title: const Text(
+                      'アプリのアップデートがあります',
+                      textAlign: TextAlign.center,
+                      style:
+                          TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+                    ),
+                    actions: <Widget>[
+                      // ボタン領域
+                      ElevatedButton(
+                        child: const Text('後で'),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                      ),
+                      ElevatedButton(
+                        child: const Text('OK'),
+                        onPressed: () {
+                          launchUrl(
+                            Uri.parse(
+                              'https://github.com/piman528/aitapp/releases/latest',
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  );
+                },
+              )
+            : null,
+      );
+      return null;
+    });
+
+    return FutureBuilder(
+      future: loadIdPass(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData &&
+            snapshot.data?[0] != '' &&
+            snapshot.data?[1] != '') {
+          return const TabScreen();
+        } else if (snapshot.hasData &&
+            snapshot.data?[0] == '' &&
+            snapshot.data?[1] == '') {
+          return const LoginScreen();
+        } else {
+          return const SizedBox();
+        }
+      },
+    );
   }
 }
