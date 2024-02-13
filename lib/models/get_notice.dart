@@ -91,8 +91,8 @@ class GetNotice {
       final directory = await getApplicationDocumentsDirectory();
       final file = File('${directory.path}/${entry.key}');
       if (entry.key.contains('.pdf')) {
-        await file.writeAsBytes(response.bodyBytes).then((value) {
-          Navigator.of(context).push<void>(
+        await file.writeAsBytes(response.bodyBytes).then((value) async {
+          await Navigator.of(context).push<void>(
             MaterialPageRoute(
               builder: (BuildContext ctx) => OpenFilePdf(
                 title: entry.key,
@@ -100,6 +100,7 @@ class GetNotice {
               ),
             ),
           );
+          await file.delete();
         });
       } else {
         await file.writeAsBytes(response.bodyBytes);
