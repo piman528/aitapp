@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:aitapp/models/get_notice.dart';
 import 'package:aitapp/models/notice_detail.dart';
-import 'package:aitapp/provider/file_downloading_provider.dart';
 import 'package:aitapp/provider/id_password_provider.dart';
 import 'package:async/async.dart';
 import 'package:flutter/material.dart';
@@ -33,6 +32,7 @@ class NoticeDetailScreen extends HookConsumerWidget {
     final error = useState<String?>(null);
     final notice = useState<NoticeDetail?>(null);
     final operation = useRef<CancelableOperation<void>?>(null);
+    final isDonwloading = useState(false);
     final content = useState<Widget>(
       const Center(
         child: SizedBox(
@@ -71,20 +71,6 @@ class NoticeDetailScreen extends HookConsumerWidget {
           error.value = err.toString();
         }
       }
-    }
-
-    Future<void> fileShare(MapEntry<String, String> entries) async {
-      ref.read(fileDownloadingProvider.notifier).state = true;
-      try {
-        await getNotice.shareFile(entries, context);
-      } on SocketException {
-        await Fluttertoast.showToast(msg: 'インターネットに接続できません');
-      } on Exception catch (err) {
-        await Fluttertoast.showToast(msg: err.toString());
-      }
-
-      await Future<void>.delayed(const Duration(milliseconds: 500));
-      ref.read(fileDownloadingProvider.notifier).state = false;
     }
 
     useEffect(
@@ -167,10 +153,22 @@ class NoticeDetailScreen extends HookConsumerWidget {
                   ),
                   for (final entries in notice.value!.files.entries) ...{
                     TextButton(
-                      onPressed: ref.watch(fileDownloadingProvider)
+                      onPressed: isDonwloading.value
                           ? null
-                          : () {
-                              fileShare(entries);
+                          : () async {
+                              isDonwloading.value = true;
+                              try {
+                                await getNotice.shareFile(entries, context);
+                              } on SocketException {
+                                await Fluttertoast.showToast(
+                                  msg: 'インターネットに接続できません',
+                                );
+                              } on Exception catch (err) {
+                                await Fluttertoast.showToast(
+                                  msg: err.toString(),
+                                );
+                              }
+                              isDonwloading.value = false;
                             },
                       child: Text(entries.key),
                     ),

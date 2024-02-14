@@ -5,7 +5,6 @@ import 'package:aitapp/models/get_notice.dart';
 import 'package:aitapp/models/notice.dart';
 import 'package:aitapp/models/univ_notice.dart';
 import 'package:aitapp/provider/class_notices_provider.dart';
-import 'package:aitapp/provider/file_downloading_provider.dart';
 import 'package:aitapp/provider/id_password_provider.dart';
 import 'package:aitapp/provider/last_login_time_provider.dart';
 import 'package:aitapp/provider/last_notice_login_time_provider.dart';
@@ -166,9 +165,7 @@ class NoticeList extends HookConsumerWidget {
 
     ref
       ..listen(lastLoginTimeProvider, (previous, next) {
-        if (!isLoading.value &&
-            !ref.read(fileDownloadingProvider) &&
-            tabs.value == (isCommon ? 0 : 1)) {
+        if (!isLoading.value && tabs.value == (isCommon ? 0 : 1)) {
           operation.value = CancelableOperation.fromFuture(
             load(withLogin: true),
           );

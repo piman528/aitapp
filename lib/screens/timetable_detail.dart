@@ -40,23 +40,15 @@ class TimeTableDetailScreen extends StatelessWidget {
           ),
         ),
         body: TabBarView(
-          children: <Widget>[
-            DaiyaDetail(
-              daiyaA: 'A',
-              destination: destination,
-              vehicle: vehicle,
-            ),
-            DaiyaDetail(
-              daiyaA: 'B',
-              destination: destination,
-              vehicle: vehicle,
-            ),
-            DaiyaDetail(
-              daiyaA: 'C',
-              destination: destination,
-              vehicle: vehicle,
-            ),
-          ],
+          children: ['A', 'B', 'C']
+              .map(
+                (daiya) => DaiyaDetail(
+                  daiyaA: daiya,
+                  destination: destination,
+                  vehicle: vehicle,
+                ),
+              )
+              .toList(),
         ),
       ),
     );
