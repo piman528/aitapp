@@ -14,11 +14,6 @@ class TabScreen extends HookConsumerWidget {
     ClassTimeTableScreen(),
     TimeTableScreen(),
   ];
-  static const appBarTitle = [
-    'お知らせ',
-    '時間割',
-    '時刻表',
-  ];
   static const destinations = [
     NavigationDestination(
       icon: Icon(Icons.article),
@@ -39,7 +34,7 @@ class TabScreen extends HookConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         scrolledUnderElevation: 0,
-        title: Text(appBarTitle[currentPageIndex.value]),
+        title: Text(destinations[currentPageIndex.value].label),
         centerTitle: true,
       ),
       drawer: const MainDrawer(),

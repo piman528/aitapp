@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:aitapp/infrastructure/rest_access.dart';
+import 'package:aitapp/infrastructure/github_rest_access.dart';
 import 'package:aitapp/provider/id_password_provider.dart';
 import 'package:aitapp/provider/setting_int_provider.dart';
 import 'package:aitapp/provider/shared_preference_provider.dart';
