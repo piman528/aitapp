@@ -28,7 +28,7 @@ dependencies:
   path_provider: ^2.1.1
   share_plus: ^7.2.1
   shared_preferences: ^2.2.2
-  syncfusion_flutter_pdfviewer: ^24.2.4
+  syncfusion_flutter_pdfviewer: ^24.2.6
   system_proxy: ^0.1.0
   universal_html: ^2.2.4
   url_launcher: ^6.2.2
