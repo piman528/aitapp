@@ -95,7 +95,7 @@ class MainDrawer extends ConsumerWidget {
                     MaterialPageRoute<void>(
                       builder: (ctx) => const OpenAssetPdf(
                         title: '学生便覧',
-                        path: 'assets/pdfs/binran_2023.pdf',
+                        path: 'assets/pdfs/binran2024.pdf',
                       ),
                     ),
                   );
