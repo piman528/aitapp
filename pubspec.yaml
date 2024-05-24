@@ -46,7 +46,7 @@ dev_dependencies:
   flutter_lints: ^3.0.2
   flutter_test:
     sdk: flutter
-  pedantic_mono: ^1.26.0
+  pedantic_mono: ^1.27.0
 
 flutter:
   uses-material-design: true
