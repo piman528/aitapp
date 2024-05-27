@@ -36,7 +36,7 @@ dependencies:
   syncfusion_flutter_pdfviewer: ^24.2.8
   universal_html: ^2.2.4
   url_launcher: ^6.2.6
-  webview_flutter: ^4.7.0
+  webview_flutter: ^4.8.0
   xml: ^6.5.0
 
 dev_dependencies:
