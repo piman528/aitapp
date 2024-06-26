@@ -33,7 +33,7 @@ dependencies:
   riverpod_generator: ^2.4.0
   share_plus: ^9.0.0
   shared_preferences: ^2.2.3
-  syncfusion_flutter_pdfviewer: ^25.2.6
+  syncfusion_flutter_pdfviewer: ^26.1.39
   universal_html: ^2.2.4
   url_launcher: ^6.2.6
   webview_cookie_manager:
