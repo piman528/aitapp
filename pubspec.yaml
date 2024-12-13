@@ -19,7 +19,7 @@ dependencies:
   flutter_hooks: ^0.20.5
   flutter_riverpod: ^2.5.1
   flutter_widget_from_html: ^0.15.0
-  fluttertoast: ^8.2.5
+  fluttertoast: ^8.2.6
   freezed: ^2.5.2
   freezed_annotation: ^2.4.1
   hooks_riverpod: ^2.5.1
