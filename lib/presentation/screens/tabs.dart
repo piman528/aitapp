@@ -32,13 +32,13 @@ class TabScreen extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final currentPageIndex = useState(0);
     return Scaffold(
-      appBar: AppBar(
-        scrolledUnderElevation: 0,
-        title: Text(destinations[currentPageIndex.value].label),
-        centerTitle: true,
-      ),
+      // appBar: AppBar(
+      //   scrolledUnderElevation: 0,
+      //   title: Text(destinations[currentPageIndex.value].label),
+      //   centerTitle: true,
+      // ),
       drawer: const MainDrawer(),
-      body: currentPages[currentPageIndex.value],
+      body: SafeArea(child: currentPages[currentPageIndex.value]),
       bottomNavigationBar: BottomNavigationBar(
         items: const [
           BottomNavigationBarItem(

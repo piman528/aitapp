@@ -21,20 +21,28 @@ class TimeTableColumn extends HookWidget {
     final todayDaiya = useMemoized(
       () => dayDaiya[DateFormat('yyyy-MM-dd').format(now)],
     );
-    return Expanded(
-      child: Column(
-        children: [
-          Row(
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 4),
+          child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                vehicleName[vehicle]! + destinationName[destination]!,
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
+              Row(
+                children: [
+                  const Icon(Icons.access_time, size: 20),
+                  const SizedBox(width: 8),
+                  Text(
+                    '次の${todayDaiya != null && todayDaiya != '-' ? "3便" : "0便"}',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: Theme.of(context).colorScheme.onSurface,
+                    ),
+                  ),
+                ],
               ),
-              TextButton(
+              TextButton.icon(
                 onPressed: () {
                   Navigator.of(context).push<void>(
                     MaterialPageRoute(
@@ -45,39 +53,51 @@ class TimeTableColumn extends HookWidget {
                     ),
                   );
                 },
-                child: const Text(
-                  '時刻表を見る',
-                  style: TextStyle(fontSize: 16),
+                icon: const Icon(Icons.calendar_today, size: 18),
+                label: const Text('時刻表を見る'),
+                style: TextButton.styleFrom(
+                  foregroundColor: Theme.of(context).colorScheme.primary,
                 ),
               ),
             ],
           ),
-          const SizedBox(
-            height: 5,
-          ),
-          todayDaiya != null && todayDaiya != '-'
-              ? Expanded(
-                  child: ListView(
-                    children: List.generate(
-                      3, // 表示する TimeCard の数
-                      (index) => Column(
-                        children: [
-                          if (index > 0) const SizedBox(height: 10),
-                          TimeCard(
-                            vehicle: vehicle,
-                            destination: destination,
-                            order: index,
-                          ),
-                        ],
-                      ),
+        ),
+        todayDaiya != null && todayDaiya != '-'
+            ? Expanded(
+                child: ListView.builder(
+                  padding: const EdgeInsets.symmetric(vertical: 4),
+                  itemCount: 3,
+                  itemBuilder: (context, index) => Padding(
+                    padding: const EdgeInsets.only(bottom: 16),
+                    child: TimeCard(
+                      vehicle: vehicle,
+                      destination: destination,
+                      order: index,
                     ),
                   ),
-                )
-              : const Center(
-                  child: Text('運行はありません'),
                 ),
-        ],
-      ),
+              )
+            : Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.no_transfer,
+                      size: 48,
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      '本日の運行は終了しました',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+      ],
     );
   }
 }

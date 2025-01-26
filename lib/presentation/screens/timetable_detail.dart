@@ -29,14 +29,134 @@ class TimeTableDetailScreen extends StatelessWidget {
       length: 3,
       child: Scaffold(
         appBar: AppBar(
-          title: Text(
-            vehicleName[vehicle]! + destinationName[destination]!,
+          title: Row(
+            children: [
+              Icon(
+                vehicle == 'bus' ? Icons.directions_bus : Icons.train,
+                size: 24,
+              ),
+              const SizedBox(width: 8),
+              Text(
+                vehicleName[vehicle]! + destinationName[destination]!,
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ],
           ),
           bottom: TabBar(
+            labelStyle: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
+            indicator: BoxDecoration(
+              borderRadius: BorderRadius.circular(50),
+              color: Theme.of(context).colorScheme.primaryContainer,
+            ),
             tabs: <Widget>[
-              Tab(text: todayDaiya == 'A' ? 'A (今日)' : 'A'),
-              Tab(text: todayDaiya == 'B' ? 'B (今日)' : 'B'),
-              Tab(text: todayDaiya == 'C' ? 'C (今日)' : 'C'),
+              Tab(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'ダイヤA',
+                      style: TextStyle(
+                        color: todayDaiya == 'A'
+                            ? Theme.of(context).colorScheme.primary
+                            : null,
+                      ),
+                    ),
+                    if (todayDaiya == 'A') ...[
+                      const SizedBox(width: 4),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 2,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).colorScheme.primary,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Text(
+                          '今日',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Theme.of(context).colorScheme.onPrimary,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+              Tab(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'ダイヤB',
+                      style: TextStyle(
+                        color: todayDaiya == 'B'
+                            ? Theme.of(context).colorScheme.primary
+                            : null,
+                      ),
+                    ),
+                    if (todayDaiya == 'B') ...[
+                      const SizedBox(width: 4),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 2,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).colorScheme.primary,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Text(
+                          '今日',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Theme.of(context).colorScheme.onPrimary,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+              Tab(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'ダイヤC',
+                      style: TextStyle(
+                        color: todayDaiya == 'C'
+                            ? Theme.of(context).colorScheme.primary
+                            : null,
+                      ),
+                    ),
+                    if (todayDaiya == 'C') ...[
+                      const SizedBox(width: 4),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 2,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).colorScheme.primary,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Text(
+                          '今日',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Theme.of(context).colorScheme.onPrimary,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
             ],
           ),
         ),
@@ -70,37 +190,103 @@ class DaiyaDetail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final daiyas = daiya[vehicle]![destination]![daiyaA]!;
-    return ListView(
-      children: [
-        for (final hour in daiyas.keys) ...{
-          const SizedBox(
-            height: 10,
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12),
-            child: Text(
-              '$hour時',
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
-          ),
-          GridView.count(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            crossAxisCount: 6,
+    final now = DateTime.now().toUtc().add(const Duration(hours: 9));
+    final currentHour = now.hour;
+    final currentMinute = now.minute;
+
+    return ListView.builder(
+      padding: const EdgeInsets.symmetric(vertical: 16),
+      itemCount: daiyas.keys.length,
+      itemBuilder: (context, index) {
+        final hour = daiyas.keys.elementAt(index);
+        final isCurrentHour = hour == currentHour;
+
+        return Card(
+          margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          elevation: isCurrentHour ? 4 : 1,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              for (final minutes in daiyas[hour]!) ...{
-                Center(
-                  child: Text(
-                    '$minutes',
-                    style: Theme.of(context).textTheme.titleLarge,
-                  ),
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: isCurrentHour
+                      ? Theme.of(context).colorScheme.primaryContainer
+                      : Theme.of(context).colorScheme.surfaceContainerHighest,
+                  borderRadius:
+                      const BorderRadius.vertical(top: Radius.circular(12)),
                 ),
-              },
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.schedule,
+                      size: 20,
+                      color: isCurrentHour
+                          ? Theme.of(context).colorScheme.primary
+                          : Theme.of(context).colorScheme.onSurfaceVariant,
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      '$hour時',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: isCurrentHour
+                            ? Theme.of(context).colorScheme.primary
+                            : Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(12),
+                child: Wrap(
+                  spacing: 16,
+                  runSpacing: 16,
+                  children: [
+                    for (final minutes in daiyas[hour]!)
+                      Container(
+                        width: 56,
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 8,
+                          horizontal: 4,
+                        ),
+                        decoration: BoxDecoration(
+                          color: isCurrentHour && minutes > currentMinute
+                              ? Theme.of(context).colorScheme.primaryContainer
+                              : null,
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(
+                            color: isCurrentHour && minutes > currentMinute
+                                ? Theme.of(context).colorScheme.primary
+                                : Theme.of(context).colorScheme.outline,
+                            width: isCurrentHour && minutes > currentMinute
+                                ? 2
+                                : 1,
+                          ),
+                        ),
+                        child: Text(
+                          '$minutes分',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: isCurrentHour && minutes > currentMinute
+                                ? FontWeight.bold
+                                : FontWeight.normal,
+                            color: isCurrentHour && minutes > currentMinute
+                                ? Theme.of(context).colorScheme.primary
+                                : null,
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
             ],
           ),
-          const Divider(),
-        },
-      ],
+        );
+      },
     );
   }
 }
