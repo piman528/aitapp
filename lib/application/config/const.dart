@@ -23,6 +23,7 @@ const List<List<String>> classPeriods = [
 
 const Map<String, Map<String, Map<String, Map<int, List<int>>>>> daiya = {
   'linimo': {
+    // 八草発藤が丘行きの時刻表
     'toFujigaoka': {
       'A': {
         5: [30, 48],
@@ -67,6 +68,7 @@ const Map<String, Map<String, Map<String, Map<int, List<int>>>>> daiya = {
         23: [1, 15, 30, 45],
       },
     },
+    // 藤が丘発八草行きの時刻表
     'toYakusa': {
       'A': {
         5: [52],
@@ -610,6 +612,27 @@ const Map<String, Map<String, dynamic>> vehicles = {
     'destinations': {
       'toFujigaoka': '藤が丘行',
       'toYakusa': '八草行',
+    },
+    'stations': {
+      'L01': '藤が丘',
+      'L02': 'はなみずき通り',
+      'L03': '杁ヶ池公園',
+      'L04': '長久手古戦場',
+      'L05': '芸大通',
+      'L06': '公園西',
+      'L07': '愛・地球博記念公園',
+      'L08': '陶磁資料館南',
+      'L09': '八草',
+    },
+    'times': {
+      'L01-L02': '3',
+      'L02-L03': '2',
+      'L03-L04': '2',
+      'L04-L05': '2',
+      'L05-L06': '2',
+      'L06-L07': '2',
+      'L07-L08': '2',
+      'L08-L09': '2',
     },
   },
   'bus': {

@@ -92,6 +92,7 @@ class TimeTableColumn extends HookWidget {
                     padding: const EdgeInsets.only(bottom: 8),
                     child: TimTableCard(
                       vehicle: vehicle,
+                      destination: destination,
                       departureTime: departureTimes.value[index],
                     ),
                   ),
