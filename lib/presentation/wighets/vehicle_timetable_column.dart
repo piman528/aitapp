@@ -1,9 +1,9 @@
-import 'package:aitapp/application/config/const.dart';
+import 'dart:async';
+import 'package:aitapp/domain/features/next_departure.dart';
 import 'package:aitapp/presentation/screens/timetable_detail.dart';
 import 'package:aitapp/presentation/wighets/timetable_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:intl/intl.dart';
 
 class TimeTableColumn extends HookWidget {
   const TimeTableColumn({
@@ -16,10 +16,32 @@ class TimeTableColumn extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final now =
-        useMemoized(() => DateTime.now().toUtc().add(const Duration(hours: 9)));
-    final todayDaiya = useMemoized(
-      () => dayDaiya[DateFormat('yyyy-MM-dd').format(now)],
+    final departureTimes = useState<List<DateTime>>([]);
+    final timer = useRef<Timer?>(null);
+
+    void reflashtime() {
+      departureTimes.value = NextDeparture(
+        vehicle: vehicle,
+        destination: destination,
+        order: 4,
+      ).searchNextDeparture();
+    }
+
+    useEffect(
+      () {
+        reflashtime();
+        timer.value = Timer.periodic(const Duration(seconds: 1), (timer) {
+          final time = DateTime.now().toUtc().add(const Duration(hours: 9));
+          if (departureTimes.value.isNotEmpty &&
+              departureTimes.value[0].difference(time).inSeconds < 0) {
+            reflashtime();
+          }
+        });
+        return () {
+          timer.value!.cancel();
+        };
+      },
+      const [],
     );
     return Column(
       children: [
@@ -33,7 +55,7 @@ class TimeTableColumn extends HookWidget {
                   const Icon(Icons.access_time, size: 20),
                   const SizedBox(width: 8),
                   Text(
-                    '次の${todayDaiya != null && todayDaiya != '-' ? "3便" : "0便"}',
+                    '次の${departureTimes.value.length}便',
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
@@ -62,39 +84,39 @@ class TimeTableColumn extends HookWidget {
             ],
           ),
         ),
-        todayDaiya != null && todayDaiya != '-'
+        departureTimes.value.isNotEmpty
             ? Expanded(
                 child: ListView.builder(
-                  padding: const EdgeInsets.symmetric(vertical: 4),
-                  itemCount: 3,
+                  itemCount: departureTimes.value.length,
                   itemBuilder: (context, index) => Padding(
-                    padding: const EdgeInsets.only(bottom: 16),
-                    child: TimeCard(
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: TimTableCard(
                       vehicle: vehicle,
-                      destination: destination,
-                      order: index,
+                      departureTime: departureTimes.value[index],
                     ),
                   ),
                 ),
               )
-            : Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.no_transfer,
-                      size: 48,
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
-                    ),
-                    const SizedBox(height: 16),
-                    Text(
-                      '本日の運行は終了しました',
-                      style: TextStyle(
-                        fontSize: 16,
+            : Expanded(
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.no_transfer,
+                        size: 48,
                         color: Theme.of(context).colorScheme.onSurfaceVariant,
                       ),
-                    ),
-                  ],
+                      const SizedBox(height: 16),
+                      Text(
+                        '本日の運行は終了しました',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
       ],

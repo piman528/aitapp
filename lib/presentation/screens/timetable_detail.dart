@@ -13,6 +13,10 @@ class TimeTableDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final vehicleName = vehicles[vehicle]?['name'] as String;
+    final destinations =
+        vehicles[vehicle]?['destinations'] as Map<String, String>;
+    final destinationName = destinations[destination];
     final now = DateTime.now().toUtc().add(const Duration(hours: 9));
     final todayDaiya = dayDaiya[DateFormat('yyyy-MM-dd').format(now)];
     int? initialValue;
@@ -32,12 +36,12 @@ class TimeTableDetailScreen extends StatelessWidget {
           title: Row(
             children: [
               Icon(
-                vehicle == 'bus' ? Icons.directions_bus : Icons.train,
+                vehicles[vehicle]?['icon'] as IconData?,
                 size: 24,
               ),
               const SizedBox(width: 8),
               Text(
-                vehicleName[vehicle]! + destinationName[destination]!,
+                '$vehicleName ($destinationName)',
                 style: const TextStyle(fontWeight: FontWeight.bold),
               ),
             ],

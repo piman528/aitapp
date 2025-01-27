@@ -1,7 +1,7 @@
 import 'package:aitapp/application/state/tab_button_provider.dart';
 import 'package:aitapp/presentation/screens/class_timetable.dart';
 import 'package:aitapp/presentation/screens/notices.dart';
-import 'package:aitapp/presentation/screens/vehicle_timetable.dart';
+import 'package:aitapp/presentation/screens/timetable_screen.dart';
 import 'package:aitapp/presentation/wighets/drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';

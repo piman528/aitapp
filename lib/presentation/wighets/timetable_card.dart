@@ -1,43 +1,29 @@
 import 'dart:async';
 
-import 'package:aitapp/domain/features/next_departure.dart';
+import 'package:aitapp/application/config/const.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:intl/intl.dart';
 
-class TimeCard extends HookWidget {
-  const TimeCard({
+class TimTableCard extends HookWidget {
+  const TimTableCard({
     super.key,
     required this.vehicle,
-    required this.destination,
-    required this.order,
+    // required this.destination,
+    required this.departureTime,
   });
   final String vehicle;
-  final String destination;
-  final int order;
+  // final String destination;
+  final DateTime departureTime;
 
   @override
   Widget build(BuildContext context) {
     final f = useMemoized(() => DateFormat('HH:mm'));
-    final nextDepartureTime = useState<DateTime?>(null);
     final time = useState<DateTime?>(null);
     final timer = useRef<Timer?>(null);
 
-    void reflashtime() {
-      nextDepartureTime.value = NextDeparture(
-        vehicle: vehicle,
-        destination: destination,
-        order: order,
-      ).searchNextDeparture();
-    }
-
     useEffect(
       () {
-        nextDepartureTime.value = NextDeparture(
-          vehicle: vehicle,
-          destination: destination,
-          order: order,
-        ).searchNextDeparture();
         time.value = DateTime.now().toUtc().add(const Duration(hours: 9));
         timer.value =
             Timer.periodic(const Duration(milliseconds: 1000), (timer) {
@@ -48,111 +34,146 @@ class TimeCard extends HookWidget {
         };
       },
     );
-    if (nextDepartureTime.value != null) {
-      final remainTime = nextDepartureTime.value!.difference(time.value!);
-      if (remainTime.inSeconds % 60 == 0 && remainTime.inMinutes % 5 == 0) {
-        reflashtime();
-      }
-      final remainHour =
-          remainTime.inMinutes < 60 ? '' : '${remainTime.inHours}時間';
-      final remainMinutes =
-          remainTime.inSeconds < 60 ? '' : '${remainTime.inMinutes % 60}分';
-      final remainSeconds = '${remainTime.inSeconds % 60}秒';
-      final progressValue =
-          1.0 - (remainTime.inSeconds / (30 * 60)); // 30分を最大値とする
-      return Card(
-        elevation: 4,
-        child: Container(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.directions_bus,
-                        color: Theme.of(context).colorScheme.primary,
-                        size: 24,
-                      ),
-                      const SizedBox(width: 8),
-                      Text(
-                        f.format(nextDepartureTime.value!),
-                        style: TextStyle(
-                          fontSize: 32,
-                          fontWeight: FontWeight.bold,
-                          color: Theme.of(context).colorScheme.onSurface,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                    decoration: BoxDecoration(
-                      color: remainTime.inMinutes <= 3
-                          ? Colors.red.withOpacity(0.1)
-                          : Theme.of(context).colorScheme.primaryContainer,
-                      borderRadius: BorderRadius.circular(16),
+    final remainTime = departureTime.difference(time.value!) > Duration.zero
+        ? departureTime.difference(time.value!)
+        : Duration.zero;
+    return Card(
+      elevation: 4,
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    Icon(
+                      vehicles[vehicle]?['icon'] as IconData?,
+                      color: Theme.of(context).colorScheme.primary,
+                      size: 24,
                     ),
-                    child: Text(
-                      'あと$remainHour$remainMinutes$remainSeconds',
+                    const SizedBox(width: 8),
+                    Text(
+                      f.format(departureTime),
                       style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        color: remainTime.inMinutes <= 3
-                            ? Colors.red
-                            : Theme.of(context).colorScheme.primary,
+                        fontSize: 32,
+                        fontWeight: FontWeight.bold,
+                        color: Theme.of(context).colorScheme.onSurface,
                       ),
                     ),
+                  ],
+                ),
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: remainTime.inMinutes < 3
+                        ? Colors.red.withOpacity(0.1)
+                        : Theme.of(context).colorScheme.primaryContainer,
+                    borderRadius: BorderRadius.circular(16),
                   ),
-                ],
-              ),
-              const SizedBox(height: 12),
-              LinearProgressIndicator(
-                value: progressValue.clamp(0.0, 1.0),
-                backgroundColor:
-                    Theme.of(context).colorScheme.surfaceContainerHighest,
-                color: remainTime.inMinutes <= 3
-                    ? Colors.red
-                    : Theme.of(context).colorScheme.primary,
-              ),
-              const SizedBox(height: 8),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    '到着予定 ${f.format(nextDepartureTime.value!.add(const Duration(minutes: 10)))}',
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
-                    ),
-                  ),
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.circle,
-                        size: 8,
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
-                      const SizedBox(width: 4),
-                      Text(
-                        '運行中',
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  child: remainTime.inHours < 1
+                      ? Row(
+                          children: [
+                            SizedBox(
+                              width: 35, // 固定幅を設定
+                              child: Text(
+                                'あと',
+                                textAlign: TextAlign.center, // 中央寄せ
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                  color: remainTime.inMinutes < 3
+                                      ? Colors.red
+                                      : Theme.of(context).colorScheme.primary,
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              width: 40, // 固定幅を設定
+                              child: Text(
+                                '${remainTime.inMinutes % 60}分',
+                                textAlign: TextAlign.center, // 中央寄せ
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                  color: remainTime.inMinutes < 3
+                                      ? Colors.red
+                                      : Theme.of(context).colorScheme.primary,
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              width: 40, // 固定幅を設定
+                              child: Text(
+                                '${remainTime.inSeconds % 60}秒',
+                                textAlign: TextAlign.center, // 中央寄せ
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                  color: remainTime.inMinutes < 3
+                                      ? Colors.red
+                                      : Theme.of(context).colorScheme.primary,
+                                ),
+                              ),
+                            ),
+                          ],
+                        )
+                      : Text(
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                          'あと1時間以上',
                         ),
-                      ),
-                    ],
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            LinearProgressIndicator(
+              value: (1.0 - (remainTime.inSeconds / (30 * 60))).clamp(0.0, 1.0),
+              backgroundColor:
+                  Theme.of(context).colorScheme.surfaceContainerHighest,
+              color: remainTime.inMinutes < 3
+                  ? Colors.red
+                  : Theme.of(context).colorScheme.primary,
+            ),
+            const SizedBox(height: 8),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  // ignore: lines_longer_than_80_chars
+                  '到着予定 ${f.format(departureTime.add(const Duration(minutes: 10)))}',
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
                   ),
-                ],
-              ),
-            ],
-          ),
+                ),
+                Row(
+                  children: [
+                    Icon(
+                      Icons.circle,
+                      size: 8,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                    const SizedBox(width: 4),
+                    Text(
+                      '運行中',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ],
         ),
-      );
-    }
-    return const SizedBox();
+      ),
+    );
   }
 }
