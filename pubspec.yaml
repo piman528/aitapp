@@ -35,7 +35,7 @@ dependencies:
   shared_preferences: ^2.2.3
   syncfusion_flutter_pdfviewer: ^26.1.39
   universal_html: ^2.2.4
-  url_launcher: ^6.2.6
+  url_launcher: ^6.3.0
   webview_cookie_manager:
     git:
        url: https://github.com/fryette/webview_cookie_manager
