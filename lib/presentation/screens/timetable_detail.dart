@@ -12,7 +12,7 @@ class TimeTableDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final vehicleName = vehicle.displayName;
+    final vehicleName = vehicle.vehicle.displayName;
     final now = DateTime.now().toUtc().add(const Duration(hours: 9));
     final todayDaiya = dayDaiya[DateFormat('yyyy-MM-dd').format(now)];
     int? initialValue;
@@ -186,7 +186,7 @@ class DaiyaDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final daiyas = daiya[vehicle.name]![vehicle.destination]![daiyaA]!;
+    final daiyas = daiya[vehicle.vehicle]![vehicle.destination]![daiyaA]!;
     final now = DateTime.now().toUtc().add(const Duration(hours: 9));
     final currentHour = now.hour;
     final currentMinute = now.minute;

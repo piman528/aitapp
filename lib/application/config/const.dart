@@ -3,6 +3,7 @@ import 'package:aitapp/domain/types/contact.dart';
 import 'package:aitapp/domain/types/day_of_week.dart';
 import 'package:aitapp/domain/types/destination.dart';
 import 'package:aitapp/domain/types/station.dart';
+import 'package:aitapp/domain/types/vehicles.dart';
 import 'package:aitapp/domain/types/web_access.dart';
 import 'package:flutter/material.dart';
 
@@ -24,7 +25,7 @@ const List<List<String>> classPeriods = [
 ];
 
 final daiya = {
-  'linimo': {
+  Vehicles.linimo: {
     // 八草発藤が丘行きの時刻表
     Destination.toFujigaoka: {
       'A': {
@@ -118,7 +119,7 @@ final daiya = {
       },
     },
   },
-  'bus': {
+  Vehicles.bus: {
     Destination.toAIT: {
       'A': {
         8: [00, 05, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55],
@@ -607,19 +608,33 @@ const Map<String, String> dayDaiya = {
   '2025-04-05': 'A',
   '2025-04-06': 'A',
 };
-final stations = [
-  Station(id: 'L01', name: '藤が丘'),
-  Station(id: 'L02', name: 'はなみずき通り'),
-  Station(id: 'L03', name: '杁ヶ池公園'),
-  Station(id: 'L04', name: '長久手古戦場'),
-  Station(id: 'L05', name: '芸大通'),
-  Station(id: 'L06', name: '公園西'),
-  Station(id: 'L07', name: '愛・地球博記念公園'),
-  Station(id: 'L08', name: '陶磁資料館南'),
-  Station(id: 'L09', name: '八草'),
-];
+final stations = {
+  Vehicles.bus: [
+    Station(id: 'A01', name: '愛知工業大学'),
+    Station(id: 'A02', name: '八草'),
+  ],
+  Vehicles.linimo: [
+    Station(id: 'L01', name: '藤が丘'),
+    Station(id: 'L02', name: 'はなみずき通り'),
+    Station(id: 'L03', name: '杁ヶ池公園'),
+    Station(id: 'L04', name: '長久手古戦場'),
+    Station(id: 'L05', name: '芸大通'),
+    Station(id: 'L06', name: '公園西'),
+    Station(id: 'L07', name: '愛・地球博記念公園'),
+    Station(id: 'L08', name: '陶磁資料館南'),
+    Station(id: 'L09', name: '八草'),
+  ],
+};
 final stationAmongTimes = {
-  'linimo': {
+  Vehicles.bus: {
+    Destination.toAIT: {
+      'A01-A02': '10',
+    },
+    Destination.toYakusa: {
+      'A01-A02': '10',
+    },
+  },
+  Vehicles.linimo: {
     Destination.toYakusa: {
       'L01-L02': '3',
       'L02-L03': '2',

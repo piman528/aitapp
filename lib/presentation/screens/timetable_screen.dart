@@ -1,7 +1,7 @@
 import 'package:aitapp/application/config/const.dart';
 import 'package:aitapp/domain/types/destination.dart';
-import 'package:aitapp/domain/types/station.dart';
 import 'package:aitapp/domain/types/vehicle.dart';
+import 'package:aitapp/domain/types/vehicles.dart';
 import 'package:aitapp/presentation/wighets/vehicle_timetable.dart';
 import 'package:flutter/material.dart';
 
@@ -102,35 +102,15 @@ class TimeTableScreen extends StatelessWidget {
                     vehicles: [
                       Vehicle(
                         icon: Icons.directions_bus,
-                        name: 'bus',
-                        displayName: 'シャトルバス',
+                        vehicle: Vehicles.bus,
                         destination: Destination.toAIT,
-                        stations: [
-                          Station(
-                            id: 'a',
-                            name: '大学',
-                          ),
-                          Station(
-                            id: 'b',
-                            name: '八草',
-                          ),
-                        ],
+                        stations: stations[Vehicles.bus]!,
                       ),
                       Vehicle(
                         icon: Icons.directions_bus,
-                        name: 'bus',
-                        displayName: 'シャトルバス',
+                        vehicle: Vehicles.bus,
                         destination: Destination.toYakusa,
-                        stations: [
-                          Station(
-                            id: 'a',
-                            name: '大学',
-                          ),
-                          Station(
-                            id: 'b',
-                            name: '八草',
-                          ),
-                        ],
+                        stations: stations[Vehicles.bus]!,
                       ),
                     ],
                   ),
@@ -138,17 +118,15 @@ class TimeTableScreen extends StatelessWidget {
                     vehicles: [
                       Vehicle(
                         icon: Icons.train,
-                        name: 'linimo',
-                        displayName: 'リニモ',
+                        vehicle: Vehicles.linimo,
                         destination: Destination.toFujigaoka,
-                        stations: stations,
+                        stations: stations[Vehicles.linimo]!,
                       ),
                       Vehicle(
                         icon: Icons.train,
-                        name: 'linimo',
-                        displayName: 'リニモ',
+                        vehicle: Vehicles.linimo,
                         destination: Destination.toYakusa,
-                        stations: stations,
+                        stations: stations[Vehicles.linimo]!,
                       ),
                     ],
                   ),

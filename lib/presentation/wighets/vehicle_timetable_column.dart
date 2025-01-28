@@ -1,8 +1,9 @@
 import 'dart:async';
 import 'package:aitapp/domain/features/next_departure.dart';
-import 'package:aitapp/domain/types/departur_schedule.dart';
+import 'package:aitapp/domain/types/departure_schedule.dart';
 import 'package:aitapp/domain/types/destination.dart';
 import 'package:aitapp/domain/types/vehicle.dart';
+import 'package:aitapp/domain/types/vehicles.dart';
 import 'package:aitapp/presentation/screens/timetable_detail.dart';
 import 'package:aitapp/presentation/wighets/timetable_card.dart';
 import 'package:flutter/material.dart';
@@ -19,13 +20,21 @@ class TimeTableColumn extends HookWidget {
   Widget build(BuildContext context) {
     final departureTimes = useState<List<DepartureSchedule>>([]);
     final timer = useRef<Timer?>(null);
-    final selectedStation = useState<String?>(null);
+    final selectedStation = useState<String>(
+      vehicle.vehicle == Vehicles.linimo
+          ? vehicle.destination == Destination.toFujigaoka
+              ? 'L09'
+              : 'L01'
+          : vehicle.destination == Destination.toYakusa
+              ? 'A01'
+              : 'A02',
+    );
     final mounted = useRef(true);
 
     // リニモの場合は駅一覧を取得
     final stations = useMemoized(
       () {
-        if (vehicle.name == 'linimo') {
+        if (vehicle.vehicle == Vehicles.linimo) {
           final stationsData = vehicle.stations
               .asMap()
               .map((key, value) => MapEntry(value.id, value.name));
@@ -55,7 +64,7 @@ class TimeTableColumn extends HookWidget {
     // 初期選択駅を設定
     useEffect(
       () {
-        if (vehicle.name == 'linimo' && stations.isNotEmpty) {
+        if (vehicle.vehicle == Vehicles.linimo && stations.isNotEmpty) {
           selectedStation.value = stations.first.key;
         }
         return null;
@@ -107,7 +116,8 @@ class TimeTableColumn extends HookWidget {
           padding: const EdgeInsets.symmetric(horizontal: 4),
           child: Column(
             children: [
-              if (vehicle.name == 'linimo' && stations.isNotEmpty) ...[
+              if (vehicle.vehicle == Vehicles.linimo &&
+                  stations.isNotEmpty) ...[
                 const SizedBox(
                   height: 14,
                 ),

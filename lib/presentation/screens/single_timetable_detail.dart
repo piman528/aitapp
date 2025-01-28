@@ -22,318 +22,167 @@ class SingleTimeTableDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // リニモの場合
-    if (vehicle.name == 'linimo') {
-      final stations = vehicle.stations;
-      final timesData = stationAmongTimes['linimo']?[vehicle.destination];
-      if (timesData == null) {
-        return const Scaffold(
-          body: Center(
-            child: Text('駅・時刻情報が見つかりません'),
-          ),
-        );
-      }
+    final stations = vehicle.stations;
+    final timesData = stationAmongTimes[vehicle.vehicle]?[vehicle.destination];
+    if (timesData == null) {
+      return const Scaffold(
+        body: Center(
+          child: Text('時刻情報が見つかりません'),
+        ),
+      );
+    }
 
-      List<Station> orderedStations;
-      if (vehicle.destination == Destination.toFujigaoka) {
-        orderedStations = stations.reversed.toList();
-      } else {
-        orderedStations = stations;
-      }
+    List<Station> orderedStations;
+    if (vehicle.destination == Destination.toFujigaoka ||
+        vehicle.destination == Destination.toAIT) {
+      orderedStations = stations.reversed.toList();
+    } else {
+      orderedStations = stations;
+    }
 
-      var totalMinutes = 0;
-      final stationSchedule = <Map<String, dynamic>>[];
+    var totalMinutes = 0;
+    final stationSchedule = <Map<String, dynamic>>[];
 
-      for (var i = 0; i < orderedStations.length; i++) {
-        final currentStation = orderedStations[i];
-        stationSchedule.add({
-          'station': currentStation.name,
-          'time': _calculateArrivalTime(
-              departureTime.subtract(Duration(minutes: offset)), totalMinutes),
-        });
+    for (var i = 0; i < orderedStations.length; i++) {
+      final currentStation = orderedStations[i];
+      stationSchedule.add({
+        'station': currentStation.name,
+        'time': _calculateArrivalTime(
+          departureTime.subtract(Duration(minutes: offset)),
+          totalMinutes,
+        ),
+      });
 
-        if (i < orderedStations.length - 1) {
-          final nextStation = orderedStations[i + 1];
-          var timePair = '${currentStation.id}-${nextStation.id}';
-          if (vehicle.destination == Destination.toFujigaoka) {
-            timePair = '${nextStation.id}-${currentStation.id}';
-          }
-          final travelTime = timesData[timePair];
-          if (travelTime != null) {
-            totalMinutes += int.parse(travelTime);
-          }
-          stationSchedule[i]['travelTime'] = travelTime ?? '---';
+      if (i < orderedStations.length - 1) {
+        final nextStation = orderedStations[i + 1];
+        var timePair = '${currentStation.id}-${nextStation.id}';
+        if (vehicle.destination == Destination.toFujigaoka ||
+            vehicle.destination == Destination.toAIT) {
+          timePair = '${nextStation.id}-${currentStation.id}';
         }
+        final travelTime = timesData[timePair];
+        if (travelTime != null) {
+          totalMinutes += int.parse(travelTime);
+        }
+        stationSchedule[i]['travelTime'] = travelTime ?? '---';
       }
+    }
 
-      return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-          title: Row(
-            children: [
-              Icon(
-                vehicle.icon,
-                size: 24,
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+        title: Row(
+          children: [
+            Icon(
+              vehicle.icon,
+              size: 24,
+              color: Theme.of(context).colorScheme.primary,
+            ),
+            const SizedBox(width: 8),
+            Text(
+              '${vehicle.vehicle.displayName} (${vehicle.destination.displayName})',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
                 color: Theme.of(context).colorScheme.primary,
               ),
-              const SizedBox(width: 8),
-              Text(
-                '${vehicle.displayName} (${vehicle.destination.displayName})',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Theme.of(context).colorScheme.primary,
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
-        body: ListView.builder(
-          padding: const EdgeInsets.all(16),
-          itemCount: stationSchedule.length,
-          itemBuilder: (context, index) {
-            final isFirst = index == 0;
-            final isLast = index == stationSchedule.length - 1;
-            final schedule = stationSchedule[index];
+      ),
+      body: ListView.builder(
+        padding: const EdgeInsets.all(16),
+        itemCount: stationSchedule.length,
+        itemBuilder: (context, index) {
+          final isFirst = index == 0;
+          final isLast = index == stationSchedule.length - 1;
+          final schedule = stationSchedule[index];
 
-            return Column(
-              children: [
-                Card(
-                  elevation: 2,
-                  margin: const EdgeInsets.only(bottom: 4),
-                  child: ListTile(
-                    leading: Container(
-                      width: 40,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        color: isFirst || isLast
-                            ? Theme.of(context).colorScheme.primary
-                            : Theme.of(context).colorScheme.primaryContainer,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Icon(
-                        isFirst
-                            ? Icons.departure_board
-                            : isLast
-                                ? Icons.location_on
-                                : Icons.train,
-                        color: isFirst || isLast
-                            ? Theme.of(context).colorScheme.onPrimary
-                            : Theme.of(context).colorScheme.primary,
-                        size: 20,
-                      ),
-                    ),
-                    title: Text(
-                      schedule['station'] as String,
-                      style: TextStyle(
-                        fontWeight: isFirst || isLast ? FontWeight.bold : null,
-                        fontSize: 16,
-                      ),
-                    ),
-                    trailing: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 6,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.primaryContainer,
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Text(
-                        schedule['time'] as String,
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Theme.of(context).colorScheme.primary,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                if (!isLast)
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 8,
-                      horizontal: 24,
-                    ),
-                    child: Row(
-                      children: [
-                        Container(
-                          width: 2,
-                          height: 24,
-                          color: Theme.of(context)
-                              .colorScheme
-                              .outline
-                              .withOpacity(0.5),
-                        ),
-                        const SizedBox(width: 16),
-                        Text(
-                          '${schedule['travelTime']}分',
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                            color:
-                                Theme.of(context).colorScheme.onSurfaceVariant,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-              ],
-            );
-          },
-        ),
-      );
-    }
-    // シャトルバスの場合
-    else {
-      final busStops = {
-        Destination.toAIT: ['八草駅', '愛知工業大学'],
-        Destination.toYakusa: ['愛知工業大学', '八草駅'],
-      };
-
-      final stops = busStops[vehicle.destination];
-      if (stops == null) {
-        return const Scaffold(
-          body: Center(
-            child: Text('バス停情報が見つかりません'),
-          ),
-        );
-      }
-
-      const travelTime = 10;
-
-      return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-          title: Row(
+          return Column(
             children: [
-              Icon(
-                vehicle.icon,
-                size: 24,
-                color: Theme.of(context).colorScheme.primary,
-              ),
-              const SizedBox(width: 8),
-              Text(
-                '${vehicle.displayName} (${vehicle.destination.displayName})',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Theme.of(context).colorScheme.primary,
-                ),
-              ),
-            ],
-          ),
-        ),
-        body: ListView.builder(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          itemCount: stops.length,
-          itemBuilder: (context, index) {
-            final isFirst = index == 0;
-            final isLast = index == stops.length - 1;
-            final arrivalTime = _calculateArrivalTime(
-              departureTime,
-              index * travelTime,
-            );
-
-            return Column(
-              children: [
-                Card(
-                  elevation: 2,
-                  margin: const EdgeInsets.only(bottom: 4),
-                  child: ListTile(
-                    leading: Container(
-                      width: 40,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        color: isFirst || isLast
-                            ? Theme.of(context).colorScheme.primary
-                            : Theme.of(context).colorScheme.primaryContainer,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Icon(
-                        isFirst
-                            ? Icons.departure_board
-                            : isLast
-                                ? Icons.location_on
-                                : Icons.directions_bus,
-                        color: isFirst || isLast
-                            ? Theme.of(context).colorScheme.onPrimary
-                            : Theme.of(context).colorScheme.primary,
-                        size: 20,
-                      ),
+              Card(
+                elevation: 2,
+                margin: const EdgeInsets.only(bottom: 4),
+                child: ListTile(
+                  leading: Container(
+                    width: 40,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      color: isFirst || isLast
+                          ? Theme.of(context).colorScheme.primary
+                          : Theme.of(context).colorScheme.primaryContainer,
+                      borderRadius: BorderRadius.circular(20),
                     ),
-                    title: Text(
-                      stops[index],
-                      style: TextStyle(
-                        fontWeight: isFirst || isLast ? FontWeight.bold : null,
-                        fontSize: 16,
-                      ),
-                    ),
-                    trailing: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 6,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.primaryContainer,
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Text(
-                        arrivalTime,
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Theme.of(context).colorScheme.primary,
-                        ),
-                      ),
+                    child: Icon(
+                      isFirst
+                          ? Icons.departure_board
+                          : isLast
+                              ? Icons.location_on
+                              : Icons.train,
+                      color: isFirst || isLast
+                          ? Theme.of(context).colorScheme.onPrimary
+                          : Theme.of(context).colorScheme.primary,
+                      size: 20,
                     ),
                   ),
-                ),
-                if (!isLast)
-                  Padding(
+                  title: Text(
+                    schedule['station'] as String,
+                    style: TextStyle(
+                      fontWeight: isFirst || isLast ? FontWeight.bold : null,
+                      fontSize: 16,
+                    ),
+                  ),
+                  trailing: Container(
                     padding: const EdgeInsets.symmetric(
-                      vertical: 8,
-                      horizontal: 24,
+                      horizontal: 12,
+                      vertical: 6,
                     ),
-                    child: Row(
-                      children: [
-                        Container(
-                          width: 2,
-                          height: 24,
-                          color: Theme.of(context)
-                              .colorScheme
-                              .outline
-                              .withOpacity(0.5),
-                        ),
-                        const SizedBox(width: 16),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 4,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Theme.of(context)
-                                .colorScheme
-                                .surfaceContainerHighest,
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Text(
-                            '約10分',
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .onSurfaceVariant,
-                            ),
-                          ),
-                        ),
-                      ],
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.primaryContainer,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Text(
+                      schedule['time'] as String,
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
                     ),
                   ),
-              ],
-            );
-          },
-        ),
-      );
-    }
+                ),
+              ),
+              if (!isLast)
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 8,
+                    horizontal: 24,
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 2,
+                        height: 24,
+                        color: Theme.of(context)
+                            .colorScheme
+                            .outline
+                            .withOpacity(0.5),
+                      ),
+                      const SizedBox(width: 16),
+                      Text(
+                        '${schedule['travelTime']}分',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+            ],
+          );
+        },
+      ),
+    );
   }
 }
