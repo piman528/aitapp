@@ -110,69 +110,98 @@ class TimeTableColumn extends HookWidget {
       const [],
     );
 
+    Widget buildStationInfo() {
+      if (vehicle.vehicle == Vehicles.linimo && stations.isNotEmpty) {
+        // リニモの場合：青文字のボタンで表示
+        return TextButton.icon(
+          style: TextButton.styleFrom(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 8,
+              vertical: 0,
+            ),
+            alignment: Alignment.centerLeft,
+            foregroundColor: Theme.of(context).colorScheme.primary,
+          ),
+          onPressed: () {
+            showModalBottomSheet(
+              context: context,
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+              ),
+              builder: (context) => Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Text(
+                      '出発駅を選択',
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                  ),
+                  const Divider(),
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: stations.length,
+                      itemBuilder: (context, index) {
+                        final station = stations[index];
+                        return ListTile(
+                          leading: const Icon(Icons.train),
+                          title: Text(station.value),
+                          selected: station.key == selectedStation.value,
+                          onTap: () {
+                            Navigator.pop(context);
+                            if (station.key != selectedStation.value) {
+                              selectedStation.value = station.key;
+                              refreshTime();
+                            }
+                          },
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+          icon: const Icon(Icons.train_outlined, size: 20),
+          label: Text(
+            '${stations.firstWhere((s) => s.key == selectedStation.value).value} 発',
+            style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        );
+      } else {
+        // シャトルバスの場合：通常のテキストで表示
+        return Row(
+          children: [
+            const Icon(Icons.directions_bus_outlined, size: 20),
+            const SizedBox(width: 8),
+            Text(
+              vehicle.destination == Destination.toYakusa ? '大学 発' : '八草 発',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+                color: Theme.of(context).colorScheme.onSurface,
+              ),
+            ),
+          ],
+        );
+      }
+    }
+
     return Column(
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 4),
           child: Column(
             children: [
-              if (vehicle.vehicle == Vehicles.linimo &&
-                  stations.isNotEmpty) ...[
-                const SizedBox(
-                  height: 14,
-                ),
-                Row(
-                  children: [
-                    const Icon(Icons.train_outlined, size: 32),
-                    const SizedBox(width: 20),
-                    Expanded(
-                      child: DropdownButtonFormField<String>(
-                        value: selectedStation.value,
-                        decoration: InputDecoration(
-                          labelText: '出発駅',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 8,
-                          ),
-                        ),
-                        items: stations.map((station) {
-                          return DropdownMenuItem(
-                            value: station.key,
-                            child: Text(station.value),
-                          );
-                        }).toList(),
-                        onChanged: (value) {
-                          if (value != null && value != selectedStation.value) {
-                            WidgetsBinding.instance.addPostFrameCallback((_) {
-                              selectedStation.value = value;
-                              refreshTime();
-                            });
-                          }
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              ],
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Row(
-                    children: [
-                      const Icon(Icons.access_time, size: 20),
-                      const SizedBox(width: 8),
-                      Text(
-                        '次の${departureTimes.value.length}便',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          color: Theme.of(context).colorScheme.onSurface,
-                        ),
-                      ),
-                    ],
+                  Expanded(
+                    child: buildStationInfo(),
                   ),
                   TextButton.icon(
                     onPressed: () {
