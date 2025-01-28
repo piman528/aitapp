@@ -103,7 +103,13 @@ class NextDeparture {
                 DepartureSchedule(
                   departureTime: baseTime.add(Duration(minutes: timeOffset)),
                   arrivalTime: baseTime.add(
-                    const Duration(minutes: 17),
+                    Duration(
+                      minutes: stationAmongTimes[vehicle.vehicle]![
+                              vehicle.destination]!
+                          .values
+                          .map(int.parse)
+                          .fold(0, (a, b) => a + b),
+                    ),
                   ),
                   offset: timeOffset,
                 ),
