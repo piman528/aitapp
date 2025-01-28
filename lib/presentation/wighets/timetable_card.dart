@@ -41,6 +41,7 @@ class TimTableCard extends HookWidget {
         ? departureTime.difference(time.value!)
         : Duration.zero;
     return Card(
+      margin: const EdgeInsets.symmetric(horizontal: 12),
       elevation: 4,
       child: InkWell(
         borderRadius: BorderRadius.circular(12),

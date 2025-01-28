@@ -188,7 +188,7 @@ class TimeTableColumn extends HookWidget {
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 4),
+          padding: const EdgeInsets.symmetric(horizontal: 8),
           child: Column(
             children: [
               Row(
