@@ -117,13 +117,12 @@ class TimeTableColumn extends HookWidget {
           style: TextButton.styleFrom(
             padding: const EdgeInsets.symmetric(
               horizontal: 8,
-              vertical: 0,
             ),
             alignment: Alignment.centerLeft,
             foregroundColor: Theme.of(context).colorScheme.primary,
           ),
           onPressed: () {
-            showModalBottomSheet(
+            showModalBottomSheet<void>(
               context: context,
               shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
@@ -131,14 +130,6 @@ class TimeTableColumn extends HookWidget {
               builder: (context) => Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Text(
-                      '出発駅を選択',
-                      style: Theme.of(context).textTheme.titleMedium,
-                    ),
-                  ),
-                  const Divider(),
                   Expanded(
                     child: ListView.builder(
                       itemCount: stations.length,
@@ -174,19 +165,22 @@ class TimeTableColumn extends HookWidget {
         );
       } else {
         // シャトルバスの場合：通常のテキストで表示
-        return Row(
-          children: [
-            const Icon(Icons.directions_bus_outlined, size: 20),
-            const SizedBox(width: 8),
-            Text(
-              vehicle.destination == Destination.toYakusa ? '大学 発' : '八草 発',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-                color: Theme.of(context).colorScheme.onSurface,
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          child: Row(
+            children: [
+              const Icon(Icons.directions_bus_outlined, size: 20),
+              const SizedBox(width: 8),
+              Text(
+                vehicle.destination == Destination.toYakusa ? '大学 発' : '八草 発',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: Theme.of(context).colorScheme.onSurface,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         );
       }
     }
@@ -214,7 +208,12 @@ class TimeTableColumn extends HookWidget {
                       );
                     },
                     icon: const Icon(Icons.calendar_today, size: 18),
-                    label: const Text('時刻表を見る'),
+                    label: const Text(
+                      '時刻表を見る',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                     style: TextButton.styleFrom(
                       foregroundColor: Theme.of(context).colorScheme.primary,
                     ),
