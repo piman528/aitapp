@@ -1,16 +1,19 @@
 import 'package:aitapp/application/config/const.dart';
+import 'package:aitapp/domain/types/destination.dart';
+import 'package:aitapp/domain/types/station.dart';
+import 'package:aitapp/domain/types/vehicle.dart';
 import 'package:flutter/material.dart';
 
 class SingleTimeTableDetailScreen extends StatelessWidget {
   const SingleTimeTableDetailScreen({
     super.key,
     required this.vehicle,
-    required this.destination,
     required this.departureTime,
+    required this.offset,
   });
-  final String vehicle;
-  final String destination;
+  final Vehicle vehicle;
   final DateTime departureTime;
+  final int offset;
 
   String _calculateArrivalTime(DateTime baseTime, int addMinutes) {
     final arrivalTime = baseTime.add(Duration(minutes: addMinutes));
@@ -19,34 +22,11 @@ class SingleTimeTableDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final vehicleData = vehicles[vehicle];
-    if (vehicleData == null) {
-      return const Scaffold(
-        body: Center(
-          child: Text('車両情報が見つかりません'),
-        ),
-      );
-    }
-
-    final vehicleName = vehicleData['name'] as String;
-    final destinations = vehicleData['destinations'] as Map<String, String>;
-    final destinationName = destinations[destination] ?? '不明';
-    final vehicleIcon = vehicleData['icon'] as IconData?;
-
     // リニモの場合
-    if (vehicle == 'linimo') {
-      final linimoData = vehicles['linimo'];
-      if (linimoData == null) {
-        return const Scaffold(
-          body: Center(
-            child: Text('リニモの情報が見つかりません'),
-          ),
-        );
-      }
-
-      final stationsData = linimoData['stations'];
-      final timesData = linimoData['times'];
-      if (stationsData == null || timesData == null) {
+    if (vehicle.name == 'linimo') {
+      final stations = vehicle.stations;
+      final timesData = stationAmongTimes['linimo']?[vehicle.destination];
+      if (timesData == null) {
         return const Scaffold(
           body: Center(
             child: Text('駅・時刻情報が見つかりません'),
@@ -54,11 +34,8 @@ class SingleTimeTableDetailScreen extends StatelessWidget {
         );
       }
 
-      final stations = (stationsData as Map<String, String>).entries.toList();
-      final times = timesData as Map<String, String>;
-
-      List<MapEntry<String, String>> orderedStations;
-      if (destination == 'toFujigaoka') {
+      List<Station> orderedStations;
+      if (vehicle.destination == Destination.toFujigaoka) {
         orderedStations = stations.reversed.toList();
       } else {
         orderedStations = stations;
@@ -70,17 +47,18 @@ class SingleTimeTableDetailScreen extends StatelessWidget {
       for (var i = 0; i < orderedStations.length; i++) {
         final currentStation = orderedStations[i];
         stationSchedule.add({
-          'station': currentStation.value,
-          'time': _calculateArrivalTime(departureTime, totalMinutes),
+          'station': currentStation.name,
+          'time': _calculateArrivalTime(
+              departureTime.subtract(Duration(minutes: offset)), totalMinutes),
         });
 
         if (i < orderedStations.length - 1) {
           final nextStation = orderedStations[i + 1];
-          var timePair = '${currentStation.key}-${nextStation.key}';
-          if (destination == 'toFujigaoka') {
-            timePair = '${nextStation.key}-${currentStation.key}';
+          var timePair = '${currentStation.id}-${nextStation.id}';
+          if (vehicle.destination == Destination.toFujigaoka) {
+            timePair = '${nextStation.id}-${currentStation.id}';
           }
-          final travelTime = times[timePair];
+          final travelTime = timesData[timePair];
           if (travelTime != null) {
             totalMinutes += int.parse(travelTime);
           }
@@ -94,13 +72,13 @@ class SingleTimeTableDetailScreen extends StatelessWidget {
           title: Row(
             children: [
               Icon(
-                vehicleIcon ?? Icons.error,
+                vehicle.icon,
                 size: 24,
                 color: Theme.of(context).colorScheme.primary,
               ),
               const SizedBox(width: 8),
               Text(
-                '$vehicleName ($destinationName)',
+                '${vehicle.displayName} (${vehicle.destination.displayName})',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   color: Theme.of(context).colorScheme.primary,
@@ -209,11 +187,11 @@ class SingleTimeTableDetailScreen extends StatelessWidget {
     // シャトルバスの場合
     else {
       final busStops = {
-        'toAIT': ['八草駅', '愛知工業大学'],
-        'toYakusa': ['愛知工業大学', '八草駅'],
+        Destination.toAIT: ['八草駅', '愛知工業大学'],
+        Destination.toYakusa: ['愛知工業大学', '八草駅'],
       };
 
-      final stops = busStops[destination];
+      final stops = busStops[vehicle.destination];
       if (stops == null) {
         return const Scaffold(
           body: Center(
@@ -230,13 +208,13 @@ class SingleTimeTableDetailScreen extends StatelessWidget {
           title: Row(
             children: [
               Icon(
-                vehicleIcon ?? Icons.error,
+                vehicle.icon,
                 size: 24,
                 color: Theme.of(context).colorScheme.primary,
               ),
               const SizedBox(width: 8),
               Text(
-                '$vehicleName ($destinationName)',
+                '${vehicle.displayName} (${vehicle.destination.displayName})',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   color: Theme.of(context).colorScheme.primary,

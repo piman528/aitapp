@@ -1,3 +1,7 @@
+import 'package:aitapp/application/config/const.dart';
+import 'package:aitapp/domain/types/destination.dart';
+import 'package:aitapp/domain/types/station.dart';
+import 'package:aitapp/domain/types/vehicle.dart';
 import 'package:aitapp/presentation/wighets/vehicle_timetable.dart';
 import 'package:flutter/material.dart';
 
@@ -91,14 +95,62 @@ class TimeTableScreen extends StatelessWidget {
                 ],
               ),
             ),
-            const Expanded(
+            Expanded(
               child: TabBarView(
                 children: [
                   VehicleTimeTable(
-                    vehicle: 'bus',
+                    vehicles: [
+                      Vehicle(
+                        icon: Icons.directions_bus,
+                        name: 'bus',
+                        displayName: 'シャトルバス',
+                        destination: Destination.toAIT,
+                        stations: [
+                          Station(
+                            id: 'a',
+                            name: '大学',
+                          ),
+                          Station(
+                            id: 'b',
+                            name: '八草',
+                          ),
+                        ],
+                      ),
+                      Vehicle(
+                        icon: Icons.directions_bus,
+                        name: 'bus',
+                        displayName: 'シャトルバス',
+                        destination: Destination.toYakusa,
+                        stations: [
+                          Station(
+                            id: 'a',
+                            name: '大学',
+                          ),
+                          Station(
+                            id: 'b',
+                            name: '八草',
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                   VehicleTimeTable(
-                    vehicle: 'linimo',
+                    vehicles: [
+                      Vehicle(
+                        icon: Icons.train,
+                        name: 'linimo',
+                        displayName: 'リニモ',
+                        destination: Destination.toFujigaoka,
+                        stations: stations,
+                      ),
+                      Vehicle(
+                        icon: Icons.train,
+                        name: 'linimo',
+                        displayName: 'リニモ',
+                        destination: Destination.toYakusa,
+                        stations: stations,
+                      ),
+                    ],
                   ),
                 ],
               ),

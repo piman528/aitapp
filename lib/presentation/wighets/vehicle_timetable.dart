@@ -1,34 +1,14 @@
-import 'package:aitapp/application/config/const.dart';
+import 'package:aitapp/domain/types/vehicle.dart';
 import 'package:aitapp/presentation/wighets/vehicle_timetable_column.dart';
 import 'package:flutter/material.dart';
 
 class VehicleTimeTable extends StatelessWidget {
   const VehicleTimeTable({
     super.key,
-    required this.vehicle,
+    required this.vehicles,
   });
 
-  final String vehicle;
-
-  /// 行先情報を取得するヘルパーメソッド
-  Map<String, String> _getDestination(int index) {
-    final destinations = List<Map<String, String>>.from(
-      (vehicles[vehicle]?['destinations'] as Map<String, String>).entries.map(
-            (e) => {e.key: e.value},
-          ),
-    );
-    return destinations[index];
-  }
-
-  /// 行先のキーを取得するヘルパーメソッド
-  String _getDestinationKey(int index) {
-    return _getDestination(index).keys.first;
-  }
-
-  /// 行先の値を取得するヘルパーメソッド
-  String _getDestinationValue(int index) {
-    return _getDestination(index).values.first;
-  }
+  final List<Vehicle> vehicles;
 
   @override
   Widget build(BuildContext context) {
@@ -79,7 +59,7 @@ class VehicleTimeTable extends StatelessWidget {
                         const Icon(Icons.arrow_circle_up_outlined, size: 16),
                         const SizedBox(width: 4),
                         Text(
-                          _getDestinationValue(0),
+                          '${vehicles[0].destination.displayName}行き',
                         ),
                       ],
                     ),
@@ -91,7 +71,7 @@ class VehicleTimeTable extends StatelessWidget {
                         const Icon(Icons.arrow_circle_down_outlined, size: 16),
                         const SizedBox(width: 4),
                         Text(
-                          _getDestinationValue(1),
+                          '${vehicles[1].destination.displayName}行き',
                         ),
                       ],
                     ),
@@ -104,12 +84,10 @@ class VehicleTimeTable extends StatelessWidget {
             child: TabBarView(
               children: [
                 TimeTableColumn(
-                  vehicle: vehicle,
-                  destination: _getDestinationKey(0),
+                  vehicle: vehicles[0],
                 ),
                 TimeTableColumn(
-                  vehicle: vehicle,
-                  destination: _getDestinationKey(1),
+                  vehicle: vehicles[1],
                 ),
               ],
             ),

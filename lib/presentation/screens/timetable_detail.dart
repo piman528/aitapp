@@ -1,4 +1,5 @@
 import 'package:aitapp/application/config/const.dart';
+import 'package:aitapp/domain/types/vehicle.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -6,17 +7,12 @@ class TimeTableDetailScreen extends StatelessWidget {
   const TimeTableDetailScreen({
     super.key,
     required this.vehicle,
-    required this.destination,
   });
-  final String vehicle;
-  final String destination;
+  final Vehicle vehicle;
 
   @override
   Widget build(BuildContext context) {
-    final vehicleName = vehicles[vehicle]?['name'] as String;
-    final destinations =
-        vehicles[vehicle]?['destinations'] as Map<String, String>;
-    final destinationName = destinations[destination];
+    final vehicleName = vehicle.displayName;
     final now = DateTime.now().toUtc().add(const Duration(hours: 9));
     final todayDaiya = dayDaiya[DateFormat('yyyy-MM-dd').format(now)];
     int? initialValue;
@@ -36,12 +32,12 @@ class TimeTableDetailScreen extends StatelessWidget {
           title: Row(
             children: [
               Icon(
-                vehicles[vehicle]?['icon'] as IconData?,
+                vehicle.icon,
                 size: 24,
               ),
               const SizedBox(width: 8),
               Text(
-                '$vehicleName ($destinationName)',
+                '$vehicleName (${vehicle.destination.displayName})',
                 style: const TextStyle(fontWeight: FontWeight.bold),
               ),
             ],
@@ -169,7 +165,6 @@ class TimeTableDetailScreen extends StatelessWidget {
               .map(
                 (daiya) => DaiyaDetail(
                   daiyaA: daiya,
-                  destination: destination,
                   vehicle: vehicle,
                 ),
               )
@@ -184,16 +179,14 @@ class DaiyaDetail extends StatelessWidget {
   const DaiyaDetail({
     super.key,
     required this.vehicle,
-    required this.destination,
     required this.daiyaA,
   });
-  final String vehicle;
-  final String destination;
+  final Vehicle vehicle;
   final String daiyaA;
 
   @override
   Widget build(BuildContext context) {
-    final daiyas = daiya[vehicle]![destination]![daiyaA]!;
+    final daiyas = daiya[vehicle.name]![vehicle.destination]![daiyaA]!;
     final now = DateTime.now().toUtc().add(const Duration(hours: 9));
     final currentHour = now.hour;
     final currentMinute = now.minute;

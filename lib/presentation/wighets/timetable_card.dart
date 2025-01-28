@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:aitapp/application/config/const.dart';
+import 'package:aitapp/domain/types/vehicle.dart';
 import 'package:aitapp/presentation/screens/single_timetable_detail.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -10,12 +10,14 @@ class TimTableCard extends HookWidget {
   const TimTableCard({
     super.key,
     required this.vehicle,
-    required this.destination,
     required this.departureTime,
+    required this.arrivalTime,
+    required this.offset,
   });
-  final String vehicle;
-  final String destination;
+  final Vehicle vehicle;
   final DateTime departureTime;
+  final DateTime arrivalTime;
+  final int offset;
 
   @override
   Widget build(BuildContext context) {
@@ -47,8 +49,8 @@ class TimTableCard extends HookWidget {
             MaterialPageRoute(
               builder: (ctx) => SingleTimeTableDetailScreen(
                 vehicle: vehicle,
-                destination: destination,
                 departureTime: departureTime,
+                offset: offset,
               ),
             ),
           );
@@ -63,7 +65,7 @@ class TimTableCard extends HookWidget {
                   Row(
                     children: [
                       Icon(
-                        vehicles[vehicle]?['icon'] as IconData?,
+                        vehicle.icon,
                         color: Theme.of(context).colorScheme.primary,
                         size: 24,
                       ),
@@ -161,7 +163,7 @@ class TimTableCard extends HookWidget {
                 children: [
                   Text(
                     // ignore: lines_longer_than_80_chars
-                    '到着予定 ${f.format(departureTime.add(const Duration(minutes: 10)))}',
+                    '${vehicle.destination.displayName} 到着予定 ${f.format(arrivalTime)}',
                     style: TextStyle(
                       fontSize: 14,
                       color: Theme.of(context).colorScheme.onSurfaceVariant,

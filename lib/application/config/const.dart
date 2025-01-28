@@ -1,6 +1,8 @@
 import 'package:aitapp/domain/types/building_info.dart';
 import 'package:aitapp/domain/types/contact.dart';
 import 'package:aitapp/domain/types/day_of_week.dart';
+import 'package:aitapp/domain/types/destination.dart';
+import 'package:aitapp/domain/types/station.dart';
 import 'package:aitapp/domain/types/web_access.dart';
 import 'package:flutter/material.dart';
 
@@ -21,10 +23,10 @@ const List<List<String>> classPeriods = [
   ['19:40', '21:10'],
 ];
 
-const Map<String, Map<String, Map<String, Map<int, List<int>>>>> daiya = {
+final daiya = {
   'linimo': {
     // 八草発藤が丘行きの時刻表
-    'toFujigaoka': {
+    Destination.toFujigaoka: {
       'A': {
         5: [30, 48],
         6: [3, 18, 29, 37, 45, 53],
@@ -69,7 +71,7 @@ const Map<String, Map<String, Map<String, Map<int, List<int>>>>> daiya = {
       },
     },
     // 藤が丘発八草行きの時刻表
-    'toYakusa': {
+    Destination.toYakusa: {
       'A': {
         5: [52],
         6: [9, 23, 33, 42, 51, 59],
@@ -117,7 +119,7 @@ const Map<String, Map<String, Map<String, Map<int, List<int>>>>> daiya = {
     },
   },
   'bus': {
-    'toAIT': {
+    Destination.toAIT: {
       'A': {
         8: [00, 05, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55],
         9: [00, 05, 10, 15, 20, 25, 30, 35, 40, 50, 55],
@@ -167,7 +169,7 @@ const Map<String, Map<String, Map<String, Map<int, List<int>>>>> daiya = {
         21: [05],
       },
     },
-    'toYakusa': {
+    Destination.toYakusa: {
       'A': {
         8: [20, 50],
         9: [20, 50],
@@ -605,26 +607,20 @@ const Map<String, String> dayDaiya = {
   '2025-04-05': 'A',
   '2025-04-06': 'A',
 };
-const Map<String, Map<String, dynamic>> vehicles = {
+final stations = [
+  Station(id: 'L01', name: '藤が丘'),
+  Station(id: 'L02', name: 'はなみずき通り'),
+  Station(id: 'L03', name: '杁ヶ池公園'),
+  Station(id: 'L04', name: '長久手古戦場'),
+  Station(id: 'L05', name: '芸大通'),
+  Station(id: 'L06', name: '公園西'),
+  Station(id: 'L07', name: '愛・地球博記念公園'),
+  Station(id: 'L08', name: '陶磁資料館南'),
+  Station(id: 'L09', name: '八草'),
+];
+final stationAmongTimes = {
   'linimo': {
-    'icon': Icons.train,
-    'name': 'リニモ',
-    'destinations': {
-      'toFujigaoka': '藤が丘行',
-      'toYakusa': '八草行',
-    },
-    'stations': {
-      'L01': '藤が丘',
-      'L02': 'はなみずき通り',
-      'L03': '杁ヶ池公園',
-      'L04': '長久手古戦場',
-      'L05': '芸大通',
-      'L06': '公園西',
-      'L07': '愛・地球博記念公園',
-      'L08': '陶磁資料館南',
-      'L09': '八草',
-    },
-    'times': {
+    Destination.toYakusa: {
       'L01-L02': '3',
       'L02-L03': '2',
       'L03-L04': '2',
@@ -634,13 +630,15 @@ const Map<String, Map<String, dynamic>> vehicles = {
       'L07-L08': '2',
       'L08-L09': '2',
     },
-  },
-  'bus': {
-    'icon': Icons.directions_bus,
-    'name': 'シャトルバス',
-    'destinations': {
-      'toAIT': '愛工大行',
-      'toYakusa': '八草行',
+    Destination.toFujigaoka: {
+      'L01-L02': '3',
+      'L02-L03': '3',
+      'L03-L04': '2',
+      'L05-L06': '2',
+      'L04-L05': '2',
+      'L06-L07': '2',
+      'L07-L08': '2',
+      'L08-L09': '1',
     },
   },
 };
