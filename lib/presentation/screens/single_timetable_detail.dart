@@ -1,89 +1,39 @@
-import 'package:aitapp/application/config/const.dart';
-import 'package:aitapp/domain/types/destination.dart';
+import 'package:aitapp/domain/features/next_departure.dart';
 import 'package:aitapp/domain/types/station.dart';
 import 'package:aitapp/domain/types/vehicle.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class SingleTimeTableDetailScreen extends StatelessWidget {
   const SingleTimeTableDetailScreen({
     super.key,
     required this.vehicle,
     required this.departureTime,
-    required this.offset,
+    required this.station,
   });
   final Vehicle vehicle;
   final DateTime departureTime;
-  final int offset;
-
-  String _calculateArrivalTime(DateTime baseTime, int addMinutes) {
-    final arrivalTime = baseTime.add(Duration(minutes: addMinutes));
-    return '${arrivalTime.hour}:${arrivalTime.minute.toString().padLeft(2, '0')}';
-  }
+  final Station station;
 
   @override
   Widget build(BuildContext context) {
-    final stations = vehicle.stations;
-    final timesData = stationAmongTimes[vehicle.vehicle]?[vehicle.destination];
-    if (timesData == null) {
-      return const Scaffold(
-        body: Center(
-          child: Text('時刻情報が見つかりません'),
-        ),
-      );
-    }
-
-    List<Station> orderedStations;
-    if (vehicle.destination == Destination.toFujigaoka ||
-        vehicle.destination == Destination.toAIT) {
-      orderedStations = stations.reversed.toList();
-    } else {
-      orderedStations = stations;
-    }
-
-    var totalMinutes = 0;
-    final stationSchedule = <Map<String, dynamic>>[];
-
-    for (var i = 0; i < orderedStations.length; i++) {
-      final currentStation = orderedStations[i];
-      stationSchedule.add({
-        'station': currentStation.name,
-        'time': _calculateArrivalTime(
-          departureTime.subtract(Duration(minutes: offset)),
-          totalMinutes,
-        ),
-      });
-
-      if (i < orderedStations.length - 1) {
-        final nextStation = orderedStations[i + 1];
-        var timePair = '${currentStation.id}-${nextStation.id}';
-        if (vehicle.destination == Destination.toFujigaoka ||
-            vehicle.destination == Destination.toAIT) {
-          timePair = '${nextStation.id}-${currentStation.id}';
-        }
-        final travelTime = timesData[timePair];
-        if (travelTime != null) {
-          totalMinutes += int.parse(travelTime);
-        }
-        stationSchedule[i]['travelTime'] = travelTime ?? '---';
-      }
-    }
-
+    final stationSchedule =
+        NextDeparture(vehicle: vehicle, fromStation: station).getSchedule(
+      departureTime,
+    );
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.primaryContainer,
         title: Row(
           children: [
             Icon(
               vehicle.icon,
               size: 24,
-              color: Theme.of(context).colorScheme.primary,
             ),
             const SizedBox(width: 8),
             Text(
               '${vehicle.vehicle.displayName} (${vehicle.destination.displayName})',
-              style: TextStyle(
+              style: const TextStyle(
                 fontWeight: FontWeight.bold,
-                color: Theme.of(context).colorScheme.primary,
               ),
             ),
           ],
@@ -125,7 +75,7 @@ class SingleTimeTableDetailScreen extends StatelessWidget {
                     ),
                   ),
                   title: Text(
-                    schedule['station'] as String,
+                    schedule.station.name,
                     style: TextStyle(
                       fontWeight: isFirst || isLast ? FontWeight.bold : null,
                       fontSize: 16,
@@ -141,7 +91,7 @@ class SingleTimeTableDetailScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text(
-                      schedule['time'] as String,
+                      DateFormat.Hm().format(schedule.time),
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -169,7 +119,7 @@ class SingleTimeTableDetailScreen extends StatelessWidget {
                       ),
                       const SizedBox(width: 16),
                       Text(
-                        '${schedule['travelTime']}分',
+                        '${schedule.amongTime}分',
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.bold,

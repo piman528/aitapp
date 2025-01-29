@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:aitapp/domain/features/next_departure.dart';
 import 'package:aitapp/domain/types/departure_schedule.dart';
 import 'package:aitapp/domain/types/destination.dart';
+import 'package:aitapp/domain/types/station.dart';
 import 'package:aitapp/domain/types/vehicle.dart';
 import 'package:aitapp/domain/types/vehicles.dart';
 import 'package:aitapp/presentation/screens/timetable_detail.dart';
@@ -20,14 +21,14 @@ class TimeTableColumn extends HookWidget {
   Widget build(BuildContext context) {
     final departureTimes = useState<List<DepartureSchedule>>([]);
     final timer = useRef<Timer?>(null);
-    final selectedStation = useState<String>(
+    final selectedStation = useState<Station>(
       vehicle.vehicle == Vehicles.linimo
           ? vehicle.destination == Destination.toFujigaoka
-              ? 'L09'
-              : 'L01'
+              ? vehicle.stations.last
+              : vehicle.stations.first
           : vehicle.destination == Destination.toYakusa
-              ? 'A01'
-              : 'A02',
+              ? vehicle.stations.first
+              : vehicle.stations.last,
     );
     final mounted = useRef(true);
 
@@ -35,28 +36,22 @@ class TimeTableColumn extends HookWidget {
     final stations = useMemoized(
       () {
         if (vehicle.vehicle == Vehicles.linimo) {
-          final stationsData = vehicle.stations
-              .asMap()
-              .map((key, value) => MapEntry(value.id, value.name));
-
-          // 終点駅を除外
-          final endStation =
-              vehicle.destination == Destination.toFujigaoka ? 'L01' : 'L09';
-          final stations = stationsData.entries
-              .where((entry) => entry.key != endStation)
-              .toList();
-
+          // 元の配列のコピーを作成
+          final stationsData = List<Station>.from(vehicle.stations);
           // 方面に応じて駅の並び順を調整
           if (vehicle.destination == Destination.toFujigaoka) {
             // 八草→藤が丘方面：L09から順に並べる
-            stations.sort((a, b) => b.key.compareTo(a.key));
+            stationsData.sort((a, b) => b.id.compareTo(a.id));
           } else {
             // 藤が丘→八草方面：L01から順に並べる
-            stations.sort((a, b) => a.key.compareTo(b.key));
+            stationsData.sort((a, b) => a.id.compareTo(b.id));
           }
-          return stations;
+          // コピーした配列から終点駅を除外
+          return stationsData
+              .where((element) => element != stationsData.last)
+              .toList();
         }
-        return <MapEntry<String, String>>[];
+        return <Station>[];
       },
       [vehicle],
     );
@@ -65,7 +60,7 @@ class TimeTableColumn extends HookWidget {
     useEffect(
       () {
         if (vehicle.vehicle == Vehicles.linimo && stations.isNotEmpty) {
-          selectedStation.value = stations.first.key;
+          selectedStation.value = stations.first;
         }
         return null;
       },
@@ -78,9 +73,10 @@ class TimeTableColumn extends HookWidget {
       }
       final times = NextDeparture(
         vehicle: vehicle,
-        order: 6,
         fromStation: selectedStation.value,
-      ).searchNextDeparture();
+      ).searchNextDeparture(
+        order: 6,
+      );
       if (mounted.value) {
         departureTimes.value = times;
       }
@@ -137,12 +133,12 @@ class TimeTableColumn extends HookWidget {
                         final station = stations[index];
                         return ListTile(
                           leading: const Icon(Icons.train),
-                          title: Text(station.value),
-                          selected: station.key == selectedStation.value,
+                          title: Text(station.name),
+                          selected: station.id == selectedStation.value.id,
                           onTap: () {
                             Navigator.pop(context);
-                            if (station.key != selectedStation.value) {
-                              selectedStation.value = station.key;
+                            if (station.id != selectedStation.value.id) {
+                              selectedStation.value = station;
                               refreshTime();
                             }
                           },
@@ -156,7 +152,7 @@ class TimeTableColumn extends HookWidget {
           },
           icon: const Icon(Icons.train_outlined, size: 20),
           label: Text(
-            '${stations.firstWhere((s) => s.key == selectedStation.value).value} 発',
+            '${selectedStation.value.name} 発',
             style: const TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w600,
@@ -203,6 +199,7 @@ class TimeTableColumn extends HookWidget {
                         MaterialPageRoute(
                           builder: (ctx) => TimeTableDetailScreen(
                             vehicle: vehicle,
+                            selectedStation: selectedStation.value,
                           ),
                         ),
                       );
@@ -231,9 +228,8 @@ class TimeTableColumn extends HookWidget {
                     padding: const EdgeInsets.only(bottom: 8),
                     child: TimTableCard(
                       vehicle: vehicle,
-                      departureTime: departureTimes.value[index].departureTime,
-                      arrivalTime: departureTimes.value[index].arrivalTime,
-                      offset: departureTimes.value[index].offset,
+                      departureSchedule: departureTimes.value[index],
+                      station: selectedStation.value,
                     ),
                   ),
                 ),

@@ -118,13 +118,13 @@ class TimeTableScreen extends StatelessWidget {
                     Vehicle(
                       icon: Icons.train,
                       vehicle: Vehicles.linimo,
-                      destination: Destination.toFujigaoka,
+                      destination: Destination.toYakusa,
                       stations: stations[Vehicles.linimo]!,
                     ),
                     Vehicle(
                       icon: Icons.train,
                       vehicle: Vehicles.linimo,
-                      destination: Destination.toYakusa,
+                      destination: Destination.toFujigaoka,
                       stations: stations[Vehicles.linimo]!,
                     ),
                   ],

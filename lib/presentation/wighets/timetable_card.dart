@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:aitapp/domain/types/departure_schedule.dart';
+import 'package:aitapp/domain/types/station.dart';
 import 'package:aitapp/domain/types/vehicle.dart';
 import 'package:aitapp/presentation/screens/single_timetable_detail.dart';
 import 'package:flutter/material.dart';
@@ -10,14 +12,12 @@ class TimTableCard extends HookWidget {
   const TimTableCard({
     super.key,
     required this.vehicle,
-    required this.departureTime,
-    required this.arrivalTime,
-    required this.offset,
+    required this.departureSchedule,
+    required this.station,
   });
   final Vehicle vehicle;
-  final DateTime departureTime;
-  final DateTime arrivalTime;
-  final int offset;
+  final DepartureSchedule departureSchedule;
+  final Station station;
 
   @override
   Widget build(BuildContext context) {
@@ -37,9 +37,10 @@ class TimTableCard extends HookWidget {
         };
       },
     );
-    final remainTime = departureTime.difference(time.value!) > Duration.zero
-        ? departureTime.difference(time.value!)
-        : Duration.zero;
+    final remainTime =
+        departureSchedule.departureTime.difference(time.value!) > Duration.zero
+            ? departureSchedule.departureTime.difference(time.value!)
+            : Duration.zero;
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 12),
       elevation: 4,
@@ -50,8 +51,8 @@ class TimTableCard extends HookWidget {
             MaterialPageRoute(
               builder: (ctx) => SingleTimeTableDetailScreen(
                 vehicle: vehicle,
-                departureTime: departureTime,
-                offset: offset,
+                departureTime: departureSchedule.departureTime,
+                station: station,
               ),
             ),
           );
@@ -72,7 +73,7 @@ class TimTableCard extends HookWidget {
                       ),
                       const SizedBox(width: 8),
                       Text(
-                        f.format(departureTime),
+                        f.format(departureSchedule.departureTime),
                         style: TextStyle(
                           fontSize: 32,
                           fontWeight: FontWeight.bold,
@@ -164,7 +165,7 @@ class TimTableCard extends HookWidget {
                 children: [
                   Text(
                     // ignore: lines_longer_than_80_chars
-                    '${vehicle.destination.displayName} 到着予定 ${f.format(arrivalTime)}',
+                    '${vehicle.destination.displayName} 到着予定 ${f.format(departureSchedule.arrivalTime)}',
                     style: TextStyle(
                       fontSize: 14,
                       color: Theme.of(context).colorScheme.onSurfaceVariant,
