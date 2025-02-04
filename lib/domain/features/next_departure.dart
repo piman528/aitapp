@@ -88,8 +88,9 @@ class NextDeparture {
     }
 
     // 方面に応じて計算方法を変える
-    if (vehicle.destination == Destination.toFujigaoka) {
-      // 八草→藤が丘方面
+    if (vehicle.destination == Destination.toFujigaoka ||
+        vehicle.destination == Destination.toAIT) {
+      // 八草→藤が丘、大学方面
       for (var i = startIndex; i < stations.length - 1; i++) {
         final timePair = '${stations[i].id}-${stations[i + 1].id}';
         final time = int.parse(timesData[timePair] ?? '0');
