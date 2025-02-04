@@ -5,7 +5,7 @@ import 'package:aitapp/domain/types/class_syllabus.dart';
 import 'package:aitapp/domain/types/day_of_week.dart';
 import 'package:aitapp/domain/types/select_syllabus_filters.dart';
 import 'package:aitapp/domain/types/semester.dart';
-import 'package:aitapp/presentation/wighets/loading.dart';
+import 'package:aitapp/presentation/wighets/loading/syllabus_loading.dart';
 import 'package:aitapp/presentation/wighets/syllabus_item.dart';
 import 'package:async/async.dart';
 import 'package:flutter/material.dart';
@@ -29,7 +29,7 @@ class SyllabusList extends HookWidget {
     final syllabusList = useState<List<ClassSyllabus>?>(null);
     final content = useState<Widget>(
       const Expanded(
-        child: LoadingWidget(),
+        child: SyllabusLoadingWidget(),
       ),
     );
 

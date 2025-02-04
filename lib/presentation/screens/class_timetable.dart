@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:aitapp/application/state/class_timetable/class_timetable.dart';
 import 'package:aitapp/presentation/wighets/class_timetable_item.dart';
-import 'package:aitapp/presentation/wighets/loading.dart';
+import 'package:aitapp/presentation/wighets/loading/timetable_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -13,7 +13,7 @@ class ClassTimeTableScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final asyncValue = ref.watch(classTimeTableNotifierProvider);
     return asyncValue.when(
-      loading: () => const LoadingWidget(),
+      loading: () => const TimetableLoadingWidget(),
       error: (error, __) {
         if (error is SocketException) {
           return const Center(
