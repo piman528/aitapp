@@ -1,17 +1,18 @@
 import 'dart:io';
 
+import 'package:aitapp/application/state/class_timetable/class_timetable.dart';
 import 'package:aitapp/domain/features/get_syllabus.dart';
 import 'package:aitapp/domain/types/class_syllabus.dart';
 import 'package:aitapp/domain/types/day_of_week.dart';
 import 'package:aitapp/domain/types/select_syllabus_filters.dart';
-import 'package:aitapp/domain/types/semester.dart';
 import 'package:aitapp/presentation/wighets/loading.dart';
 import 'package:aitapp/presentation/wighets/syllabus_item.dart';
 import 'package:async/async.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class SyllabusList extends HookWidget {
+class SyllabusList extends HookConsumerWidget {
   const SyllabusList({
     super.key,
     this.dayOfWeek,
@@ -23,7 +24,8 @@ class SyllabusList extends HookWidget {
   final String? filterText;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final notifier = ref.watch(classTimeTableNotifierProvider.notifier);
     final getSyllabus = useMemoized(GetSyllabus.new);
     final operation = useRef<CancelableOperation<void>?>(null);
     final syllabusList = useState<List<ClassSyllabus>?>(null);
@@ -35,16 +37,13 @@ class SyllabusList extends HookWidget {
 
     Future<void> load() async {
       try {
-        final thisMonth = DateTime.now().month;
         await getSyllabus.create();
         final list = await getSyllabus.getSyllabusList(
           selectSyllabusFilters: SelectSyllabusFilters(
             week: dayOfWeek,
             hour: classPeriod,
-            year: getSyllabus.filters.year.values.first,
-            semester: thisMonth >= 4 && thisMonth <= 8
-                ? Semester.early
-                : Semester.late,
+            year: '00${notifier.selectYear - 2003}',
+            semester: notifier.selectSemester,
           ),
         );
         syllabusList.value = list;

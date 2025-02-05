@@ -157,6 +157,56 @@ class LcamParse {
     );
   }
 
+  Map<DayOfWeek, Map<int, Class>> pcClassTimeTable(String body) {
+    final classTimeTableMap = <DayOfWeek, Map<int, Class>>{};
+    final topStorytitle = parseHtmlDocument(body).querySelectorAll(
+      '#st1 > div > table > tbody > tr',
+    );
+    if (topStorytitle.isEmpty) {
+      throw const GetDataException('[parseClassTimeTable]データの取得に失敗しました');
+    }
+    for (var i = 1; i < topStorytitle.length; i++) {
+      for (var j = 1; j < topStorytitle[i].children.length; j++) {
+        if (topStorytitle[i].children[j].children.isNotEmpty) {
+          var subject = '';
+          var teacher = '';
+          var classRoom = '';
+          for (var k = 0; k < 3; k++) {
+            final text = topStorytitle[i]
+                .children[j]
+                .children[0]
+                .children[k]
+                .text!
+                .trim();
+            switch (k) {
+              case 0: //授業科目
+                subject = text.replaceAll('[八]', '');
+              case 1: // 教員
+                teacher = text.replaceAll(RegExp(r'　他$'), '').split('/').first;
+              case 2: // 教室
+                classRoom = text.replaceAll('八草', '').trim();
+            }
+          }
+          final dayOfWeek = switch (j) {
+            1 => DayOfWeek.monday,
+            2 => DayOfWeek.tuesday,
+            3 => DayOfWeek.wednesday,
+            4 => DayOfWeek.thurstay,
+            5 => DayOfWeek.friday,
+            6 => DayOfWeek.saturday,
+            _ => DayOfWeek.sunday,
+          };
+          if (subject != '') {
+            classTimeTableMap[dayOfWeek] ??= <int, Class>{};
+            classTimeTableMap[dayOfWeek]![i] =
+                Class(title: subject, classRoom: classRoom, teacher: teacher);
+          }
+        }
+      }
+    }
+    return classTimeTableMap;
+  }
+
   Map<DayOfWeek, Map<int, Class>> classTimeTable(String body) {
     final classTimeTableMap = <DayOfWeek, Map<int, Class>>{};
     final topStorytitle = parseHtmlDocument(body).querySelectorAll(
@@ -211,22 +261,26 @@ class LcamParse {
     return classTimeTableMap;
   }
 
-  String lCamStrutsToken({
-    required String body,
-    required bool isCommon,
-  }) {
-    final selector = isCommon
-        // ignore: lines_longer_than_80_chars
-        ? '#smartPhoneCommonContactList > form:nth-child(3) > div:nth-child(1) > input'
-        // ignore: lines_longer_than_80_chars
-        : '#smartPhoneClassContactList > form:nth-child(3) > div:nth-child(1) > input';
-    final topStorytitle = parseHtmlDocument(body).querySelectorAll(
-      selector,
-    );
-    if (topStorytitle.isEmpty) {
-      throw const GetDataException('[parseStrutsToken]データの取得に失敗しました');
+  String lCamStrutsToken({required String body}) {
+    final selectors = [
+      '#header > form:nth-child(3) > div > input',
+      '#header > form:nth-child(2) > div > input',
+      '#smartPhoneCommonContactList > form:nth-child(3) > div:nth-child(1) > input',
+      '#smartPhoneClassContactList > form:nth-child(3)',
+    ];
+    var topStorytitle = <Element>[];
+    for (var i = 0; i < selectors.length; i++) {
+      topStorytitle = parseHtmlDocument(body).querySelectorAll(
+        selectors[i],
+      );
+      if (topStorytitle.isNotEmpty) {
+        break;
+      }
+      if (i == selectors.length - 1) {
+        throw const GetDataException('[parseLcamStrutsToken]データの取得に失敗しました');
+      }
     }
-    final value = topStorytitle[0].attributes['value'];
+    final value = topStorytitle.first.attributes['value'];
     return value!;
   }
 

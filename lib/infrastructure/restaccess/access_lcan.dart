@@ -40,11 +40,142 @@ Future<Response> httpAccess(
   return res;
 }
 
+Future<String> preAccess({required Cookies cookie}) async {
+  debugPrint('preAccess');
+  final url = Uri.parse('https://$origin/portalv2/login/preLogin/preLogin');
+  final headers = {
+    'Origin': 'https://$origin',
+    'Referer': 'https://$origin/',
+    'Cookie': cookie.toString(),
+  }
+    ..addAll(constHeader)
+    ..addAll(secFetchHeader)
+    ..addAll(contentTypeHeader);
+
+  final data = {
+    'mistakeChecker': '0',
+    'clientLocationUrl': 'https://$origin/',
+  };
+
+  final res = await httpAccess(url, headers: headers, body: data);
+
+  final setCookie = _getSetCookie(res.headers);
+  return setCookie;
+}
+
+Future<String> initLogin({
+  required String id,
+  required String password,
+  required Cookies cookies,
+}) async {
+  debugPrint('initLogin');
+  final headers = {
+    'Origin': 'https://$origin',
+    'Referer': 'https://$origin/portalv2/',
+    'Cookie': cookies.toString(),
+  }
+    ..addAll(constHeader)
+    ..addAll(secFetchHeader)
+    ..addAll(contentTypeHeader);
+
+  final data = {
+    'userID': id,
+    'password': password,
+    'selectLocale': 'ja',
+    'authenticMethod': '1',
+    'mistakeChecker': '0',
+    'EXCLUDE_SET': '',
+  };
+
+  final url = Uri.parse('https://$origin/portalv2/login/login/initLogin');
+
+  final res = await http.post(url, headers: headers, body: data);
+  return res.body;
+}
+
+Future<String> generalPurpose({
+  required Cookies cookies,
+  required String token,
+}) async {
+  final headers = {
+    'Origin': 'https://$origin',
+    'Referer': 'https://$origin/portalv2/login/login/initLogin',
+    'Cookie': cookies.toString(),
+  }
+    ..addAll(constHeader)
+    ..addAll(secFetchHeader)
+    ..addAll(contentTypeHeader);
+
+  final data = {
+    'org.apache.struts.taglib.html.TOKEN': token,
+    'headTitle': 'ホーム',
+    'menuCode': 'A00',
+    'nextPath': '/classsupporttop/classSupportTop/initialize',
+    '_screenIdentifier': '',
+    '_screenInfoDisp': '',
+    '_scrollTop': '0',
+  };
+
+  final url = Uri.parse('https://$origin/portalv2/common/generalPurpose/');
+
+  final res = await httpAccess(url, headers: headers, body: data);
+  return res.body;
+}
+
+Future<String> searchTimeTable({
+  required Cookies cookies,
+  required String token,
+  required String year,
+  required String semester,
+}) async {
+  final headers = {
+    'Origin': 'https://$origin',
+    'Referer': 'https://$origin/portalv2/common/generalPurpose/',
+    'Cookie': cookies.toString(),
+  }
+    ..addAll(constHeader)
+    ..addAll(secFetchHeader)
+    ..addAll(contentTypeHeader);
+
+  final data = {
+    'org.apache.struts.taglib.html.TOKEN': token,
+    'schoolYear': year,
+    'semesterCode': semester,
+    '_screenIdentifier': 'SC_A00_01',
+    '_screenInfoDisp': '',
+    '_scrollTop': '494',
+  };
+
+  final url = Uri.parse(
+    'https://$origin/portalv2/portaltopcommon/timeTableForTop/searchTimeTable',
+  );
+
+  final res = await httpAccess(url, headers: headers, body: data);
+  return res.body;
+}
+
+Future<Cookies> pcGetCookie() async {
+  debugPrint('pcgetcookie');
+  final url = Uri.parse('https://$origin/portalv2/');
+  final headers = <String, String>{}
+    ..addAll(constHeader)
+    ..addAll(secFetchHeader);
+
+  final res = await httpAccess(url, headers: headers);
+
+  final setCookie = _getSetCookie(res.headers);
+  final cookies = setCookie.split(RegExp(',(?=[^ ])'));
+  return Cookies(jSessionId: cookies[0], liveAppsCookie: cookies[1]);
+}
+
 Future<Cookies> getCookie() async {
   debugPrint('getcookie');
   final url = Uri.parse('https://$origin/portalv2/sp');
+  final headers = <String, String>{}
+    ..addAll(constHeader)
+    ..addAll(secFetchHeader);
 
-  final res = await httpAccess(url, headers: constHeader);
+  final res = await httpAccess(url, headers: headers);
 
   final setCookie = _getSetCookie(res.headers);
   final cookies = setCookie.split(RegExp(',(?=[^ ])'));
@@ -272,10 +403,31 @@ Future<Response> getFile({
 }
 
 String _getSetCookie(Map<String, dynamic> headers) {
-  for (final key in headers.keys) {
-    // システムによって返却される "set-cookie" のケースはバラバラです。
-    if (key.toLowerCase() == 'set-cookie') {
-      return headers[key] as String;
+  for (final header in headers.entries) {
+    // システムによって返却される "set-cookie" のケースはバラバラ
+
+    String? jSessionId;
+    String? liveAppCookie;
+
+    if (header.key.toLowerCase() == 'set-cookie') {
+      if (header.value.toString().toLowerCase().contains('jsessionid') &&
+          header.value.toString().toLowerCase().contains('liveapps-cookie')) {
+        return header.value as String;
+      } else if (header.value.toString().toLowerCase().contains('jsessionid')) {
+        jSessionId = (header.value as String).split(',').last;
+      } else if (header.value
+          .toString()
+          .toLowerCase()
+          .contains('liveapps-cookie')) {
+        liveAppCookie = header.value as String;
+      }
+      if (jSessionId != null && liveAppCookie != null) {
+        return '$jSessionId, $liveAppCookie';
+      } else if (jSessionId != null) {
+        return jSessionId;
+      } else if (liveAppCookie != null) {
+        return liveAppCookie;
+      }
     }
   }
 
