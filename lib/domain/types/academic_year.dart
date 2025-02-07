@@ -18,7 +18,7 @@ class AcademicYear {
   String get displayName => '$year年度';
 
   /// 学年度の開始日を取得します
-  DateTime get startDate => DateTime(year, 4, 1);
+  DateTime get startDate => DateTime(year, 4);
 
   /// 学年度の終了日を取得します
   DateTime get endDate => DateTime(year + 1, 3, 31);

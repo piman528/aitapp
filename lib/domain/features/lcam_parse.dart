@@ -263,10 +263,9 @@ class LcamParse {
 
   String lCamStrutsToken({required String body}) {
     final selectors = [
-      '#header > form:nth-child(3) > div > input',
-      '#header > form:nth-child(2) > div > input',
+      '#header > form > div > input',
       '#smartPhoneCommonContactList > form:nth-child(3) > div:nth-child(1) > input',
-      '#smartPhoneClassContactList > form:nth-child(3)',
+      '#smartPhoneClassContactList > form:nth-child(3) > div:nth-child(1) > input',
     ];
     var topStorytitle = <Element>[];
     for (var i = 0; i < selectors.length; i++) {
@@ -274,14 +273,13 @@ class LcamParse {
         selectors[i],
       );
       if (topStorytitle.isNotEmpty) {
-        break;
-      }
-      if (i == selectors.length - 1) {
-        throw const GetDataException('[parseLcamStrutsToken]データの取得に失敗しました');
+        final value = topStorytitle.first.attributes['value'];
+        if (value != null) {
+          return value;
+        }
       }
     }
-    final value = topStorytitle.first.attributes['value'];
-    return value!;
+    throw const GetDataException('[parseLcamStrutsToken]データの取得に失敗しました');
   }
 
   List<UnivNotice> univNotice(String body) {

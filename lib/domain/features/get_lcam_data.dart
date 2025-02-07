@@ -143,7 +143,7 @@ class GetPCLcamData {
       Semester.late: {},
     };
     while (true) {
-      print('year: $year, semester: $semester');
+      debugPrint('year: $year, semester: $semester');
       final body = await searchTimeTable(
         cookies: cookies,
         token: token!,

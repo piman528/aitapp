@@ -7,7 +7,7 @@ part of 'class_timetable.dart';
 // **************************************************************************
 
 String _$classTimeTableNotifierHash() =>
-    r'229ddbd9fd7caf9a60094d82c70107fd0ec92239';
+    r'ddc3d79cf643792578fa6aaa584116ea5021faa8';
 
 /// See also [ClassTimeTableNotifier].
 @ProviderFor(ClassTimeTableNotifier)

@@ -63,7 +63,10 @@ class ClassGridContainer extends StatelessWidget {
                     width: double.infinity - 5,
                     decoration: BoxDecoration(
                       borderRadius: const BorderRadius.all(Radius.circular(10)),
-                      color: Theme.of(context).colorScheme.tertiaryContainer,
+                      color: Theme.of(context)
+                          .colorScheme
+                          .primary
+                          .withOpacity(0.6),
                     ),
                     child: Text(
                       clas!.classRoom.alphanumericToHalfLength(),

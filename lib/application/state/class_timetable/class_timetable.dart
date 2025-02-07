@@ -6,14 +6,16 @@ import 'package:aitapp/domain/types/class_timetable_state.dart';
 import 'package:aitapp/domain/types/day_of_week.dart';
 import 'package:aitapp/domain/types/last_login.dart';
 import 'package:aitapp/domain/types/semester.dart';
+import 'package:aitapp/infrastructure/database/timetable_database.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+
 part 'class_timetable.g.dart';
 
 @Riverpod(keepAlive: true)
 class ClassTimeTableNotifier extends _$ClassTimeTableNotifier {
   @override
   AsyncValue<ClassTimeTableState> build() {
-    fetchData();
+    _loadFromDatabase();
     return const AsyncValue.loading();
   }
 
@@ -43,25 +45,42 @@ class ClassTimeTableNotifier extends _$ClassTimeTableNotifier {
     );
   }
 
-  Future<void> fetchData() async {
-    state = const AsyncValue.loading();
+  Future<void> _loadFromDatabase() async {
     try {
-      final getPCLcamData = GetPCLcamData();
-      final identity = ref.read(identityProvider);
-      await getPCLcamData.create(identity!.id, identity.password);
-      ref
-          .read(lastLoginNotifierProvider.notifier)
-          .changeState(LastLogin.others);
-      final result = await getPCLcamData.getClassTimeTable();
-      state = AsyncValue.data(
-        ClassTimeTableState(
-          timetable: result,
-          selectYear: result.entries.last.key,
-          selectSemester: result.entries.last.value.keys.last,
-        ),
-      );
+      final timetable = await TimetableDatabase.instance.getTimetable();
+      if (timetable.isNotEmpty) {
+        state = AsyncValue.data(
+          ClassTimeTableState(
+            timetable: timetable,
+            selectYear: timetable.entries.last.key,
+            selectSemester: timetable.entries.last.value.keys.last,
+          ),
+        );
+      } else {
+        await fetchData();
+      }
     } on Exception catch (err, stack) {
       state = AsyncValue.error(err, stack);
     }
+  }
+
+  Future<void> fetchData() async {
+    state = const AsyncValue.loading();
+    final getPCLcamData = GetPCLcamData();
+    final identity = ref.read(identityProvider);
+    await getPCLcamData.create(identity!.id, identity.password);
+    ref.read(lastLoginNotifierProvider.notifier).changeState(LastLogin.others);
+    final result = await getPCLcamData.getClassTimeTable();
+
+    // データベースに保存
+    await TimetableDatabase.instance.saveTimetable(result);
+
+    state = AsyncValue.data(
+      ClassTimeTableState(
+        timetable: result,
+        selectYear: result.entries.last.key,
+        selectSemester: result.entries.last.value.keys.last,
+      ),
+    );
   }
 }
