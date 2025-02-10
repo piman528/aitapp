@@ -5,6 +5,7 @@ import 'package:aitapp/domain/types/academic_year.dart';
 import 'package:aitapp/domain/types/class.dart';
 import 'package:aitapp/domain/types/cookies.dart';
 import 'package:aitapp/domain/types/day_of_week.dart';
+import 'package:aitapp/domain/types/event.dart';
 import 'package:aitapp/domain/types/exception.dart';
 import 'package:aitapp/domain/types/notice.dart';
 import 'package:aitapp/domain/types/notice_detail.dart';
@@ -170,6 +171,25 @@ class GetPCLcamData {
         semester = Semester.early;
       }
     }
+
+    return result;
+  }
+
+  Future<Map<DateTime, List<UnivEvent>>> getShedule() async {
+    final result = <DateTime, List<UnivEvent>>{};
+    var body = '';
+
+    for (var i = 0; i < 25; i++) {
+      body = await reload(cookie: cookies, token: token!);
+      token = LcamParse().lCamStrutsToken(body: body);
+      final schedules = parse.schedule(body);
+      result.addAll(schedules);
+      await getSchedule(cookie: cookies);
+    }
+    body = await reload(cookie: cookies, token: token!);
+    token = LcamParse().lCamStrutsToken(body: body);
+    final schedules = parse.schedule(body);
+    result.addAll(schedules);
 
     return result;
   }

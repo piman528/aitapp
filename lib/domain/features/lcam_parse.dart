@@ -1,7 +1,10 @@
+import 'package:aitapp/domain/types/academic_year.dart';
 import 'package:aitapp/domain/types/class.dart';
 import 'package:aitapp/domain/types/class_notice.dart';
 import 'package:aitapp/domain/types/class_notice_detail.dart';
+import 'package:aitapp/domain/types/class_period.dart';
 import 'package:aitapp/domain/types/day_of_week.dart';
+import 'package:aitapp/domain/types/event.dart';
 import 'package:aitapp/domain/types/exception.dart';
 import 'package:aitapp/domain/types/univ_notice.dart';
 import 'package:aitapp/domain/types/univ_notice_detail.dart';
@@ -205,6 +208,85 @@ class LcamParse {
       }
     }
     return classTimeTableMap;
+  }
+
+  Map<DateTime, List<UnivEvent>> schedule(String body) {
+    final result = <DateTime, List<UnivEvent>>{};
+
+    final element = parseHtmlDocument(body).querySelector(
+      'table.calendar-body',
+    );
+    if (element == null) {
+      throw const GetDataException('[parseClassTimeTable]データの取得に失敗しました');
+    }
+    final dates = element.querySelectorAll('thead > tr > th').map((e) {
+      final dateText = e.innerText.trim();
+      final match = RegExp(r'(\d{1,2})/(\d{1,2})').firstMatch(dateText);
+      if (match == null) {
+        throw const GetDataException('[parseClassTimeTable]データの取得に失敗しました');
+      }
+      final month = int.parse(match.group(1)!);
+      final day = int.parse(match.group(2)!);
+      final year =
+          month < 4 ? AcademicYear.getCurrent() + 1 : AcademicYear.getCurrent();
+
+      return DateTime(year, month, day);
+    }).toList();
+    final contents = element.querySelectorAll('tbody > tr > td > div');
+
+    for (var i = 0; i < dates.length; i++) {
+      final eventsList = <UnivEvent>[];
+      final events =
+          contents[i].innerHtml?.split('<hr class="schedule_line" noshade="">');
+
+      if (events != null) {
+        for (final event in events) {
+          String? eventText;
+          String? location;
+          String? teacher;
+          ClassPeriod? period;
+
+          final formatedEventList = event
+              .split('<br>')
+              .map((e) => e.trim())
+              .toList()
+              .where((e) => e.isNotEmpty)
+              .toList();
+
+          if (formatedEventList.isNotEmpty) {
+            if (formatedEventList.length == 4) {
+              teacher = formatedEventList[2].replaceAll('他', '').trim();
+              location = formatedEventList[3];
+              eventText = formatedEventList[1].replaceAll('[八]', '');
+              final periodMatch =
+                  RegExp(r'(Ⅰ|Ⅱ|Ⅲ|Ⅳ|Ⅴ)限').firstMatch(formatedEventList[0]);
+              period = switch (periodMatch?.group(1)) {
+                'Ⅰ' => ClassPeriod.period1,
+                'Ⅱ' => ClassPeriod.period2,
+                'Ⅲ' => ClassPeriod.period3,
+                'Ⅳ' => ClassPeriod.period4,
+                'Ⅴ' => ClassPeriod.period5,
+                _ => null,
+              };
+            } else if (formatedEventList.length == 1) {
+              eventText = formatedEventList[0];
+            }
+
+            eventsList.add(
+              UnivEvent(
+                event: eventText!,
+                location: location,
+                teacher: teacher,
+                period: period,
+              ),
+            );
+          }
+        }
+      }
+      result[dates[i]] = eventsList;
+    }
+
+    return result;
   }
 
   Map<DayOfWeek, Map<int, Class>> classTimeTable(String body) {
