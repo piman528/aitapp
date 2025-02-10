@@ -34,6 +34,7 @@ dependencies:
   share_plus: ^9.0.0
   shared_preferences: ^2.2.3
   shimmer: ^3.0.0
+  sqflite: ^2.3.2
   syncfusion_flutter_pdfviewer: ^26.1.39
   universal_html: ^2.2.4
   url_launcher: ^6.3.0

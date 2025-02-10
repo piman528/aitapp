@@ -1,4 +1,8 @@
 import 'package:aitapp/application/config/const.dart';
+import 'package:aitapp/domain/types/station.dart';
+import 'package:aitapp/domain/types/vehicle.dart';
+import 'package:aitapp/domain/types/vehicles.dart';
+import 'package:aitapp/presentation/wighets/daiya_detail.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -6,10 +10,10 @@ class TimeTableDetailScreen extends StatelessWidget {
   const TimeTableDetailScreen({
     super.key,
     required this.vehicle,
-    required this.destination,
+    required this.selectedStation,
   });
-  final String vehicle;
-  final String destination;
+  final Vehicle vehicle;
+  final Station selectedStation;
 
   @override
   Widget build(BuildContext context) {
@@ -24,83 +28,120 @@ class TimeTableDetailScreen extends StatelessWidget {
       case 'C':
         initialValue = 2;
     }
+    final isLinimo = vehicle.vehicle == Vehicles.linimo;
+
     return DefaultTabController(
       initialIndex: initialValue ?? 0,
-      length: 3,
+      length: isLinimo ? 2 : 3,
       child: Scaffold(
         appBar: AppBar(
-          title: Text(
-            vehicleName[vehicle]! + destinationName[destination]!,
-          ),
-          bottom: TabBar(
-            tabs: <Widget>[
-              Tab(text: todayDaiya == 'A' ? 'A (今日)' : 'A'),
-              Tab(text: todayDaiya == 'B' ? 'B (今日)' : 'B'),
-              Tab(text: todayDaiya == 'C' ? 'C (今日)' : 'C'),
+          title: Row(
+            children: [
+              Icon(
+                vehicle.icon,
+                size: 24,
+              ),
+              const SizedBox(width: 8),
+              Text(
+                '${vehicle.vehicle.displayName} (${vehicle.destination.displayName})',
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
             ],
           ),
         ),
-        body: TabBarView(
-          children: ['A', 'B', 'C']
-              .map(
-                (daiya) => DaiyaDetail(
-                  daiyaA: daiya,
-                  destination: destination,
-                  vehicle: vehicle,
+        body: Column(
+          children: [
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              height: 40,
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  color: Theme.of(context)
+                      .colorScheme
+                      .surfaceContainerHighest
+                      .withOpacity(0.6),
                 ),
-              )
-              .toList(),
+                child: TabBar(
+                  labelColor:
+                      Theme.of(context).colorScheme.surfaceContainerHighest,
+                  unselectedLabelColor:
+                      Theme.of(context).colorScheme.onSurfaceVariant,
+                  labelStyle: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                  ),
+                  unselectedLabelStyle: const TextStyle(
+                    fontWeight: FontWeight.normal,
+                    fontSize: 14,
+                  ),
+                  indicator: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                  overlayColor: WidgetStateProperty.all(Colors.transparent),
+                  dividerColor: Colors.transparent,
+                  labelPadding: const EdgeInsets.symmetric(
+                    horizontal: 4,
+                  ),
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 4,
+                  ),
+                  tabs: [
+                    ...['A', 'B', if (!isLinimo) 'C'].map(
+                      (daiyaType) => Tab(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'ダイヤ$daiyaType',
+                            ),
+                            if (todayDaiya == daiyaType) ...[
+                              const SizedBox(width: 4),
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                  vertical: 2,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Theme.of(context).colorScheme.primary,
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Text(
+                                  '今日',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color:
+                                        Theme.of(context).colorScheme.onPrimary,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 8),
+            Expanded(
+              child: TabBarView(
+                children: [
+                  ...['A', 'B', if (!isLinimo) 'C'].map(
+                    (daiya) => DaiyaDetail(
+                      daiyaA: daiya,
+                      vehicle: vehicle,
+                      selectedStation: selectedStation,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
-    );
-  }
-}
-
-class DaiyaDetail extends StatelessWidget {
-  const DaiyaDetail({
-    super.key,
-    required this.vehicle,
-    required this.destination,
-    required this.daiyaA,
-  });
-  final String vehicle;
-  final String destination;
-  final String daiyaA;
-
-  @override
-  Widget build(BuildContext context) {
-    final daiyas = daiya[vehicle]![destination]![daiyaA]!;
-    return ListView(
-      children: [
-        for (final hour in daiyas.keys) ...{
-          const SizedBox(
-            height: 10,
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12),
-            child: Text(
-              '$hour時',
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
-          ),
-          GridView.count(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            crossAxisCount: 6,
-            children: [
-              for (final minutes in daiyas[hour]!) ...{
-                Center(
-                  child: Text(
-                    '$minutes',
-                    style: Theme.of(context).textTheme.titleLarge,
-                  ),
-                ),
-              },
-            ],
-          ),
-          const Divider(),
-        },
-      ],
     );
   }
 }

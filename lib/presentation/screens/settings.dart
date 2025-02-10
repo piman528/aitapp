@@ -1,4 +1,5 @@
 import 'package:aitapp/application/state/setting_int_provider.dart';
+import 'package:aitapp/infrastructure/database/timetable_database.dart';
 import 'package:aitapp/presentation/screens/license.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -67,6 +68,36 @@ class Settings extends ConsumerWidget {
                     .changeNum('colorTheme', number!);
               },
             ),
+          ),
+          ListTile(
+            leading: const Icon(Icons.delete),
+            title: const Text('時間割データベースの削除'),
+            onTap: () {
+              showDialog<void>(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    title: const Text('時間割データベースの削除'),
+                    content: const Text('時間割データベースを削除しますか？'),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: const Text('キャンセル'),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          TimetableDatabase.instance.deleteTimetable();
+                          Navigator.of(context).pop();
+                        },
+                        child: const Text('削除'),
+                      ),
+                    ],
+                  );
+                },
+              );
+            },
           ),
         ],
       ),

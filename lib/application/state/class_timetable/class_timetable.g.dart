@@ -7,12 +7,12 @@ part of 'class_timetable.dart';
 // **************************************************************************
 
 String _$classTimeTableNotifierHash() =>
-    r'f7255ad62cdaf6a344bcbb253759bf255aae2df4';
+    r'ddc3d79cf643792578fa6aaa584116ea5021faa8';
 
 /// See also [ClassTimeTableNotifier].
 @ProviderFor(ClassTimeTableNotifier)
 final classTimeTableNotifierProvider = NotifierProvider<ClassTimeTableNotifier,
-    AsyncValue<Map<DayOfWeek, Map<int, Class>>>>.internal(
+    AsyncValue<ClassTimeTableState>>.internal(
   ClassTimeTableNotifier.new,
   name: r'classTimeTableNotifierProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -22,7 +22,6 @@ final classTimeTableNotifierProvider = NotifierProvider<ClassTimeTableNotifier,
   allTransitiveDependencies: null,
 );
 
-typedef _$ClassTimeTableNotifier
-    = Notifier<AsyncValue<Map<DayOfWeek, Map<int, Class>>>>;
+typedef _$ClassTimeTableNotifier = Notifier<AsyncValue<ClassTimeTableState>>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
