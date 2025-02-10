@@ -1,4 +1,5 @@
 import 'package:aitapp/application/state/notice_load/notice_load.dart';
+import 'package:aitapp/presentation/wighets/appbar.dart';
 import 'package:aitapp/presentation/wighets/notice_tab_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -45,21 +46,75 @@ class NoticeScreen extends HookConsumerWidget with RouteAware {
 
     return Column(
       children: [
-        IgnorePointer(
-          ignoring: isLoading,
-          child: TabBar(
-            tabs: const [
-              Tab(text: '学内'),
-              Tab(text: '授業'),
-            ],
-            controller: tabController,
-            onTap: (index) {
-              if (!isLoading) {
-                currentPage.value = index;
-              }
-            },
+        AppBarWidget(
+          child: IgnorePointer(
+            ignoring: isLoading,
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(18),
+                color: Theme.of(context)
+                    .colorScheme
+                    .surfaceContainerHighest
+                    .withOpacity(0.6),
+              ),
+              child: TabBar(
+                labelColor:
+                    Theme.of(context).colorScheme.surfaceContainerHighest,
+                unselectedLabelColor:
+                    Theme.of(context).colorScheme.onSurfaceVariant,
+                labelStyle: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14,
+                ),
+                unselectedLabelStyle: const TextStyle(
+                  fontWeight: FontWeight.normal,
+                  fontSize: 14,
+                ),
+                indicator: BoxDecoration(
+                  borderRadius: BorderRadius.circular(16),
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+                overlayColor: WidgetStateProperty.all(Colors.transparent),
+                dividerColor: Colors.transparent,
+                labelPadding: const EdgeInsets.symmetric(
+                  horizontal: 4,
+                ),
+                padding: const EdgeInsets.symmetric(
+                  vertical: 4,
+                ),
+                tabs: const [
+                  Tab(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.account_balance, size: 18),
+                        SizedBox(width: 4),
+                        Text('学内'),
+                      ],
+                    ),
+                  ),
+                  Tab(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.class_, size: 18),
+                        SizedBox(width: 4),
+                        Text('授業'),
+                      ],
+                    ),
+                  ),
+                ],
+                controller: tabController,
+                onTap: (index) {
+                  if (!isLoading) {
+                    currentPage.value = index;
+                  }
+                },
+              ),
+            ),
           ),
         ),
+        const SizedBox(height: 8),
         Expanded(
           child: GestureDetector(
             behavior: HitTestBehavior.translucent,
