@@ -7,7 +7,10 @@ class DetailLoadingWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Shimmer.fromColors(
-      baseColor: Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.5),
+      baseColor: Theme.of(context)
+          .colorScheme
+          .surfaceContainerHighest
+          .withOpacity(0.5),
       highlightColor: Theme.of(context).colorScheme.surface,
       child: ListView(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 24),
