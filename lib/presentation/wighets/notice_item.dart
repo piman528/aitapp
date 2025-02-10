@@ -41,6 +41,7 @@ class NoticeItem extends ConsumerWidget {
           },
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
+            height: isCommon ? 98 : 128,
             width: double.infinity,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -85,18 +86,26 @@ class NoticeItem extends ConsumerWidget {
                       width: 5,
                     ),
                     Expanded(
-                      child: Text(
-                        notice.title,
-                        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                              color: Theme.of(context).colorScheme.onSurface,
-                            ),
+                      child: SizedBox(
+                        height: 40, // Adjust this value based on your font size
+                        child: Text(
+                          notice.title,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyMedium!
+                              .copyWith(
+                                color: Theme.of(context).colorScheme.onSurface,
+                              ),
+                        ),
                       ),
                     ),
                   ],
                 ),
                 if (isCommon) ...{
                   const SizedBox(
-                    height: 25,
+                    height: 12,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,

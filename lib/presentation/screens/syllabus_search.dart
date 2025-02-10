@@ -4,7 +4,7 @@ import 'package:aitapp/application/state/syllabus_search/syllabus_search.dart';
 import 'package:aitapp/application/usecases/syllabus_search_usecase.dart';
 import 'package:aitapp/domain/features/get_syllabus.dart';
 import 'package:aitapp/presentation/wighets/filter_drawer.dart';
-import 'package:aitapp/presentation/wighets/loading.dart';
+import 'package:aitapp/presentation/wighets/loading/notice_loading.dart';
 import 'package:aitapp/presentation/wighets/search_bar.dart';
 import 'package:aitapp/presentation/wighets/syllabus_item.dart';
 import 'package:flutter/material.dart';
@@ -91,7 +91,9 @@ class SyllabusSearchScreen extends HookConsumerWidget {
               );
             },
             loading: () => const Expanded(
-              child: LoadingWidget(),
+              child: NoticeLoadingWidget(
+                isCommon: true,
+              ),
             ),
             data: (data) {
               if (data.isEmpty) {

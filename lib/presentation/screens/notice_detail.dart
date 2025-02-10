@@ -1,5 +1,5 @@
 import 'package:aitapp/application/state/class_notice_detail/notice_detail.dart';
-import 'package:aitapp/presentation/wighets/loading.dart';
+import 'package:aitapp/presentation/wighets/loading/detail_loading.dart';
 import 'package:aitapp/presentation/wighets/notice_detail.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -51,7 +51,7 @@ class NoticeDetailScreen extends HookConsumerWidget {
         error: (error, stack) => Center(
           child: Text(error.toString()),
         ),
-        loading: () => const LoadingWidget(),
+        loading: () => const DetailLoadingWidget(),
       ),
     );
   }
