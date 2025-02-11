@@ -52,8 +52,8 @@ class ClassTimeTableNotifier extends _$ClassTimeTableNotifier {
         state = AsyncValue.data(
           ClassTimeTableState(
             timetable: timetable,
-            selectYear: timetable.entries.last.key,
-            selectSemester: timetable.entries.last.value.keys.last,
+            selectYear: timetable.entries.first.key,
+            selectSemester: timetable.entries.first.value.keys.last,
           ),
         );
       } else {
@@ -78,8 +78,8 @@ class ClassTimeTableNotifier extends _$ClassTimeTableNotifier {
     state = AsyncValue.data(
       ClassTimeTableState(
         timetable: result,
-        selectYear: result.entries.last.key,
-        selectSemester: result.entries.last.value.keys.last,
+        selectYear: result.entries.first.key,
+        selectSemester: result.entries.first.value.keys.last,
       ),
     );
   }
