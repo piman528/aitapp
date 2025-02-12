@@ -44,7 +44,7 @@ jobs:
           mv Payload.zip release.ipa
           rm -rf Payload
       - name: Upload artifact aab
-        uses: actions/upload-artifact@v1.0.0
+        uses: actions/upload-artifact@v4
         with:
           name: release-ios
           path: ./release.ipa
