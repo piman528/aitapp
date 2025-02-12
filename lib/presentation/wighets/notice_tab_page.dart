@@ -47,20 +47,23 @@ class NoticeTabPage extends HookConsumerWidget {
     );
 
     if (error.value == null) {
-      if (noticeCatche != null) {
-        return NoticeListWidget(
-          textController: controller,
-          isCommon: isCommon,
-          notices: usecase.filteredList(noticeCatche.notices, result.value),
-          page: noticeCatche.page,
-          onRefresh: () async {
-            await usecase.load(withLogin: true);
-          },
-          onLast: usecase.load,
-        );
-      }
-      return NoticeLoadingWidget(
-        isCommon: isCommon,
+      return AnimatedSwitcher(
+        duration: const Duration(milliseconds: 150),
+        child: noticeCatche != null
+            ? NoticeListWidget(
+                textController: controller,
+                isCommon: isCommon,
+                notices:
+                    usecase.filteredList(noticeCatche.notices, result.value),
+                page: noticeCatche.page,
+                onRefresh: () async {
+                  await usecase.load(withLogin: true);
+                },
+                onLast: usecase.load,
+              )
+            : NoticeLoadingWidget(
+                isCommon: isCommon,
+              ),
       );
     }
     return Center(

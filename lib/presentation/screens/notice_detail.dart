@@ -46,12 +46,15 @@ class NoticeDetailScreen extends HookConsumerWidget {
           '詳細',
         ),
       ),
-      body: asyncValue.when(
-        data: (notice) => NoticeDetailWidget(notice: notice),
-        error: (error, stack) => Center(
-          child: Text(error.toString()),
+      body: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 100),
+        child: asyncValue.when(
+          data: (notice) => NoticeDetailWidget(notice: notice),
+          error: (error, stack) => Center(
+            child: Text(error.toString()),
+          ),
+          loading: () => const DetailLoadingWidget(),
         ),
-        loading: () => const DetailLoadingWidget(),
       ),
     );
   }
