@@ -1,4 +1,5 @@
 import 'package:aitapp/domain/types/academic_year.dart';
+import 'package:aitapp/domain/types/calendar_event.dart';
 import 'package:aitapp/domain/types/class.dart';
 import 'package:aitapp/domain/types/class_notice.dart';
 import 'package:aitapp/domain/types/class_notice_detail.dart';
@@ -210,8 +211,8 @@ class LcamParse {
     return classTimeTableMap;
   }
 
-  Map<DateTime, List<UnivEvent>> schedule(String body) {
-    final result = <DateTime, List<UnivEvent>>{};
+  Map<DateTime, List<CalendarEvent>> schedule(String body) {
+    final result = <DateTime, List<CalendarEvent>>{};
 
     final element = parseHtmlDocument(body).querySelector(
       'table.calendar-body',
@@ -235,7 +236,7 @@ class LcamParse {
     final contents = element.querySelectorAll('tbody > tr > td > div');
 
     for (var i = 0; i < dates.length; i++) {
-      final eventsList = <UnivEvent>[];
+      final eventsList = <CalendarEvent>[];
       final events =
           contents[i].innerHtml?.split('<hr class="schedule_line" noshade="">');
 
@@ -272,14 +273,25 @@ class LcamParse {
               eventText = formatedEventList[0];
             }
 
-            eventsList.add(
-              UnivEvent(
-                event: eventText!,
-                location: location,
-                teacher: teacher,
-                period: period,
-              ),
-            );
+            if (period != null && eventText != null) {
+              eventsList.add(
+                UnivEvent.fromPeriod(
+                  title: eventText,
+                  period: period,
+                  location: location,
+                  teacher: teacher,
+                  date: dates[i],
+                ),
+              );
+            } else if (eventText != null) {
+              eventsList.add(
+                CalendarEvent(
+                  title: eventText,
+                  startTime: dates[i],
+                  endTime: dates[i].add(const Duration(hours: 8)),
+                ),
+              );
+            }
           }
         }
       }

@@ -2,10 +2,10 @@ import 'dart:io';
 
 import 'package:aitapp/domain/features/lcam_parse.dart';
 import 'package:aitapp/domain/types/academic_year.dart';
+import 'package:aitapp/domain/types/calendar_event.dart';
 import 'package:aitapp/domain/types/class.dart';
 import 'package:aitapp/domain/types/cookies.dart';
 import 'package:aitapp/domain/types/day_of_week.dart';
-import 'package:aitapp/domain/types/event.dart';
 import 'package:aitapp/domain/types/exception.dart';
 import 'package:aitapp/domain/types/notice.dart';
 import 'package:aitapp/domain/types/notice_detail.dart';
@@ -175,11 +175,11 @@ class GetPCLcamData {
     return result;
   }
 
-  Future<Map<DateTime, List<UnivEvent>>> getShedule() async {
-    final result = <DateTime, List<UnivEvent>>{};
+  Future<Map<DateTime, List<CalendarEvent>>> getShedule() async {
+    final result = <DateTime, List<CalendarEvent>>{};
     var body = '';
 
-    for (var i = 0; i < 25; i++) {
+    for (var i = 0; i < 10; i++) {
       body = await reload(cookie: cookies, token: token!);
       token = LcamParse().lCamStrutsToken(body: body);
       final schedules = parse.schedule(body);

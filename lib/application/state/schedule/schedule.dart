@@ -1,10 +1,11 @@
 import 'package:aitapp/application/state/identity_provider.dart';
 import 'package:aitapp/application/state/last_login/last_login.dart';
 import 'package:aitapp/domain/features/get_lcam_data.dart';
+import 'package:aitapp/domain/types/calendar_event.dart';
 import 'package:aitapp/domain/types/calendar_state.dart';
-import 'package:aitapp/domain/types/event.dart';
 import 'package:aitapp/domain/types/last_login.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart'; // この import を追加
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 part 'schedule.g.dart';
 
@@ -30,7 +31,7 @@ class ScheduleNotifier extends _$ScheduleNotifier {
     );
   }
 
-  List<UnivEvent> getEventsForSelectedDay(DateTime day) {
+  List<CalendarEvent> getEventsForSelectedDay(DateTime day) {
     final normalizedDay = DateTime(day.year, day.month, day.day);
     return state.when(
       data: (data) => data.events[normalizedDay] ?? [],
@@ -41,7 +42,13 @@ class ScheduleNotifier extends _$ScheduleNotifier {
 
   void changeFocusedDay(DateTime day) {
     state = state.whenData(
-      (data) => CalendarState(events: data.events, forcusedDay: day),
+      (data) => data.copyWith(forcusedDay: day),
+    );
+  }
+
+  void changeView(CalendarView view) {
+    state = state.whenData(
+      (data) => data.copyWith(view: view),
     );
   }
 }
