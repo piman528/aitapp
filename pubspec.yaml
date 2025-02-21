@@ -33,11 +33,11 @@ dependencies:
   path_provider: ^2.1.3
   riverpod_annotation: ^2.3.5
   riverpod_generator: ^2.4.0
+  scrollable_positioned_list: ^0.3.8
   share_plus: 
   shared_preferences: ^2.2.3
   shimmer: ^3.0.0
   sqflite: ^2.3.2
-  syncfusion_flutter_calendar: ^28.2.5
   syncfusion_flutter_pdfviewer: ^28.2.5
   syncfusion_localizations: ^28.2.5
   universal_html: ^2.2.4
