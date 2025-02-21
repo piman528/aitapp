@@ -1,54 +1,82 @@
 import 'package:aitapp/application/state/identity_provider.dart';
 import 'package:aitapp/application/state/last_login/last_login.dart';
 import 'package:aitapp/domain/features/get_lcam_data.dart';
+import 'package:aitapp/domain/features/get_moodle_data.dart';
 import 'package:aitapp/domain/types/calendar_event.dart';
 import 'package:aitapp/domain/types/calendar_state.dart';
 import 'package:aitapp/domain/types/last_login.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 part 'schedule.g.dart';
 
 @Riverpod(keepAlive: true)
 class ScheduleNotifier extends _$ScheduleNotifier {
   @override
-  AsyncValue<CalendarState> build() {
+  CalendarState build() {
     fetchData();
-    return const AsyncValue.loading();
+    return CalendarState(
+      events: const AsyncValue.loading(),
+      showDate: DateTime.now(),
+    );
   }
 
   Future<void> fetchData() async {
-    final id = ref.read(identityProvider);
-    if (id == null) {
-      throw Exception('ログインIDが取得できません');
+    try {
+      final id = ref.read(identityProvider);
+      if (id == null) {
+        throw Exception('ログインIDが取得できません');
+      }
+
+      // LCAMからのデータ取得
+      final lcamData = GetPCLcamData();
+      await lcamData.create(id.id, id.password);
+      ref
+          .read(lastLoginNotifierProvider.notifier)
+          .changeState(LastLogin.others);
+      final lcamEvents = await lcamData.getShedule();
+
+      // Moodleからのデータ取得
+      final moodleData = GetMoodleData();
+      await moodleData.create(id.id, id.password);
+      final moodleEvents = await moodleData.getAssignments();
+
+      // 2つのイベントマップをマージ
+      final mergedEvents = _mergeEventMaps(lcamEvents, moodleEvents);
+
+      state = state.copyWith(
+        events: AsyncValue.data(mergedEvents),
+      );
+    } catch (e, stack) {
+      state = state.copyWith(
+        events: AsyncValue.error(e, stack),
+      );
     }
-    final data = GetPCLcamData();
-    await data.create(id.id, id.password);
-    ref.read(lastLoginNotifierProvider.notifier).changeState(LastLogin.others);
-    final result = await data.getShedule();
-    state = AsyncValue.data(
-      CalendarState(events: result, forcusedDay: DateTime.now()),
-    );
   }
 
-  List<CalendarEvent> getEventsForSelectedDay(DateTime day) {
-    final normalizedDay = DateTime(day.year, day.month, day.day);
-    return state.when(
-      data: (data) => data.events[normalizedDay] ?? [],
-      loading: () => [],
-      error: (error, _) => [],
-    );
+  Map<DateTime, List<CalendarEvent>> _mergeEventMaps(
+    Map<DateTime, List<CalendarEvent>> map1,
+    Map<DateTime, List<CalendarEvent>> map2,
+  ) {
+    final result = <DateTime, List<CalendarEvent>>{};
+
+    // すべての日付のセットを取得
+    final allDates = {...map1.keys, ...map2.keys};
+
+    for (final date in allDates) {
+      result[date] = [
+        ...(map1[date] ?? []),
+        ...(map2[date] ?? []),
+      ];
+    }
+
+    return result;
   }
 
-  void changeFocusedDay(DateTime day) {
-    state = state.whenData(
-      (data) => data.copyWith(forcusedDay: day),
-    );
+  void changeShowDate(DateTime date) {
+    state = state.copyWith(showDate: date);
   }
 
-  void changeView(CalendarView view) {
-    state = state.whenData(
-      (data) => data.copyWith(view: view),
-    );
+  void changeViewType(CalendarViewType viewType) {
+    state = state.copyWith(viewType: viewType);
   }
 }
