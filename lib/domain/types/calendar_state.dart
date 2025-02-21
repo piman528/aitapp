@@ -1,26 +1,32 @@
 import 'package:aitapp/domain/types/calendar_event.dart';
-import 'package:syncfusion_flutter_calendar/calendar.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+enum CalendarViewType {
+  calendar,
+  schedule,
+  list,
+}
 
 class CalendarState {
   CalendarState({
     required this.events,
-    required this.forcusedDay,
-    this.view = CalendarView.month,
+    required this.showDate,
+    this.viewType = CalendarViewType.calendar,
   });
 
-  final Map<DateTime, List<CalendarEvent>> events;
-  final DateTime forcusedDay;
-  final CalendarView view;
+  final AsyncValue<Map<DateTime, List<CalendarEvent>>> events;
+  final DateTime showDate;
+  final CalendarViewType viewType;
 
   CalendarState copyWith({
-    Map<DateTime, List<CalendarEvent>>? events,
-    DateTime? forcusedDay,
-    CalendarView? view,
+    AsyncValue<Map<DateTime, List<CalendarEvent>>>? events,
+    DateTime? showDate,
+    CalendarViewType? viewType,
   }) {
     return CalendarState(
       events: events ?? this.events,
-      forcusedDay: forcusedDay ?? this.forcusedDay,
-      view: view ?? this.view,
+      showDate: showDate ?? this.showDate,
+      viewType: viewType ?? this.viewType,
     );
   }
 }
