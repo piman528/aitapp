@@ -22,7 +22,7 @@ class TimeTableScreen extends StatelessWidget {
                 color: Theme.of(context)
                     .colorScheme
                     .surfaceContainerHighest
-                    .withOpacity(0.4),
+                    .withValues(alpha: 0.6),
               ),
               child: TabBar(
                 labelColor:

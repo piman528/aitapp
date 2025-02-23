@@ -27,7 +27,7 @@ class VehicleTimeTable extends StatelessWidget {
               color: Theme.of(context)
                   .colorScheme
                   .surfaceContainerHighest
-                  .withOpacity(0.6),
+                  .withValues(alpha: 0.6),
             ),
             child: TabBar(
               labelColor: Theme.of(context).colorScheme.primary,
@@ -43,7 +43,10 @@ class VehicleTimeTable extends StatelessWidget {
               ),
               indicator: BoxDecoration(
                 borderRadius: BorderRadius.circular(6),
-                color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                color: Theme.of(context)
+                    .colorScheme
+                    .primary
+                    .withValues(alpha: 0.1),
               ),
               overlayColor: WidgetStateProperty.all(Colors.transparent),
               dividerColor: Colors.transparent,
