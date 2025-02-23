@@ -96,7 +96,9 @@ class _DayHeader extends StatelessWidget {
 
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 8),
-      color: isToday ? Theme.of(context).primaryColor.withOpacity(0.1) : null,
+      color: isToday
+          ? Theme.of(context).primaryColor.withValues(alpha: 0.1)
+          : null,
       child: Column(
         children: [
           Text(

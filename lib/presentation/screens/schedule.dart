@@ -25,64 +25,65 @@ class ScheduleScreen extends ConsumerWidget {
       children: [
         const ScheduleAppbar(),
         Expanded(
-            child: Row(
-          children: [
-            if (scheduletype == CalendarViewType.calendar) ...{
-              Expanded(
-                child: Column(
-                  children: [
-                    const Row(
-                      children: [
-                        _WeekdayLabel('日'),
-                        _WeekdayLabel('月'),
-                        _WeekdayLabel('火'),
-                        _WeekdayLabel('水'),
-                        _WeekdayLabel('木'),
-                        _WeekdayLabel('金'),
-                        _WeekdayLabel('土'),
-                      ],
-                    ),
-                    Expanded(
-                      child: CustomCalendar(
-                        initialShowDate:
-                            ref.read(scheduleNotifierProvider).showDate,
-                        events: scheduleState.when(
-                          data: (events) => events,
-                          loading: () => const {},
-                          error: (e, stack) => const {},
-                        ),
-                        onDateChanged: notifier.changeShowDate,
+          child: Row(
+            children: [
+              if (scheduletype == CalendarViewType.calendar) ...{
+                Expanded(
+                  child: Column(
+                    children: [
+                      const Row(
+                        children: [
+                          _WeekdayLabel('日'),
+                          _WeekdayLabel('月'),
+                          _WeekdayLabel('火'),
+                          _WeekdayLabel('水'),
+                          _WeekdayLabel('木'),
+                          _WeekdayLabel('金'),
+                          _WeekdayLabel('土'),
+                        ],
                       ),
+                      Expanded(
+                        child: CustomCalendar(
+                          initialShowDate:
+                              ref.read(scheduleNotifierProvider).showDate,
+                          events: scheduleState.when(
+                            data: (events) => events,
+                            loading: () => const {},
+                            error: (e, stack) => const {},
+                          ),
+                          onDateChanged: notifier.changeShowDate,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              },
+              if (scheduletype == CalendarViewType.schedule) ...{
+                Expanded(
+                  child: TwoDaySchedule(
+                    selectedDate: selectedDate,
+                    events: scheduleState.when(
+                      data: (events) => events,
+                      loading: () => const {},
+                      error: (e, stack) => const {},
                     ),
-                  ],
-                ),
-              ),
-            },
-            if (scheduletype == CalendarViewType.schedule) ...{
-              Expanded(
-                child: TwoDaySchedule(
-                  selectedDate: selectedDate,
-                  events: scheduleState.when(
-                    data: (events) => events,
-                    loading: () => const {},
-                    error: (e, stack) => const {},
                   ),
                 ),
-              ),
-            },
-            if (scheduletype == CalendarViewType.list) ...{
-              Expanded(
-                child: EventListView(
-                  events: scheduleState.when(
-                    data: (events) => events,
-                    loading: () => const {},
-                    error: (e, stack) => const {},
+              },
+              if (scheduletype == CalendarViewType.list) ...{
+                Expanded(
+                  child: EventListView(
+                    events: scheduleState.when(
+                      data: (events) => events,
+                      loading: () => const {},
+                      error: (e, stack) => const {},
+                    ),
                   ),
                 ),
-              ),
-            },
-          ],
-        )),
+              },
+            ],
+          ),
+        ),
       ],
     );
   }

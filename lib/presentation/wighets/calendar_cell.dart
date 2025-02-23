@@ -40,7 +40,7 @@ class CalendarCell extends ConsumerWidget {
             Container(
               padding: const EdgeInsets.symmetric(vertical: 2),
               color: isToday
-                  ? Theme.of(context).primaryColor.withOpacity(0.1)
+                  ? Theme.of(context).primaryColor.withValues(alpha: 0.1)
                   : null,
               child: Text(
                 date.day.toString(),
@@ -62,7 +62,8 @@ class CalendarCell extends ConsumerWidget {
                     margin:
                         const EdgeInsets.symmetric(vertical: 2, horizontal: 1),
                     decoration: BoxDecoration(
-                      color: Theme.of(context).primaryColor.withOpacity(0.1),
+                      color:
+                          Theme.of(context).primaryColor.withValues(alpha: 0.1),
                       borderRadius: const BorderRadius.all(Radius.circular(4)),
                     ),
                     child: Text(
