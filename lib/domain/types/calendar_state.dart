@@ -3,8 +3,8 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 enum CalendarViewType {
   calendar,
-  schedule,
   list,
+  timeline,
 }
 
 class CalendarState {

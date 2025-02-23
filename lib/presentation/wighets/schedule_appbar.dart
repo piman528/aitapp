@@ -43,7 +43,7 @@ class ScheduleAppbar extends ConsumerWidget {
                     icon: Icon(Icons.calendar_month, size: 20),
                   ),
                   ButtonSegment(
-                    value: CalendarViewType.schedule,
+                    value: CalendarViewType.timeline,
                     icon: Icon(Icons.calendar_view_week, size: 20),
                   ),
                   ButtonSegment(

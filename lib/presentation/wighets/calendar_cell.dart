@@ -1,6 +1,8 @@
 import 'package:aitapp/application/state/calendar_selected_date/selected_date.dart';
+import 'package:aitapp/application/state/schedule/schedule.dart';
 import 'package:aitapp/application/state/selected_date_Logic_family/selected_date.dart';
 import 'package:aitapp/domain/types/calendar_event.dart';
+import 'package:aitapp/domain/types/calendar_state.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -20,8 +22,10 @@ class CalendarCell extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final isSelected = ref.watch(selectedFamilyProvider(date));
     final notifier = ref.read(selectedDateProvider.notifier);
+    final scheduleNotifier = ref.read(scheduleNotifierProvider.notifier);
     return InkWell(
       onTap: () {
+        scheduleNotifier.changeViewType(CalendarViewType.timeline);
         notifier.select(date);
       },
       child: DecoratedBox(

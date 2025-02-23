@@ -1,10 +1,10 @@
-import 'package:aitapp/application/state/calendar_selected_date/selected_date.dart';
+// im÷åport 'package:aitapp/application/state/calendar_selected_date/selected_date.dart';
 import 'package:aitapp/application/state/schedule/schedule.dart';
 import 'package:aitapp/domain/types/calendar_state.dart';
 import 'package:aitapp/presentation/wighets/custom_calendar.dart';
 import 'package:aitapp/presentation/wighets/event_list_view.dart';
 import 'package:aitapp/presentation/wighets/schedule_appbar.dart';
-import 'package:aitapp/presentation/wighets/two_day_schedule.dart';
+import 'package:aitapp/presentation/wighets/timeline_view/swipeable_timeline_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -19,7 +19,6 @@ class ScheduleScreen extends ConsumerWidget {
     final scheduletype =
         ref.watch(scheduleNotifierProvider.select((state) => state.viewType));
     final notifier = ref.read(scheduleNotifierProvider.notifier);
-    final selectedDate = ref.watch(selectedDateProvider);
 
     return Column(
       children: [
@@ -58,10 +57,9 @@ class ScheduleScreen extends ConsumerWidget {
                   ),
                 ),
               },
-              if (scheduletype == CalendarViewType.schedule) ...{
+              if (scheduletype == CalendarViewType.list) ...{
                 Expanded(
-                  child: TwoDaySchedule(
-                    selectedDate: selectedDate,
+                  child: EventListView(
                     events: scheduleState.when(
                       data: (events) => events,
                       loading: () => const {},
@@ -70,9 +68,9 @@ class ScheduleScreen extends ConsumerWidget {
                   ),
                 ),
               },
-              if (scheduletype == CalendarViewType.list) ...{
+              if (scheduletype == CalendarViewType.timeline) ...{
                 Expanded(
-                  child: EventListView(
+                  child: SwipeableTimelineView(
                     events: scheduleState.when(
                       data: (events) => events,
                       loading: () => const {},
