@@ -87,7 +87,7 @@ class TimTableCard extends HookWidget {
                         const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                     decoration: BoxDecoration(
                       color: remainTime.inMinutes < 3
-                          ? Colors.red.withOpacity(0.1)
+                          ? Colors.red.withValues(alpha: 0.1)
                           : Theme.of(context).colorScheme.primaryContainer,
                       borderRadius: BorderRadius.circular(16),
                     ),

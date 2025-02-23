@@ -66,7 +66,7 @@ class ClassGridContainer extends StatelessWidget {
                       color: Theme.of(context)
                           .colorScheme
                           .primary
-                          .withOpacity(0.6),
+                          .withValues(alpha: 0.6),
                     ),
                     child: Text(
                       clas!.classRoom.alphanumericToHalfLength(),

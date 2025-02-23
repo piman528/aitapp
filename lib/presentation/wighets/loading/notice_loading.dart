@@ -20,7 +20,7 @@ class NoticeLoadingWidget extends StatelessWidget {
             baseColor: Theme.of(context)
                 .colorScheme
                 .surfaceContainerHighest
-                .withOpacity(0.5),
+                .withValues(alpha: 0.5),
             highlightColor: Theme.of(context).colorScheme.surface,
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 16),
@@ -39,7 +39,7 @@ class NoticeLoadingWidget extends StatelessWidget {
             baseColor: Theme.of(context)
                 .colorScheme
                 .surfaceContainerHighest
-                .withOpacity(0.5),
+                .withValues(alpha: 0.5),
             highlightColor: Theme.of(context).colorScheme.surface,
             child: Column(
               children: List.generate(
