@@ -19,7 +19,7 @@ class TimetableLoadingWidget extends ConsumerWidget {
             baseColor: Theme.of(context)
                 .colorScheme
                 .surfaceContainerHighest
-                .withOpacity(0.5),
+                .withValues(alpha: 0.5),
             highlightColor: Theme.of(context).colorScheme.surface,
             child: ListView(
               children: [
