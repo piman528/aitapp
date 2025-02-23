@@ -1,0 +1,841 @@
+{
+  "buildings": [
+    {
+      "id": "1",
+      "name": "アーチェリー場"
+    },
+    {
+      "id": "2",
+      "name": "14号館",
+      "rooms": {
+        "2F": [
+          {
+            "roomId": "1",
+            "roomName": "201"
+          },
+          {
+            "roomId": "2",
+            "roomName": "202"
+          }
+        ],
+        "3F": [
+          {
+            "roomId": "3",
+            "roomName": "301"
+          },
+          {
+            "roomId": "4",
+            "roomName": "302"
+          }
+        ]
+      }
+    },
+    {
+      "id": "3",
+      "name": "4号館別館",
+      "rooms": {
+        "1F": [
+          {
+            "roomId": "5",
+            "roomName": "情報科学科事務室"
+          },
+          {
+            "roomId": "6",
+            "roomName": "情報科学部事務室"
+          }
+        ]
+      }
+    },
+    {
+      "id": "4",
+      "name": "情報教育センター",
+      "rooms": {
+        "2F": [
+          {
+            "roomId": "7",
+            "roomName": "情報実習室A"
+          }
+        ],
+        "3F": [
+          {
+            "roomId": "8",
+            "roomName": "情報実習室B"
+          }
+        ]
+      }
+    },
+    {
+      "id": "5",
+      "name": "11号館",
+      "rooms": {
+        "1F": [
+          {
+            "roomId": "9",
+            "roomName": "11-101"
+          },
+          {
+            "roomId": "10",
+            "roomName": "11-201"
+          },
+          {
+            "roomId": "11",
+            "roomName": "11-301"
+          },
+          {
+            "roomId": "12",
+            "roomName": "11-401"
+          }
+        ]
+      }
+    },
+    {
+      "id": "6",
+      "name": "12号館",
+      "rooms": {
+        "B1F": [
+          {
+            "roomId": "13",
+            "roomName": "みらい工房"
+          }
+        ],
+        "1F": [
+          {
+            "roomId": "14",
+            "roomName": "工学研究科"
+          },
+          {
+            "roomId": "15",
+            "roomName": "工学部事務室"
+          }
+        ],
+        "2F": [
+          {
+            "roomId": "16",
+            "roomName": "12-201"
+          },
+          {
+            "roomId": "17",
+            "roomName": "12-202"
+          }
+        ],
+        "3F": [
+          {
+            "roomId": "18",
+            "roomName": "12-303"
+          }
+        ]
+      }
+    },
+    {
+      "id": "7",
+      "name": "8号館",
+      "rooms": {
+        "1F": [
+          {
+            "roomId": "19",
+            "roomName": "8-102"
+          },
+          {
+            "roomId": "20",
+            "roomName": "8-104"
+          }
+        ],
+        "2F": [
+          {
+            "roomId": "21",
+            "roomName": "8-201"
+          },
+          {
+            "roomId": "22",
+            "roomName": "8-203"
+          },
+          {
+            "roomId": "23",
+            "roomName": "8-205"
+          }
+        ],
+        "3F": [
+          {
+            "roomId": "24",
+            "roomName": "8-303"
+          },
+          {
+            "roomId": "25",
+            "roomName": "8-304"
+          }
+        ]
+      }
+    },
+    {
+      "id": "8",
+      "name": "9号館",
+      "rooms": {
+        "2F": [
+          {
+            "roomId": "26",
+            "roomName": "G3201"
+          },
+          {
+            "roomId": "27",
+            "roomName": "G3202"
+          },
+          {
+            "roomId": "28",
+            "roomName": "G3203"
+          }
+        ],
+        "3F": [
+          {
+            "roomId": "29",
+            "roomName": "G3301"
+          },
+          {
+            "roomId": "30",
+            "roomName": "G3302"
+          },
+          {
+            "roomId": "31",
+            "roomName": "G3303"
+          }
+        ],
+        "4F": [
+          {
+            "roomId": "32",
+            "roomName": "G3401"
+          },
+          {
+            "roomId": "33",
+            "roomName": "G3402"
+          },
+          {
+            "roomId": "34",
+            "roomName": "G3403"
+          }
+        ],
+        "5F": [
+          {
+            "roomId": "35",
+            "roomName": "G3501"
+          },
+          {
+            "roomId": "36",
+            "roomName": "G3502"
+          },
+          {
+            "roomId": "37",
+            "roomName": "G3503"
+          },
+          {
+            "roomId": "38",
+            "roomName": "G3504"
+          }
+        ]
+      }
+    },
+    {
+      "id": "9",
+      "name": "計算センター",
+      "rooms": {
+        "1F": [
+          {
+            "roomId": "39",
+            "roomName": "事務室"
+          },
+          {
+            "roomId": "40",
+            "roomName": "セー講義室"
+          }
+        ],
+        "3F": [
+          {
+            "roomId": "41",
+            "roomName": "マイコン室1"
+          },
+          {
+            "roomId": "42",
+            "roomName": "マイコン室2"
+          },
+          {
+            "roomId": "43",
+            "roomName": "セー実習室1"
+          }
+        ],
+        "4F": [
+          {
+            "roomId": "44",
+            "roomName": "セー実習室2"
+          }
+        ]
+      }
+    },
+    {
+      "id": "10",
+      "name": "4号館",
+      "rooms": {
+        "1F": [
+          {
+            "roomId": "45",
+            "roomName": "売店"
+          }
+        ],
+        "4F": [
+          {
+            "roomId": "46",
+            "roomName": "K401"
+          },
+          {
+            "roomId": "47",
+            "roomName": "K404"
+          }
+        ]
+      }
+    },
+    {
+      "id": "11",
+      "name": "5号館講義実験棟",
+      "rooms": {
+        "1F": [
+          {
+            "roomId": "48",
+            "roomName": "機器実験室"
+          },
+          {
+            "roomId": "49",
+            "roomName": "計測実験室"
+          }
+        ],
+        "2F": [
+          {
+            "roomId": "50",
+            "roomName": "ER221"
+          },
+          {
+            "roomId": "51",
+            "roomName": "ER222"
+          }
+        ],
+        "3F": [
+          {
+            "roomId": "52",
+            "roomName": "ER321"
+          },
+          {
+            "roomId": "53",
+            "roomName": "ER322"
+          },
+          {
+            "roomId": "54",
+            "roomName": "ER323"
+          },
+          {
+            "roomId": "55",
+            "roomName": "ER324"
+          }
+        ]
+      }
+    },
+    {
+      "id": "12",
+      "name": "図書館"
+    },
+    {
+      "id": "13",
+      "name": "土木・建築実験棟"
+    },
+    {
+      "id": "14",
+      "name": "セントラルテラス"
+    },
+    {
+      "id": "15",
+      "name": "AITプラザ",
+      "rooms": {
+        "1F": [
+          {
+            "roomId": "56",
+            "roomName": "スガキヤ"
+          },
+          {
+            "roomId": "57",
+            "roomName": "すき家"
+          }
+        ],
+        "2F": [
+          {
+            "roomId": "58",
+            "roomName": "セブンイレブン"
+          },
+          {
+            "roomId": "59",
+            "roomName": "紀伊國屋書店"
+          },
+          {
+            "roomId": "60",
+            "roomName": "Com・Com"
+          }
+        ]
+      }
+    },
+    {
+      "id": "16",
+      "name": "2号館",
+      "rooms": {
+        "B2F": [
+          {
+            "roomId": "61",
+            "roomName": "Gギャラリー"
+          }
+        ],
+        "B1F": [
+          {
+            "roomId": "62",
+            "roomName": "B101"
+          }
+        ],
+        "2F": [
+          {
+            "roomId": "63",
+            "roomName": "電気学科事務室"
+          },
+          {
+            "roomId": "64",
+            "roomName": "建築学科事務室"
+          }
+        ]
+      }
+    },
+    {
+      "id": "17",
+      "name": "10号館",
+      "rooms": {
+        "1F": [
+          {
+            "roomId": "65",
+            "roomName": "基礎教育センター事務室"
+          },
+          {
+            "roomId": "66",
+            "roomName": "学習支援センター"
+          }
+        ],
+        "2F": [
+          {
+            "roomId": "67",
+            "roomName": "G2208"
+          },
+          {
+            "roomId": "68",
+            "roomName": "G2209"
+          }
+        ],
+        "3F": [
+          {
+            "roomId": "69",
+            "roomName": "G2309"
+          },
+          {
+            "roomId": "70",
+            "roomName": "G2310"
+          },
+          {
+            "roomId": "71",
+            "roomName": "G2311"
+          }
+        ],
+        "4F": [
+          {
+            "roomId": "72",
+            "roomName": "G2307"
+          },
+          {
+            "roomId": "73",
+            "roomName": "G2308"
+          },
+          {
+            "roomId": "74",
+            "roomName": "G2309"
+          }
+        ],
+        "5F": [
+          {
+            "roomId": "75",
+            "roomName": "G2305"
+          },
+          {
+            "roomId": "76",
+            "roomName": "G2306"
+          },
+          {
+            "roomId": "77",
+            "roomName": "G2307"
+          }
+        ]
+      }
+    },
+    {
+      "id": "18",
+      "name": "10号館大講義室",
+      "rooms": {
+        "1F": [
+          {
+            "roomId": "78",
+            "roomName": "G2110"
+          }
+        ],
+        "2F": [
+          {
+            "roomId": "79",
+            "roomName": "G2210"
+          }
+        ]
+      }
+    },
+    {
+      "id": "19",
+      "name": "愛和会館",
+      "rooms": {
+        "1F": [
+          {
+            "roomId": "80",
+            "roomName": "愛和食堂"
+          },
+          {
+            "roomId": "81",
+            "roomName": "理容室"
+          },
+          {
+            "roomId": "82",
+            "roomName": "ゆうちょ銀行"
+          },
+          {
+            "roomId": "83",
+            "roomName": "三菱UFJ銀行"
+          }
+        ]
+      }
+    },
+    {
+      "id": "20",
+      "name": "1号館",
+      "rooms": {
+        "1F": [
+          {
+            "roomId": "84",
+            "roomName": "アメリカフェ"
+          }
+        ],
+        "2F": [
+          {
+            "roomId": "85",
+            "roomName": "キャリアセンター"
+          },
+          {
+            "roomId": "86",
+            "roomName": "メディアセンター"
+          }
+        ],
+        "3F": [
+          {
+            "roomId": "87",
+            "roomName": "1-301"
+          },
+          {
+            "roomId": "88",
+            "roomName": "1-303"
+          }
+        ],
+        "4F": [
+          {
+            "roomId": "89",
+            "roomName": "1-401"
+          }
+        ],
+        "5F": [
+          {
+            "roomId": "90",
+            "roomName": "1-501"
+          },
+          {
+            "roomId": "91",
+            "roomName": "1-502"
+          }
+        ],
+        "6F": [
+          {
+            "roomId": "92",
+            "roomName": "1-601"
+          },
+          {
+            "roomId": "93",
+            "roomName": "1-602"
+          }
+        ],
+        "7F": [
+          {
+            "roomId": "94",
+            "roomName": "1-701"
+          },
+          {
+            "roomId": "95",
+            "roomName": "1-702"
+          }
+        ]
+      }
+    },
+    {
+      "id": "21",
+      "name": "6号館",
+      "rooms": {
+        "1F": [
+          {
+            "roomId": "96",
+            "roomName": "機械学科事務室"
+          }
+        ]
+      }
+    },
+    {
+      "id": "22",
+      "name": "鉀徳館"
+    },
+    {
+      "id": "23",
+      "name": "第5クラブハウス"
+    },
+    {
+      "id": "24",
+      "name": "総合運動場管理棟"
+    },
+    {
+      "id": "25",
+      "name": "地域防災研究センター"
+    },
+    {
+      "id": "26",
+      "name": "バイオ環境科学実験棟"
+    },
+    {
+      "id": "27",
+      "name": "13号館",
+      "rooms": {
+        "1F": [
+          {
+            "roomId": "97",
+            "roomName": "13-101"
+          }
+        ],
+        "2F": [
+          {
+            "roomId": "98",
+            "roomName": "13-201"
+          }
+        ],
+        "3F": [
+          {
+            "roomId": "99",
+            "roomName": "13-301"
+          }
+        ],
+        "4F": [
+          {
+            "roomId": "100",
+            "roomName": "13-401"
+          }
+        ]
+      }
+    },
+    {
+      "id": "28",
+      "name": "1号館別館",
+      "rooms": {
+        "1F": []
+      }
+    },
+    {
+      "id": "29",
+      "name": "振動実験棟"
+    },
+    {
+      "id": "30",
+      "name": "第4クラブハウス"
+    },
+    {
+      "id": "31",
+      "name": "小体育館"
+    },
+    {
+      "id": "32",
+      "name": "3号館別館",
+      "rooms": {
+        "1F": [
+          {
+            "roomId": "101",
+            "roomName": "C2101"
+          }
+        ]
+      }
+    },
+    {
+      "id": "33",
+      "name": "第2本部棟",
+      "rooms": {
+        "2F": [
+          {
+            "roomId": "102",
+            "roomName": "学生サービスグループ"
+          },
+          {
+            "roomId": "103",
+            "roomName": "教務グループ"
+          },
+          {
+            "roomId": "104",
+            "roomName": "国際交流グループ"
+          },
+          {
+            "roomId": "105",
+            "roomName": "クラブ活動支援グループ"
+          }
+        ],
+        "3F": [
+          {
+            "roomId": "106",
+            "roomName": "保健室"
+          }
+        ],
+        "4F": [
+          {
+            "roomId": "107",
+            "roomName": "学生相談室"
+          }
+        ]
+      }
+    },
+    {
+      "id": "34",
+      "name": "総合技術研究所"
+    },
+    {
+      "id": "35",
+      "name": "3号館",
+      "rooms": {
+        "1F": [
+          {
+            "roomId": "108",
+            "roomName": "応用科学科事務室"
+          }
+        ],
+        "2F": [
+          {
+            "roomId": "109",
+            "roomName": "C1215"
+          }
+        ],
+        "3F": [
+          {
+            "roomId": "110",
+            "roomName": "C1315"
+          }
+        ],
+        "4F": [
+          {
+            "roomId": "111",
+            "roomName": "C1401"
+          },
+          {
+            "roomId": "112",
+            "roomName": "C1411"
+          }
+        ]
+      }
+    },
+    {
+      "id": "36",
+      "name": "第1本部棟"
+    },
+    {
+      "id": "37",
+      "name": "本部棟",
+      "rooms": {
+        "2F": [
+          {
+            "roomId": "113",
+            "roomName": "経理会計課"
+          }
+        ]
+      }
+    },
+    {
+      "id": "38",
+      "name": "7号館",
+      "rooms": {
+        "2F": [
+          {
+            "roomId": "114",
+            "roomName": "土木工学科事務室"
+          },
+          {
+            "roomId": "115",
+            "roomName": "7-201"
+          },
+          {
+            "roomId": "116",
+            "roomName": "7-202"
+          },
+          {
+            "roomId": "117",
+            "roomName": "7-203"
+          },
+          {
+            "roomId": "118",
+            "roomName": "7-205"
+          },
+          {
+            "roomId": "119",
+            "roomName": "7-206"
+          }
+        ]
+      }
+    },
+    {
+      "id": "39",
+      "name": "テニスコート"
+    },
+    {
+      "id": "40",
+      "name": "セントラル広場"
+    },
+    {
+      "id": "41",
+      "name": "セントラル広場"
+    },
+    {
+      "id": "42",
+      "name": "球技場"
+    },
+    {
+      "id": "43",
+      "name": "陸上競技場"
+    },
+    {
+      "id": "44",
+      "name": "サッカー場"
+    },
+    {
+      "id": "45",
+      "name": "野球場"
+    },
+    {
+      "id": "46",
+      "name": "第2駐車場"
+    },
+    {
+      "id": "47",
+      "name": "第1駐車場"
+    },
+    {
+      "id": "48",
+      "name": "第1駐車場"
+    }
+  ]
+}

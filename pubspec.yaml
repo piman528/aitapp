@@ -60,6 +60,7 @@ flutter:
     - assets/pdfs/
     - assets/html/
     - assets/images/
+    - assets/building.json
 
 flutter_icons:       
   android: true

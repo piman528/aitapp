@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:aitapp/application/config/const.dart';
 import 'package:aitapp/domain/types/map_shape.dart';
 import 'package:aitapp/utils/convert_css_color.dart';
 import 'package:flutter/services.dart';
@@ -35,9 +34,6 @@ class SVGLoader {
           id: id,
         );
         loadShapes.add(mapShape);
-        if (id != 0) {
-          buildings[id - 1].mapShape = mapShape;
-        }
       }
     }
     return loadShapes;
