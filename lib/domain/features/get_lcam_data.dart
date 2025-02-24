@@ -179,7 +179,7 @@ class GetPCLcamData {
     final result = <DateTime, List<CalendarEvent>>{};
     var body = '';
 
-    for (var i = 0; i < 10; i++) {
+    for (var i = 0; i < 25; i++) {
       body = await reload(cookie: cookies, token: token!);
       token = LcamParse().lCamStrutsToken(body: body);
       final schedules = parse.schedule(body);

@@ -9,7 +9,7 @@ class CalendarDate extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedDate = ref.watch(selectedDateProvider);
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      padding: const EdgeInsets.symmetric(vertical: 8),
       child: Text(
         '${selectedDate.year}年${selectedDate.month}月${selectedDate.day}日',
         style: const TextStyle(

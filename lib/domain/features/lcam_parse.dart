@@ -288,7 +288,7 @@ class LcamParse {
                 CalendarEvent(
                   title: eventText,
                   startTime: dates[i],
-                  endTime: dates[i].add(const Duration(hours: 8)),
+                  endTime: dates[i].add(const Duration(hours: 23, minutes: 59)),
                 ),
               );
             }

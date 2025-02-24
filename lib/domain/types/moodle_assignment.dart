@@ -26,7 +26,7 @@ class MoodleAssignment {
       status: SubmissionStatus.notSubmitted, // デフォルトは未提出
       title: '【$courseName】$name',
       // 締め切りの24時間前を開始時刻とする
-      startTime: dueDate.subtract(const Duration(hours: 24)),
+      startTime: dueDate,
       endTime: dueDate,
     );
   }
