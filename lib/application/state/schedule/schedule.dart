@@ -5,6 +5,7 @@ import 'package:aitapp/domain/features/get_moodle_data.dart';
 import 'package:aitapp/domain/types/calendar_event.dart';
 import 'package:aitapp/domain/types/calendar_state.dart';
 import 'package:aitapp/domain/types/last_login.dart';
+import 'package:aitapp/infrastructure/database/event_database.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'schedule.g.dart';
@@ -13,19 +14,33 @@ part 'schedule.g.dart';
 class ScheduleNotifier extends _$ScheduleNotifier {
   @override
   CalendarState build() {
-    fetchData();
+    checkAndFetchData();
     return CalendarState(
       events: const AsyncValue.loading(),
       showDate: DateTime.now(),
     );
   }
 
+  Future<void> checkAndFetchData() async {
+    final db = EventDatabase.instance;
+    if (!await db.hasEvents()) {
+      await fetchData();
+    } else {
+      // データベースからイベントを取得しつつ、Moodleのイベントも常に最新を取得
+      await fetchMoodleData();
+    }
+  }
+
+  // データを取得してデータベースに保存するメソッド
+  // 既存データは削除せず、新しい予定のみ追加する
   Future<void> fetchData() async {
     try {
       final id = ref.read(identityProvider);
       if (id == null) {
         throw Exception('ログインIDが取得できません');
       }
+
+      final db = EventDatabase.instance;
 
       // LCAMからのデータ取得
       final lcamData = GetPCLcamData();
@@ -40,11 +55,29 @@ class ScheduleNotifier extends _$ScheduleNotifier {
       await moodleData.create(id.id, id.password);
       final moodleEvents = await moodleData.getAssignments();
 
-      // 2つのイベントマップをマージ
-      final mergedEvents = _mergeEventMaps(lcamEvents, moodleEvents);
+      // データベースに保存（重複は自動的にスキップされる）
+      // イベントに同じタイトル・開始時間・終了時間のものがあれば挿入しない
+      // 並行処理で保存を高速化
+      await Future.wait([
+        // LCAMのイベントを保存
+        Future.wait(
+          lcamEvents.values
+              .expand((events) => events)
+              .map(db.insertCalendarEvent),
+        ),
+        // Moodleのイベントを保存
+        Future.wait(
+          moodleEvents.values
+              .expand((events) => events)
+              .map(db.insertCalendarEvent),
+        ),
+      ]);
+
+      // データベースから最新のイベントを取得
+      final dbEvents = await db.getAllEvents();
 
       state = state.copyWith(
-        events: AsyncValue.data(mergedEvents),
+        events: AsyncValue.data(dbEvents),
       );
     } catch (e, stack) {
       state = state.copyWith(
@@ -53,23 +86,38 @@ class ScheduleNotifier extends _$ScheduleNotifier {
     }
   }
 
-  Map<DateTime, List<CalendarEvent>> _mergeEventMaps(
-    Map<DateTime, List<CalendarEvent>> map1,
-    Map<DateTime, List<CalendarEvent>> map2,
-  ) {
-    final result = <DateTime, List<CalendarEvent>>{};
+  // データベースからイベントを取得し、さらにMoodleから最新のイベントも取得する
+  Future<void> fetchMoodleData() async {
+    try {
+      final id = ref.read(identityProvider);
+      if (id == null) {
+        throw Exception('ログインIDが取得できません');
+      }
 
-    // すべての日付のセットを取得
-    final allDates = {...map1.keys, ...map2.keys};
+      // データベースから既存のイベントを取得
+      final db = EventDatabase.instance;
+      final dbEvents = await db.getAllEvents();
 
-    for (final date in allDates) {
-      result[date] = [
-        ...(map1[date] ?? []),
-        ...(map2[date] ?? []),
-      ];
+      // Moodleから最新のイベントを取得
+      final moodleData = GetMoodleData();
+      await moodleData.create(id.id, id.password);
+      final moodleEvents = await moodleData.getAssignments();
+
+      // Moodleのイベントをデータベースに保存（更新用）
+      await Future.wait(
+        moodleEvents.values
+            .expand((events) => events)
+            .map(db.insertCalendarEvent),
+      );
+
+      state = state.copyWith(
+        events: AsyncValue.data(dbEvents),
+      );
+    } catch (e, stack) {
+      state = state.copyWith(
+        events: AsyncValue.error(e, stack),
+      );
     }
-
-    return result;
   }
 
   void changeShowDate(DateTime date) {

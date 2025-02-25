@@ -1,4 +1,6 @@
+import 'package:aitapp/application/state/schedule/schedule.dart';
 import 'package:aitapp/application/state/setting_int_provider.dart';
+import 'package:aitapp/infrastructure/database/event_database.dart';
 import 'package:aitapp/infrastructure/database/timetable_database.dart';
 import 'package:aitapp/presentation/screens/license.dart';
 import 'package:flutter/material.dart';
@@ -70,6 +72,38 @@ class Settings extends ConsumerWidget {
             ),
           ),
           ListTile(
+            leading: const Icon(Icons.refresh),
+            title: const Text('スケジュールの更新'),
+            onTap: () {
+              showDialog<void>(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    title: const Text('スケジュールの更新'),
+                    content: const Text('サーバーからスケジュールを取得しますか？'),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: const Text('キャンセル'),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          ref
+                              .read(scheduleNotifierProvider.notifier)
+                              .fetchData();
+                          Navigator.of(context).pop();
+                        },
+                        child: const Text('更新'),
+                      ),
+                    ],
+                  );
+                },
+              );
+            },
+          ),
+          ListTile(
             leading: const Icon(Icons.delete),
             title: const Text('時間割データベースの削除'),
             onTap: () {
@@ -89,6 +123,37 @@ class Settings extends ConsumerWidget {
                       TextButton(
                         onPressed: () {
                           TimetableDatabase.instance.deleteTimetable();
+                          Navigator.of(context).pop();
+                        },
+                        child: const Text('削除'),
+                      ),
+                    ],
+                  );
+                },
+              );
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.delete_forever),
+            title: const Text('予定データベースの削除'),
+            onTap: () {
+              showDialog<void>(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    title: const Text('予定データベースの削除'),
+                    content: const Text(
+                        '予定データベースを削除しますか？\n※サーバーから再取得するまで予定は表示されません'),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: const Text('キャンセル'),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          EventDatabase.instance.deleteAllEvents();
                           Navigator.of(context).pop();
                         },
                         child: const Text('削除'),

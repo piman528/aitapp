@@ -51,7 +51,7 @@ Future<String> getSchedule({required Cookies cookie}) async {
     ..addAll(contentTypeHeader);
 
   final data = {
-    '_mode': '3',
+    '_mode': '5',
     'EXCLUDE_SET': '',
   };
 
