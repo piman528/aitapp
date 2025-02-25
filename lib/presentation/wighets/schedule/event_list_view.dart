@@ -1,9 +1,13 @@
+import 'package:aitapp/application/state/schedule/schedule.dart';
 import 'package:aitapp/domain/types/assignment_event.dart';
 import 'package:aitapp/domain/types/calendar_event.dart';
 import 'package:aitapp/domain/types/event.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
-class EventListView extends StatelessWidget {
+class EventListView extends HookConsumerWidget {
   const EventListView({
     super.key,
     required this.events,
@@ -12,34 +16,92 @@ class EventListView extends StatelessWidget {
   final Map<DateTime, List<CalendarEvent>> events;
 
   @override
-  Widget build(BuildContext context) {
-    final now = DateTime.now();
+  Widget build(BuildContext context, WidgetRef ref) {
+    final scrollController = useMemoized(ItemScrollController.new);
+    final itemPositionsListener = useMemoized(ItemPositionsListener.create);
+
     final allEvents = <CalendarEvent>[];
 
     // すべてのイベントを1つのリストにまとめる
-    for (final dateEvents in events.values) {
-      allEvents.addAll(dateEvents);
-    }
+    events.values.forEach(allEvents.addAll);
 
-    // これからのイベントのみをフィルタリングし、日付でソート
-    final upcomingEvents = allEvents
-        .where((event) => event.endTime.isAfter(now))
-        .toList()
+    // すべてのイベントを日付でソート
+    final sortedEvents = allEvents.toList()
       ..sort((a, b) => a.startTime.compareTo(b.startTime));
 
-    if (upcomingEvents.isEmpty) {
+    if (sortedEvents.isEmpty) {
       return const Center(
-        child: Text('予定されているイベントはありません'),
+        child: Text('イベントはありません'),
       );
     }
 
-    return ListView.builder(
-      itemCount: upcomingEvents.length,
+    // 今日の日付のイベントのインデックスを計算
+    final todayIndex = useMemoized(
+      () {
+        final now = DateTime.now();
+        return sortedEvents
+            .indexWhere((event) => _isSameDay(event.startTime, now));
+      },
+      [sortedEvents],
+    );
+
+    // コンポーネントがマウントされた後に今日の位置までスクロール
+    useEffect(
+      () {
+        if (todayIndex != -1) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            scrollController.jumpTo(index: todayIndex);
+          });
+        }
+        return null;
+      },
+      [],
+    );
+
+    // スクロール位置の変更を監視
+    useEffect(
+      () {
+        void listener() {
+          final positions = itemPositionsListener.itemPositions.value;
+          if (positions.isEmpty) {
+            return;
+          }
+
+          // 画面の中央に最も近いアイテムのインデックスを取得
+          final middleIndex = positions
+              .where(
+                (pos) => pos.itemLeadingEdge < 1 && pos.itemTrailingEdge > 0,
+              )
+              .map((pos) => pos.index)
+              .reduce(
+                (min, index) => (index - positions.length ~/ 2).abs() <
+                        (min - positions.length ~/ 2).abs()
+                    ? index
+                    : min,
+              );
+
+          final event = sortedEvents[middleIndex];
+          ref
+              .read(scheduleNotifierProvider.notifier)
+              .changeShowDate(event.startTime);
+        }
+
+        itemPositionsListener.itemPositions.addListener(listener);
+        return () =>
+            itemPositionsListener.itemPositions.removeListener(listener);
+      },
+      [sortedEvents],
+    );
+
+    return ScrollablePositionedList.builder(
+      itemScrollController: scrollController,
+      itemPositionsListener: itemPositionsListener,
+      itemCount: sortedEvents.length,
       itemBuilder: (context, index) {
-        final event = upcomingEvents[index];
+        final event = sortedEvents[index];
         final isFirstOfDay = index == 0 ||
             !_isSameDay(
-              upcomingEvents[index - 1].startTime,
+              sortedEvents[index - 1].startTime,
               event.startTime,
             );
 
@@ -115,8 +177,9 @@ class _EventListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final timeString =
-        '${_formatTime(event.startTime)} - ${_formatTime(event.endTime)}';
+    final timeString = event.startTime.isAtSameMomentAs(event.endTime)
+        ? _formatTime(event.startTime)
+        : '${_formatTime(event.startTime)} - ${_formatTime(event.endTime)}';
 
     Widget? subtitle;
     if (event is UnivEvent) {

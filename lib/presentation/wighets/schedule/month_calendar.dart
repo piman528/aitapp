@@ -1,5 +1,5 @@
 import 'package:aitapp/domain/types/calendar_event.dart';
-import 'package:aitapp/presentation/wighets/calendar_cell.dart';
+import 'package:aitapp/presentation/wighets/schedule/calendar_cell.dart';
 import 'package:flutter/material.dart';
 
 class MonthCalendar extends StatelessWidget {

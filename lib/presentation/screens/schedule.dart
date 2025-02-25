@@ -1,10 +1,10 @@
 // im÷åport 'package:aitapp/application/state/calendar_selected_date/selected_date.dart';
 import 'package:aitapp/application/state/schedule/schedule.dart';
 import 'package:aitapp/domain/types/calendar_state.dart';
-import 'package:aitapp/presentation/wighets/custom_calendar.dart';
-import 'package:aitapp/presentation/wighets/event_list_view.dart';
-import 'package:aitapp/presentation/wighets/schedule_appbar.dart';
-import 'package:aitapp/presentation/wighets/timeline_view/swipeable_timeline_view.dart';
+import 'package:aitapp/presentation/wighets/schedule/custom_calendar.dart';
+import 'package:aitapp/presentation/wighets/schedule/event_list_view.dart';
+import 'package:aitapp/presentation/wighets/schedule/schedule_appbar.dart';
+import 'package:aitapp/presentation/wighets/schedule/timeline_view/swipeable_timeline_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

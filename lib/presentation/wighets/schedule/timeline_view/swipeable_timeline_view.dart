@@ -1,7 +1,7 @@
 import 'package:aitapp/application/state/calendar_selected_date/selected_date.dart';
 import 'package:aitapp/domain/types/calendar_event.dart';
-import 'package:aitapp/presentation/wighets/timeline_view/calendar_date.dart';
-import 'package:aitapp/presentation/wighets/timeline_view/timeline_view.dart';
+import 'package:aitapp/presentation/wighets/schedule/timeline_view/calendar_date.dart';
+import 'package:aitapp/presentation/wighets/schedule/timeline_view/timeline_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';

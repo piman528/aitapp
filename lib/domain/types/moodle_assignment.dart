@@ -24,9 +24,8 @@ class MoodleAssignment {
       courseName: courseName,
       description: description,
       status: SubmissionStatus.notSubmitted, // デフォルトは未提出
-      title: '【$courseName】$name',
-      // 締め切りの24時間前を開始時刻とする
-      startTime: dueDate,
+      title: name,
+      startTime: dueDate.subtract(const Duration(hours: 1, minutes: 15)),
       endTime: dueDate,
     );
   }
