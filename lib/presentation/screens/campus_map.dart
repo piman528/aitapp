@@ -16,7 +16,7 @@ class CampusMap extends HookConsumerWidget {
     final textController = useTextEditingController();
 
     final initialMatrix = useMemoized(
-      () => Matrix4.translationValues(-250, -800, 0).scaled(2.6),
+      () => Matrix4.translationValues(-400, -1200, 0).scaled(1.7),
     );
     final transformationController = useMemoized(
       () => TransformationController(initialMatrix),
@@ -40,9 +40,10 @@ class CampusMap extends HookConsumerWidget {
     }
 
     void onTransformChanged() {
-      final currentScale = transformationController.value.getMaxScaleOnAxis();
-      if (previousScale.value != currentScale) {
-        previousScale.value = currentScale;
+      final newScale = transformationController.value.getMaxScaleOnAxis();
+      if (previousScale.value != newScale) {
+        previousScale.value = currentScale.value;
+        currentScale.value = newScale; // currentScale の値を更新
       }
     }
 
@@ -56,7 +57,6 @@ class CampusMap extends HookConsumerWidget {
           pixel.value = controller.pixels + 10;
         });
         textController.addListener(textOnChange);
-        transformationController.addListener(onTransformChanged);
         WidgetsBinding.instance.addPostFrameCallback((_) {
           ref.read(mapShapesNotifierProvider.notifier).selectShape(null);
           pixel.value = controller.pixels + 10;
@@ -88,22 +88,17 @@ class CampusMap extends HookConsumerWidget {
     }
 
     ref.listen(mapShapesNotifierProvider, (previous, next) {
-      final selectedShapes = next.getSelectedShapes();
-      if (selectedShapes.isNotEmpty) {
+      final selectedShape = next.getSelectedShapes();
+      if (selectedShape != null) {
         // 最初の選択された建物のバウンドを使用
-        final bounds = selectedShapes.first.transformedPath!.getBounds();
-        // 選択された建物が複数ある場合は、全ての建物のバウンドを合成
-        for (var i = 1; i < selectedShapes.length; i++) {
-          bounds
-              .expandToInclude(selectedShapes[i].transformedPath!.getBounds());
-        }
+        final bounds = selectedShape.getBoundingBox();
         final centerX = bounds.left + bounds.width / 2;
         final centerY = bounds.top + bounds.height / 2;
-        final scale = (100 / bounds.width + 100 / bounds.height) / 2;
+        final scale = 100 / bounds.width + 100 / bounds.height;
         animateResetInitialize(
           Matrix4.translationValues(
             -centerX * scale + 200,
-            -centerY * scale + 250,
+            -centerY * scale + 300,
             0,
           ).scaled(scale),
         );
@@ -158,6 +153,9 @@ class CampusMap extends HookConsumerWidget {
         children: [
           InteractiveViewer(
             transformationController: transformationController,
+            onInteractionUpdate: (_) {
+              onTransformChanged();
+            },
             maxScale: 15,
             minScale: 2,
             child: SVGMap(

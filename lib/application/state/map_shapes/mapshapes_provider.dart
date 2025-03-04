@@ -10,20 +10,21 @@ class MapShapesNotifier extends _$MapShapesNotifier {
   @override
   MapStateData build() {
     _load();
-    return MapStateData(shapes: [], selectedShapeIds: []);
+    return MapStateData(shapes: null, selectedShapeId: null);
   }
 
   Future<void> _load() async {
     final shapes = await SVGLoader().loadSVGMap();
     state = MapStateData(
       shapes: shapes,
-      selectedShapeIds: state.selectedShapeIds,
+      selectedShapeId: state.selectedShapeId,
     );
   }
 
   Future<void> selectShape(int? id) async {
+    // print(id);
     if (id == null) {
-      state = MapStateData(shapes: state.shapes, selectedShapeIds: []);
+      state = MapStateData(shapes: state.shapes, selectedShapeId: null);
       return;
     }
 
@@ -31,12 +32,12 @@ class MapShapesNotifier extends _$MapShapesNotifier {
     if (selectedBuilding == null) {
       return;
     }
-    final selectedIds = await DatabaseHelper()
+    final selectedId = await DatabaseHelper()
         .getBuildingIdsByName(buildingName: selectedBuilding.name);
 
     state = MapStateData(
       shapes: state.shapes,
-      selectedShapeIds: selectedIds,
+      selectedShapeId: selectedId,
     );
   }
 }

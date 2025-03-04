@@ -15,18 +15,25 @@ class SVGMap extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final mapState = ref.watch(mapShapesNotifierProvider);
     Offset? pointerDownPosition;
+    print('Scale: $scale');
 
-    if (mapState.shapes.isNotEmpty) {
+    if (mapState.shapes != null) {
       return GestureDetector(
         onTapDown: (details) {
           pointerDownPosition = details.localPosition;
         },
         onTapUp: (details) {
           if (details.localPosition == pointerDownPosition) {
-            final select = mapState.shapes.firstWhereOrNull((shape) {
-              final path = shape.transformedPath;
-              return path!.contains(details.localPosition) &&
-                  shape.isSelectable;
+            final select =
+                mapState.shapes?.selectableShapes.firstWhereOrNull((shape) {
+              final colisionList = shape.transformedColisionList!;
+              var isColision = false;
+              for (final path in colisionList) {
+                if (path.contains(details.localPosition)) {
+                  isColision = true;
+                }
+              }
+              return isColision;
             });
             if (select != null) {
               ref
@@ -39,8 +46,8 @@ class SVGMap extends ConsumerWidget {
         child: RepaintBoundary(
           child: CustomPaint(
             painter: SVGMapRender(
-              selectedShapes: mapState.getSelectedShapes(),
-              shapes: mapState.shapes,
+              selectedShape: mapState.getSelectedShapes(),
+              shapes: mapState.shapes!,
               scale: scale,
               themeBrightness: Theme.of(context).brightness,
             ),

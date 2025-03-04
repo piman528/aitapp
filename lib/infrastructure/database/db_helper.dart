@@ -169,7 +169,7 @@ class DatabaseHelper {
     );
   }
 
-  Future<List<int>> getBuildingIdsByName({required String buildingName}) async {
+  Future<int> getBuildingIdsByName({required String buildingName}) async {
     final db = await database;
     final List<Map<String, dynamic>> results = await db.query(
       'buildings',
@@ -178,6 +178,6 @@ class DatabaseHelper {
       whereArgs: [buildingName],
     );
 
-    return results.map((map) => int.parse(map['id'] as String)).toList();
+    return int.parse(results.first['id'] as String);
   }
 }

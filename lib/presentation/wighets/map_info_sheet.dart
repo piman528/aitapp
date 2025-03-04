@@ -35,10 +35,10 @@ class BuildingInfoSheet extends HookConsumerWidget {
 
     useEffect(
       () {
-        if (selectBuildingint.selectedShapeIds.isNotEmpty) {
+        if (selectBuildingint.selectedShapeId != null) {
           // 最初の選択された建物の情報を表示
           DatabaseHelper()
-              .getBuildingById(selectBuildingint.selectedShapeIds.first)
+              .getBuildingById(selectBuildingint.selectedShapeId!)
               .then((building) {
             selectBuilding.value = building;
             if (building?.rooms?.isNotEmpty == true) {
