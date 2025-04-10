@@ -15,7 +15,7 @@ jobs:
         with:
           xcode-version: '15.2.0'
       - name: setup cache
-        uses: actions/cache@v1
+        uses: actions/cache@v4
         with:
           path: /Users/runner/hostedtoolcache/flutter
           key: ${{ runner.OS }}-flutter-install-cache
