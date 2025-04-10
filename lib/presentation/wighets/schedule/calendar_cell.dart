@@ -32,9 +32,7 @@ class CalendarCell extends ConsumerWidget {
         decoration: BoxDecoration(
           border: Border(
             top: BorderSide(
-              color: isSelected
-                  ? Theme.of(context).primaryColor
-                  : Colors.grey.shade300,
+              color: Colors.grey.shade300,
               width: 0.5,
             ),
           ),
@@ -44,7 +42,7 @@ class CalendarCell extends ConsumerWidget {
             Container(
               padding: const EdgeInsets.symmetric(vertical: 2),
               color: isToday
-                  ? Theme.of(context).primaryColor.withValues(alpha: 0.1)
+                  ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.2)
                   : null,
               child: Text(
                 date.day.toString(),
