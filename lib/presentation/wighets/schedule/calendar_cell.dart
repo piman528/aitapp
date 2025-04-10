@@ -53,7 +53,7 @@ class CalendarCell extends ConsumerWidget {
                       ? Colors.red
                       : date.weekday == DateTime.saturday
                           ? Colors.blue
-                          : Colors.black,
+                          : Theme.of(context).textTheme.bodyMedium?.color,
                   fontWeight: isSelected || isToday ? FontWeight.bold : null,
                 ),
               ),
@@ -66,8 +66,10 @@ class CalendarCell extends ConsumerWidget {
                     margin:
                         const EdgeInsets.symmetric(vertical: 2, horizontal: 1),
                     decoration: BoxDecoration(
-                      color:
-                          Theme.of(context).primaryColor.withValues(alpha: 0.1),
+                      color: Theme.of(context)
+                          .colorScheme
+                          .primary
+                          .withValues(alpha: 0.4),
                       borderRadius: const BorderRadius.all(Radius.circular(4)),
                     ),
                     child: Text(

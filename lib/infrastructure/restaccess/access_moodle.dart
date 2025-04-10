@@ -18,7 +18,7 @@ class MoodleApiClient {
     required String username,
     required String password,
   }) async {
-    print('getMoodleToken');
+    debugPrint('getMoodleToken');
     final url = Uri.parse(
       'https://$moodleOrigin/login/token.php',
     );

@@ -14,7 +14,12 @@ class Settings extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         scrolledUnderElevation: 0,
-        title: const Text('設定'),
+        title: const Text(
+          '設定',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
       ),
       body: ListView(
         children: [
@@ -152,7 +157,8 @@ class Settings extends ConsumerWidget {
                   return AlertDialog(
                     title: const Text('予定データベースの削除'),
                     content: const Text(
-                        '予定データベースを削除しますか？\n※サーバーから再取得するまで予定は表示されません'),
+                      '予定データベースを削除しますか？\n※サーバーから再取得するまで予定は表示されません',
+                    ),
                     actions: [
                       TextButton(
                         onPressed: () {

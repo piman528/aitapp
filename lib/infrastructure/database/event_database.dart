@@ -160,7 +160,8 @@ class EventDatabase {
   }
 
   Map<DateTime, List<CalendarEvent>> _convertToEvents(
-      List<Map<String, dynamic>> maps) {
+    List<Map<String, dynamic>> maps,
+  ) {
     final events = maps.map((map) {
       final type = map['type'] as String;
 

@@ -110,7 +110,7 @@ class _WeekdayLabel extends StatelessWidget {
                 ? Colors.red
                 : label == '土'
                     ? Colors.blue
-                    : Colors.black,
+                    : Theme.of(context).textTheme.bodyMedium?.color,
             fontWeight: FontWeight.bold,
           ),
         ),

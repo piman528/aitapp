@@ -239,7 +239,8 @@ class ScheduleNotifier extends _$ScheduleNotifier {
         await Fluttertoast.showToast(msg: '$successCount 件のイベントを正常に登録しました');
       } else if (successCount > 0 && failCount > 0) {
         await Fluttertoast.showToast(
-            msg: '$successCount 件登録、$failCount 件失敗しました。詳細はデバッグログを確認してください。');
+          msg: '$successCount 件登録、$failCount 件失敗しました。詳細はデバッグログを確認してください。',
+        );
       } else if (successCount == 0 && failCount > 0) {
         await Fluttertoast.showToast(msg: 'イベントの登録に失敗しました。詳細はデバッグログを確認してください。');
       } else {
