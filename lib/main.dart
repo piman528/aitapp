@@ -12,13 +12,21 @@ import 'package:aitapp/presentation/screens/tabs.dart';
 import 'package:aitapp/presentation/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:syncfusion_localizations/syncfusion_localizations.dart';
+import 'package:timezone/data/latest_all.dart' as tz;
+import 'package:timezone/timezone.dart' as tz; // Add timezone import
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  tz.initializeTimeZones();
+  tz.setLocalLocation(
+    tz.getLocation('Asia/Tokyo'),
+  ); // Set local timezone to Tokyo
   runApp(
     ProviderScope(
       overrides: [
@@ -51,6 +59,16 @@ class App extends ConsumerWidget {
         _ => ThemeMode.system,
       },
       home: const InitHome(),
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        SfGlobalLocalizations.delegate,
+      ],
+      supportedLocales: const [
+        Locale('ja'),
+      ],
+      locale: const Locale('ja'),
     );
   }
 }

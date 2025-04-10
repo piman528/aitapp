@@ -44,6 +44,9 @@ class NoticeDetailScreen extends HookConsumerWidget {
         centerTitle: true,
         title: const Text(
           '詳細',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
       body: asyncValue.when(

@@ -33,7 +33,7 @@ class NoticeDetailWidget extends HookConsumerWidget {
           color: Theme.of(context)
               .colorScheme
               .surfaceContainerHighest
-              .withOpacity(0.3),
+              .withValues(alpha: 0.3),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),
