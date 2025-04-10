@@ -1,4 +1,5 @@
 import 'package:aitapp/domain/types/building_info.dart';
+import 'package:aitapp/domain/types/class_period.dart';
 import 'package:aitapp/domain/types/contact.dart';
 import 'package:aitapp/domain/types/day_of_week.dart';
 import 'package:aitapp/domain/types/destination.dart';
@@ -14,15 +15,15 @@ const List<DayOfWeek> activeWeek = [
   DayOfWeek.thurstay,
   DayOfWeek.friday,
 ];
-const List<List<String>> classPeriods = [
-  ['09:00', '10:30'],
-  ['10:40', '12:10'],
-  ['13:00', '14:30'],
-  ['14:40', '16:10'],
-  ['16:20', '17:50'],
-  ['18:00', '19:30'],
-  ['19:40', '21:10'],
-];
+final Map<ClassPeriod, List<DateTime>> classPeriods = {
+  ClassPeriod.period1: [DateTime(0, 0, 0, 9), DateTime(0, 0, 0, 10, 30)],
+  ClassPeriod.period2: [DateTime(0, 0, 0, 10, 40), DateTime(0, 0, 0, 12, 10)],
+  ClassPeriod.period3: [DateTime(0, 0, 0, 13), DateTime(0, 0, 0, 14, 30)],
+  ClassPeriod.period4: [DateTime(0, 0, 0, 14, 40), DateTime(0, 0, 0, 16, 10)],
+  ClassPeriod.period5: [DateTime(0, 0, 0, 16, 20), DateTime(0, 0, 0, 17, 50)],
+  ClassPeriod.period6: [DateTime(0, 0, 0, 18), DateTime(0, 0, 0, 19, 30)],
+  ClassPeriod.period7: [DateTime(0, 0, 0, 9), DateTime(0, 0, 0, 10, 30)],
+};
 
 final daiya = {
   Vehicles.linimo: {

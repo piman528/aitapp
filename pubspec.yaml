@@ -13,10 +13,13 @@ dependencies:
   chewie: ^1.8.1
   collection: ^1.18.0
   cupertino_icons: ^1.0.2
+  device_calendar: ^4.3.3
   envied: ^0.5.4+1
   flutter:
     sdk: flutter
   flutter_hooks: ^0.20.5
+  flutter_localizations:
+    sdk: flutter
   flutter_riverpod: ^2.5.1
   flutter_widget_from_html: ^0.15.0
   fluttertoast: ^8.2.5
@@ -31,11 +34,14 @@ dependencies:
   path_provider: ^2.1.3
   riverpod_annotation: ^2.3.5
   riverpod_generator: ^2.4.0
-  share_plus: ^9.0.0
+  scrollable_positioned_list: ^0.3.8
+  share_plus: 
   shared_preferences: ^2.2.3
   shimmer: ^3.0.0
   sqflite: ^2.3.2
-  syncfusion_flutter_pdfviewer: ^26.1.39
+  syncfusion_flutter_pdfviewer: ^28.2.5
+  syncfusion_localizations: ^28.2.5
+  timezone: ^0.9.4
   universal_html: ^2.2.4
   url_launcher: ^6.3.0
   webview_cookie_manager:
