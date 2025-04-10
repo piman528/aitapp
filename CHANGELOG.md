@@ -1,5 +1,20 @@
 # Changelog
 
+## [v1.6.4](https://github.com/piman528/aitapp/compare/v1.6.3...v1.6.4) - 2025-04-10
+- ビルド設定の更新 by @piman528 in https://github.com/piman528/aitapp/pull/98
+- リニモ時刻表の追加 by @piman528 in https://github.com/piman528/aitapp/pull/100
+- 正しく時刻計算されない問題を修正 by @piman528 in https://github.com/piman528/aitapp/pull/101
+- 修正 by @piman528 in https://github.com/piman528/aitapp/pull/102
+- 時間割をローカルに保存する機能、他の学期を選択する機能の追加 by @piman528 in https://github.com/piman528/aitapp/pull/103
+- UIの調整 by @piman528 in https://github.com/piman528/aitapp/pull/104
+- flutterのバージョンアップ by @piman528 in https://github.com/piman528/aitapp/pull/105
+- 非推奨のコードを更新 by @piman528 in https://github.com/piman528/aitapp/pull/106
+- 予定タブの追加 by @piman528 in https://github.com/piman528/aitapp/pull/108
+- 時間割を調整 by @piman528 in https://github.com/piman528/aitapp/pull/109
+- UIを調整 by @piman528 in https://github.com/piman528/aitapp/pull/110
+- 学生便覧を2024年から2025年に更新と、行事予定を更新 by @piman528 in https://github.com/piman528/aitapp/pull/111
+- 2025年度バス運行予定の追加 by @KUNKUN2121 in https://github.com/piman528/aitapp/pull/107
+
 ## [v1.6.3](https://github.com/piman528/aitapp/compare/v1.6.2...v1.6.3) - 2024-06-26
 - いちいちロードされるバグ修正 by @piman528 in https://github.com/piman528/aitapp/pull/95
 
