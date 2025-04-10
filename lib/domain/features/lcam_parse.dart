@@ -1,4 +1,3 @@
-import 'package:aitapp/domain/types/academic_year.dart';
 import 'package:aitapp/domain/types/calendar_event.dart';
 import 'package:aitapp/domain/types/class.dart';
 import 'package:aitapp/domain/types/class_notice.dart';
@@ -220,6 +219,7 @@ class LcamParse {
     if (element == null) {
       throw const GetDataException('[parseClassTimeTable]データの取得に失敗しました');
     }
+    final now = DateTime.now();
     final dates = element.querySelectorAll('thead > tr > th').map((e) {
       final dateText = e.innerText.trim();
       final match = RegExp(r'(\d{1,2})/(\d{1,2})').firstMatch(dateText);
@@ -228,9 +228,7 @@ class LcamParse {
       }
       final month = int.parse(match.group(1)!);
       final day = int.parse(match.group(2)!);
-      final year =
-          month < 4 ? AcademicYear.getCurrent() + 1 : AcademicYear.getCurrent();
-
+      final year = now.month > month ? now.year + 1 : now.year;
       return DateTime(year, month, day);
     }).toList();
     final contents = element.querySelectorAll('tbody > tr > td > div');

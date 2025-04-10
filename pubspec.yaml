@@ -13,6 +13,7 @@ dependencies:
   chewie: ^1.8.1
   collection: ^1.18.0
   cupertino_icons: ^1.0.2
+  device_calendar: ^4.3.3
   envied: ^0.5.4+1
   flutter:
     sdk: flutter
@@ -40,6 +41,7 @@ dependencies:
   sqflite: ^2.3.2
   syncfusion_flutter_pdfviewer: ^28.2.5
   syncfusion_localizations: ^28.2.5
+  timezone: ^0.9.4
   universal_html: ^2.2.4
   url_launcher: ^6.3.0
   webview_cookie_manager:

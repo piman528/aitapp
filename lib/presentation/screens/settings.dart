@@ -134,6 +134,15 @@ class Settings extends ConsumerWidget {
             },
           ),
           ListTile(
+            leading: const Icon(Icons.calendar_month), // カレンダーアイコンに変更
+            title: const Text('スケジュールをカレンダーに登録'), // テキストを変更
+            onTap: () {
+              ref
+                  .read(scheduleNotifierProvider.notifier)
+                  .addEventsToDeviceCalendar(context);
+            },
+          ),
+          ListTile(
             leading: const Icon(Icons.delete_forever),
             title: const Text('予定データベースの削除'),
             onTap: () {
