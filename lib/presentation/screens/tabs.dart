@@ -1,6 +1,7 @@
 import 'package:aitapp/application/state/tab_button_provider.dart';
 import 'package:aitapp/presentation/screens/class_timetable.dart';
 import 'package:aitapp/presentation/screens/notices.dart';
+import 'package:aitapp/presentation/screens/schedule.dart';
 import 'package:aitapp/presentation/screens/timetable_screen.dart';
 import 'package:aitapp/presentation/wighets/drawer.dart';
 import 'package:flutter/material.dart';
@@ -11,42 +12,32 @@ class TabScreen extends HookConsumerWidget {
   const TabScreen({super.key});
   static const currentPages = [
     NoticeScreen(),
+    ScheduleScreen(),
     ClassTimeTableScreen(),
     TimeTableScreen(),
   ];
-  static const destinations = [
-    NavigationDestination(
-      icon: Icon(Icons.article),
-      label: 'お知らせ',
-    ),
-    NavigationDestination(
-      icon: Icon(Icons.event),
-      label: '時間割',
-    ),
-    NavigationDestination(
-      icon: Icon(Icons.directions_bus),
-      label: '時刻表',
-    ),
-  ];
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final currentPageIndex = useState(0);
     return Scaffold(
-      // appBar: AppBar(
-      //   scrolledUnderElevation: 0,
-      //   title: Text(destinations[currentPageIndex.value].label),
-      //   centerTitle: true,
-      // ),
       drawer: const MainDrawer(),
       body: SafeArea(child: currentPages[currentPageIndex.value]),
       bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        selectedItemColor: Theme.of(context).colorScheme.primary,
+        unselectedItemColor: Colors.grey,
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.article),
             label: 'お知らせ',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.event),
+            icon: Icon(Icons.calendar_today),
+            label: '予定',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.school),
             label: '時間割',
           ),
           BottomNavigationBarItem(

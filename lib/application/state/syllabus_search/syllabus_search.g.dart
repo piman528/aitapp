@@ -7,7 +7,7 @@ part of 'syllabus_search.dart';
 // **************************************************************************
 
 String _$syllabusSearchNotifierHash() =>
-    r'6f448b71649b5b0c77c2b1c370e111ecba908704';
+    r'c8375f23528b8f3399b1c588523e6bdc0bcbf7ef';
 
 /// See also [SyllabusSearchNotifier].
 @ProviderFor(SyllabusSearchNotifier)

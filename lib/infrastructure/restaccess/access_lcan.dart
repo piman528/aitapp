@@ -40,6 +40,57 @@ Future<Response> httpAccess(
   return res;
 }
 
+Future<String> getSchedule({required Cookies cookie}) async {
+  debugPrint('getSchedule');
+  final headers = {
+    'Origin': 'https://$origin',
+    'Cookie': cookie.toString(),
+  }
+    ..addAll(constHeader)
+    ..addAll(secFetchHeader)
+    ..addAll(contentTypeHeader);
+
+  final data = {
+    '_mode': '5',
+    'EXCLUDE_SET': '',
+  };
+
+  final url = Uri.parse(
+    'https://$origin/portalv2/schedule/scheduleForHome/getSchedule',
+  );
+
+  final res = await httpAccess(url, headers: headers, body: data);
+
+  return res.body;
+}
+
+Future<String> reload({
+  required Cookies cookie,
+  required String token,
+}) async {
+  debugPrint('reload');
+  final headers = {
+    'Origin': 'https://$origin',
+    'Cookie': cookie.toString(),
+  }
+    ..addAll(constHeader)
+    ..addAll(secFetchHeader)
+    ..addAll(contentTypeHeader);
+
+  final data = {
+    'org.apache.struts.taglib.html.TOKEN': token,
+    '_screenIdentifier': 'home',
+    '_screenInfoDisp': '',
+    '_scrollTop': '148',
+  };
+
+  final url = Uri.parse('https://$origin/portalv2/home/home/reload');
+
+  final res = await httpAccess(url, headers: headers, body: data);
+
+  return res.body;
+}
+
 Future<String> preAccess({required Cookies cookie}) async {
   debugPrint('preAccess');
   final url = Uri.parse('https://$origin/portalv2/login/preLogin/preLogin');

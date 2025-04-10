@@ -86,7 +86,7 @@ class ClassTimeTableScreen extends ConsumerWidget {
                         color: Theme.of(context)
                             .colorScheme
                             .surfaceContainerHighest
-                            .withOpacity(0.4),
+                            .withValues(alpha: 0.4),
                         borderRadius: BorderRadius.circular(20),
                       ),
                       padding: const EdgeInsets.all(4),
@@ -100,7 +100,7 @@ class ClassTimeTableScreen extends ConsumerWidget {
                               color: Theme.of(context)
                                   .colorScheme
                                   .shadow
-                                  .withOpacity(0.1),
+                                  .withValues(alpha: 0.1),
                               blurRadius: 4,
                               offset: const Offset(0, 1),
                             ),
@@ -111,7 +111,7 @@ class ClassTimeTableScreen extends ConsumerWidget {
                         unselectedLabelColor: Theme.of(context)
                             .colorScheme
                             .onSurface
-                            .withOpacity(0.8),
+                            .withValues(alpha: 0.8),
                         labelStyle:
                             const TextStyle(fontWeight: FontWeight.w600),
                         unselectedLabelStyle:
