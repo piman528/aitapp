@@ -77,37 +77,37 @@ class TimeTable extends ConsumerWidget {
             ],
           ),
         ),
-        Container(
-          margin: const EdgeInsets.all(4),
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.surface,
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(
-              color:
-                  Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
-            ),
-          ),
-          child: Row(
-            children: [
-              Text(
-                '今学期の取得単位：',
-                style: TextStyle(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  fontSize: 13,
-                ),
-              ),
-              Text(
-                '14単位',
-                style: TextStyle(
-                  color: Theme.of(context).colorScheme.onSurface,
-                  fontSize: 13,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ],
-          ),
-        ),
+        // Container(
+        //   margin: const EdgeInsets.all(4),
+        //   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        //   decoration: BoxDecoration(
+        //     color: Theme.of(context).colorScheme.surface,
+        //     borderRadius: BorderRadius.circular(8),
+        //     border: Border.all(
+        //       color:
+        //           Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
+        //     ),
+        //   ),
+        //   child: Row(
+        //     children: [
+        //       Text(
+        //         '今学期の取得単位：',
+        //         style: TextStyle(
+        //           color: Theme.of(context).colorScheme.onSurfaceVariant,
+        //           fontSize: 13,
+        //         ),
+        //       ),
+        //       Text(
+        //         '14単位',
+        //         style: TextStyle(
+        //           color: Theme.of(context).colorScheme.onSurface,
+        //           fontSize: 13,
+        //           fontWeight: FontWeight.w500,
+        //         ),
+        //       ),
+        //     ],
+        //   ),
+        // ),
       ],
     );
   }
