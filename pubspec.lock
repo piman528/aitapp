@@ -1470,9 +1470,9 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: HEAD
-      resolved-ref: "923e514752ad7bb7e83849f11de767a301ac57b5"
-      url: "https://github.com/fryette/webview_cookie_manager"
+      ref: e03954491a6952e04d7fceeae4c4d074392c0fe2
+      resolved-ref: e03954491a6952e04d7fceeae4c4d074392c0fe2
+      url: "https://github.com/fryette/webview_cookie_manager.git"
     source: git
     version: "2.0.7"
   webview_flutter:

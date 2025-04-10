@@ -3,7 +3,7 @@ description: L-cam flutter app
 
 publish_to: 'none'
 
-version: 1.6.3+11
+version: 2.0.0+12
 
 environment:
   sdk: '>=3.1.5 <4.0.0'
@@ -46,7 +46,8 @@ dependencies:
   url_launcher: ^6.3.0
   webview_cookie_manager:
     git:
-       url: https://github.com/fryette/webview_cookie_manager
+      url: https://github.com/fryette/webview_cookie_manager.git
+      ref: e03954491a6952e04d7fceeae4c4d074392c0fe2
   webview_flutter: ^4.8.0
   xml: ^6.5.0
 
