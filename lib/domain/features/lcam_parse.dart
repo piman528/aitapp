@@ -461,15 +461,34 @@ class LcamParse {
         if (texts.last != '参考URL') {
           final maincontents = tr.querySelectorAll('td > div');
           for (final childContents in maincontents) {
-            for (final content in childContents.querySelectorAll('div > a')) {
-              fileMap.addEntries(
-                [
-                  MapEntry(
-                    content.text!.trim(),
-                    content.attributes['href']!,
-                  ),
-                ],
-              );
+            for (var i = 0;
+                childContents.querySelectorAll('div > a').length > i;
+                i++) {
+              final content =
+                  childContents.querySelectorAll('div > a')[i]; // 添付ファイル
+              // 拡張子を取り除く
+              final finalName = content.text!.trim();
+              if (finalName.isNotEmpty && finalName.lastIndexOf('.') > 0) {
+                final fileNameWithoutExtension =
+                    finalName.substring(0, finalName.lastIndexOf('.'));
+                fileMap.addEntries(
+                  [
+                    MapEntry(
+                      finalName,
+                      '/portalv2/common/fileUploadDownload/fileDownLoad2/${Uri.encodeFull(fileNameWithoutExtension)}/?EXCLUDE_SET=&prefix=no1&no=${i + 1}',
+                    ),
+                  ],
+                );
+              } else {
+                fileMap.addEntries(
+                  [
+                    MapEntry(
+                      'ファイル${i + 1}',
+                      '/portalv2/common/fileUploadDownload/fileDownLoad/?EXCLUDE_SET=&prefix=no1&no=${i + 1}',
+                    ),
+                  ],
+                );
+              }
             }
           }
         }
