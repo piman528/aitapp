@@ -61,8 +61,8 @@ class NextDeparture {
     if (vehicle.vehicle == Vehicles.linimo) {
       // ダイヤ種別の決定
       final month = DateFormat('MM').format(now);
-      final weekday = DateFormat('E').format(now);
-      if (['土', '日'].contains(weekday) ||
+      final weekday = now.weekday;
+      if ((weekday == DateTime.saturday || weekday == DateTime.sunday) ||
           ['02', '03', '08', '09'].contains(month)) {
         return 'B';
       } else {

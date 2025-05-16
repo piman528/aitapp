@@ -3,6 +3,7 @@ import 'package:aitapp/application/state/last_login/last_login.dart';
 import 'package:aitapp/domain/features/get_lcam_data.dart';
 import 'package:aitapp/domain/features/get_moodle_data.dart';
 import 'package:aitapp/domain/types/calendar_state.dart';
+import 'package:aitapp/domain/types/event.dart';
 import 'package:aitapp/domain/types/last_login.dart';
 import 'package:aitapp/infrastructure/database/event_database.dart';
 import 'package:aitapp/presentation/dialogs/select_calendar_dialog.dart'; // Add this import
@@ -219,6 +220,7 @@ class ScheduleNotifier extends _$ScheduleNotifier {
           title: appEvent.title,
           start: tz.TZDateTime.from(appEvent.startTime, tz.local),
           end: tz.TZDateTime.from(appEvent.endTime, tz.local),
+          location: appEvent is UnivEvent ? appEvent.location : null,
         );
 
         final createResult =
