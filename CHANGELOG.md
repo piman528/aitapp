@@ -1,5 +1,9 @@
 # Changelog
 
+## [v2.0.1](https://github.com/piman528/aitapp/compare/v2.0.0...v2.0.1) - 2025-05-16
+- Lcamのシステム改修に対応 by @piman528 in https://github.com/piman528/aitapp/pull/113
+- 土日のダイヤが正しく表示されない問題を修正 by @piman528 in https://github.com/piman528/aitapp/pull/114
+
 ## [v1.6.4](https://github.com/piman528/aitapp/compare/v1.6.3...v1.6.4) - 2025-04-10
 - ビルド設定の更新 by @piman528 in https://github.com/piman528/aitapp/pull/98
 - リニモ時刻表の追加 by @piman528 in https://github.com/piman528/aitapp/pull/100
