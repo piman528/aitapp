@@ -14,6 +14,6 @@ enum Semester {
 
   /// 指定された日付の学期を取得します
   static Semester of(DateTime date) {
-    return date.month >= 4 && date.month <= 9 ? Semester.early : Semester.late;
+    return date.month >= 4 && date.month <= 8 ? Semester.early : Semester.late;
   }
 }

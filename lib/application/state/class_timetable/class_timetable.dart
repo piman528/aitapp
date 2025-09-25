@@ -53,7 +53,7 @@ class ClassTimeTableNotifier extends _$ClassTimeTableNotifier {
           ClassTimeTableState(
             timetable: timetable,
             selectYear: timetable.entries.first.key,
-            selectSemester: timetable.entries.first.value.keys.first,
+            selectSemester: timetable.entries.first.value.keys.last,
           ),
         );
       } else {
@@ -79,7 +79,7 @@ class ClassTimeTableNotifier extends _$ClassTimeTableNotifier {
       ClassTimeTableState(
         timetable: result,
         selectYear: result.entries.first.key,
-        selectSemester: result.entries.first.value.keys.first,
+        selectSemester: result.entries.first.value.keys.last,
       ),
     );
   }
