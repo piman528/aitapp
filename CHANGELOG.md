@@ -1,5 +1,8 @@
 # Changelog
 
+## [v2.0.2](https://github.com/piman528/aitapp/compare/v2.0.1...v2.0.2) - 2025-09-25
+- 依存関係のバージョンを更新し、学期の判定ロジックを修正 by @piman528 in https://github.com/piman528/aitapp/pull/115
+
 ## [v2.0.1](https://github.com/piman528/aitapp/compare/v2.0.0...v2.0.1) - 2025-05-16
 - Lcamのシステム改修に対応 by @piman528 in https://github.com/piman528/aitapp/pull/113
 - 土日のダイヤが正しく表示されない問題を修正 by @piman528 in https://github.com/piman528/aitapp/pull/114
