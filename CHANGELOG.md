@@ -1,5 +1,8 @@
 # Changelog
 
+## [v2.0.3](https://github.com/piman528/aitapp/compare/v2.0.2...v2.0.3) - 2025-10-14
+- Hotfix by @piman528 in https://github.com/piman528/aitapp/pull/117
+
 ## [v2.0.2](https://github.com/piman528/aitapp/compare/v2.0.1...v2.0.2) - 2025-09-25
 - 依存関係のバージョンを更新し、学期の判定ロジックを修正 by @piman528 in https://github.com/piman528/aitapp/pull/115
 
