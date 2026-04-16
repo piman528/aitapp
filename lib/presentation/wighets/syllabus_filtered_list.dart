@@ -38,11 +38,17 @@ class SyllabusList extends HookConsumerWidget {
     Future<void> load() async {
       try {
         await getSyllabus.create();
+        final selectYear = notifier.selectYear;
+        final yearKey = getSyllabus.filters.year.keys.firstWhere(
+          (k) => k.startsWith('$selectYear'),
+          orElse: () => '',
+        );
+        final yearValue = getSyllabus.filters.year[yearKey] ?? '';
         final list = await getSyllabus.getSyllabusList(
           selectSyllabusFilters: SelectSyllabusFilters(
             week: dayOfWeek,
             hour: classPeriod,
-            year: '00${notifier.selectYear - 2003}',
+            year: yearValue,
             semester: notifier.selectSemester,
           ),
         );
