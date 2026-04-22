@@ -1,5 +1,11 @@
 # Changelog
 
+## [v2.0.4](https://github.com/piman528/aitapp/compare/v2.0.3...v2.0.4) - 2026-04-22
+- シラバスサイトのHTMLから取得した年度フィルタを取得するように by @piman528 in https://github.com/piman528/aitapp/pull/119
+- ダイヤを2026年度版に更新 by @piman528 in https://github.com/piman528/aitapp/pull/121
+- GitHub actionsのmacos runnerバージョンを変更 by @piman528 in https://github.com/piman528/aitapp/pull/122
+- CI: Xcodeを26.3.0に更新 by @piman528 in https://github.com/piman528/aitapp/pull/123
+
 ## [v2.0.3](https://github.com/piman528/aitapp/compare/v2.0.2...v2.0.3) - 2025-10-14
 - Hotfix by @piman528 in https://github.com/piman528/aitapp/pull/117
 
