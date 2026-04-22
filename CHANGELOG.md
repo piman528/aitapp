@@ -1,5 +1,8 @@
 # Changelog
 
+## [v2.0.5](https://github.com/piman528/aitapp/compare/v2.0.4...v2.0.5) - 2026-04-22
+- 便覧と行事予定を2026年度版に更新 by @piman528 in https://github.com/piman528/aitapp/pull/124
+
 ## [v2.0.4](https://github.com/piman528/aitapp/compare/v2.0.3...v2.0.4) - 2026-04-22
 - シラバスサイトのHTMLから取得した年度フィルタを取得するように by @piman528 in https://github.com/piman528/aitapp/pull/119
 - ダイヤを2026年度版に更新 by @piman528 in https://github.com/piman528/aitapp/pull/121
