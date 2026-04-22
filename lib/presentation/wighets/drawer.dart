@@ -44,7 +44,7 @@ class MainDrawer extends ConsumerWidget {
                   usecase.go(
                     const OpenAssetPdf(
                       title: '学生便覧',
-                      path: 'assets/pdfs/binran2025.pdf',
+                      path: 'assets/pdfs/binran2026.pdf',
                     ),
                   );
                 },
